@@ -2,25 +2,48 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-function App() {
+function PageTitle(props){
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <h1>{props.title} Anagram</h1>
+  )
+}
+
+function SearchSelector (props){
+
+  return(
+        <div>
+            <div>
+                <select name="anagramQuerySelect" id="anagramQuerySelect">
+                    <option selected="selected" className="celebrities" value="Celebrities">Celebrities</option>
+                    <option className="general" value="General">General</option>
+
+                </select>
+            </div>
+        </div>
+  )
+      }
+
+      function SearchInput(){
+return (
+<div>
+  <input type="text" placeholder = "Thanksmo,TRUMCDONALD,parsi/hl itno"></input>
+  <input type="button" value="Search"/>
+  </div>
+)
+      }
+
+class App extends React.Component {
+
+  render(){
+  return (
+    <div>
+    <PageTitle/>
+    <SearchSelector />
+    <SearchInput />
     </div>
   );
+  }
 }
 
 export default App;
