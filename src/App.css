@@ -2,21 +2,80 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  width:100%;
 }
 
-.App-link {
-  color: #09d3ac;
+
+h1 {
+font-family: Arial, Helvetica, sans-serif;
+font-weight: 400;
+font-size: 40px;
+}
+
+.headerPortion{
+  display: flex;
+  align-items: center;
+  justify-content: center; 
+  width:100%;
+  background-color: rgb(241, 241, 241);
+  border-bottom: 5px solid rgb(182, 182, 182);
+}
+
+.selector {
+padding: 5px 3px 5px 30px;
+  height: 100%;
+  font-size: 16px;
+  width: 150px;
+border:0;
+  
+}
+
+
+.searchInput, .headerPortion, .selector{
+margin-bottom: 50px;
+}
+
+.searchInput{
+  width:40%;
+  display:flex;
+  flex-direction: row;
+  justify-content: center;
+  align-content: space-between;
+  flex-wrap: wrap;
+}
+
+.searchInput > input[type="button"] {
+width: 20%;
+height: 35px;
+background-color: rgb(255, 255, 255);
+border-radius: 10%;
+
+}
+
+.searchInput > input[type="text"] {
+  width: 65%;
+  height: 16px;
+  background-color: rgb(255, 255, 255);
+  border-color: rgb(182, 182, 182);
+  border-width: 1px;
+  margin-bottom:20px;
+  padding:8px;
+  }
+  
+.inputName {
+  display: flex;
+  align-items: center;
+  justify-content: center; 
+  height: 16px;
+  width:auto;
+  background-color: rgb(255, 255, 255);
+  padding:8px;
+  border-color: rgb(182, 182, 182);
+  border-width: 1px;
+  border-style: solid;
+
 }
