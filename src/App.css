@@ -11,9 +11,16 @@
 
 
 h1 {
+  background-color: #474747;
 font-family: Arial, Helvetica, sans-serif;
 font-weight: 400;
 font-size: 40px;
+color: transparent;
+text-shadow: 0px 2px 3px rgba(255, 255, 255, 0.8);
+-webkit-background-clip: text;
+-moz-background-clip: text;
+background-clip: text;
+
 }
 
 .headerPortion{
@@ -31,9 +38,26 @@ padding: 5px 3px 5px 30px;
   font-size: 16px;
   width: 150px;
 border:0;
-  
+-webkit-appearance: none; 
+background: url(http://cdn1.iconfinder.com/data/icons/cc_mono_icon_set/blacks/16x16/br_down.png) no-repeat right rgb(255, 255, 255);
+background-position-x: 115px;
+transition: 0.3s;
+
+
 }
 
+.selector:hover {
+  background-color: rgb(241, 241, 241);
+  border-radius: 20px 20px;
+  background-repeat: repeat-y;
+  animation: selectorHoverArrow 1s infinite linear;
+
+} 
+
+@keyframes selectorHoverArrow {
+  from {  background-position-y: 50%;}
+  to {  background-position-y: 189%;}
+}
 
 .searchInput, .headerPortion, .selector{
 margin-bottom: 50px;
@@ -42,28 +66,29 @@ margin-bottom: 50px;
 .searchInput{
   width:40%;
   display:flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
-  align-content: space-between;
+  align-items: center;
   flex-wrap: wrap;
+
 }
 
-.searchInput > input[type="button"] {
+.searchButton {
+  display:block;
 width: 20%;
 height: 35px;
 background-color: rgb(255, 255, 255);
-border-radius: 10%;
-
+border-radius: 20px 20px;
 }
 
-.searchInput > input[type="text"] {
+.searchTextInput {
   width: 65%;
   height: 16px;
   background-color: rgb(255, 255, 255);
   border-color: rgb(182, 182, 182);
   border-width: 1px;
-  margin-bottom:20px;
   padding:8px;
+  flex-grow: 1;
   }
   
 .inputName {
@@ -72,10 +97,21 @@ border-radius: 10%;
   justify-content: center; 
   height: 16px;
   width:auto;
-  background-color: rgb(255, 255, 255);
+  background-color: rgb(238, 238, 238);
   padding:8px;
   border-color: rgb(182, 182, 182);
   border-width: 1px;
-  border-style: solid;
+  border-style: inset;
+
+}
+
+.inputNameGroup{
+  display:flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items:stretch;
+  width:80%;
+  border:1px solid rgb(182, 182, 182);
+  margin-bottom:40px;
 
 }
