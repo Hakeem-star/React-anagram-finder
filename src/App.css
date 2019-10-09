@@ -35,11 +35,6 @@ padding: 5px 3px 5px 30px;
   font-weight: 600;
   width: 220px;
 border:0;
-<<<<<<< Updated upstream
-  
-}
-
-=======
 -webkit-appearance: none; 
 background: url(http://cdn1.iconfinder.com/data/icons/cc_mono_icon_set/blacks/16x16/br_down.png) no-repeat right rgb(241, 241, 241);
 background-position-x: 175px;
@@ -58,7 +53,6 @@ transition: 0.3s;
   from {  background-position-y: 50%;}
   to {  background-position-y: 189%;}
 }
->>>>>>> Stashed changes
 
 .searchInput, .headerPortion, .selector{
 margin-bottom: 50px;
@@ -101,11 +95,6 @@ border-radius: 10%;
   padding:8px;
   border-color: rgb(182, 182, 182);
   border-width: 1px;
-<<<<<<< Updated upstream
-  border-style: solid;
-
-}
-=======
   border-style: inset;
 font-weight: 600;
 }
@@ -138,4 +127,3 @@ th {
   height: 35px;
   text-align: center;
 }
->>>>>>> Stashed changes

@@ -1,8 +1,6 @@
 import React from 'react';
 import './App.css';
 
-<<<<<<< Updated upstream
-=======
 
 async function celebAnagramFinder(value) {
 
@@ -238,7 +236,6 @@ function ResultDivContain(props) {
 
 
 
->>>>>>> Stashed changes
 function PageTitle(props) {
 
   return (
@@ -294,13 +291,6 @@ class App extends React.Component {
     this.setState({ anagramType: e.target.value, SearchInputName: e.target.value });
   }
 
-<<<<<<< Updated upstream
-  searchTerm(e) {
-    //console.log(e.target.value)
-    this.setState({ searchTerm: e.target.value });
-  }
-
-=======
   async localCelebAnagramFinder(val) {
     let test = await celebAnagramFinder(val);
     this.setState({ results: test });
@@ -312,7 +302,6 @@ class App extends React.Component {
     }
   }
 
->>>>>>> Stashed changes
   render() {
     let rows;
     if (typeof (this.state.results) === "string") {
@@ -325,10 +314,6 @@ class App extends React.Component {
 
       <div>
         <PageTitle title={this.state.anagramType} />
-<<<<<<< Updated upstream
-        <SearchSelector handleClick={(e) => this.searchSelected(e)} />
-        <SearchInput name={this.state.anagramType} searchTerm={(e) => this.searchTerm(e)} />
-=======
 
         <div className="inputSubmitContainer">
           <SearchSelector handleClick={(e) => this.searchSelected(e)} />
@@ -338,7 +323,6 @@ class App extends React.Component {
           {rows}
         </div>
       </div>
->>>>>>> Stashed changes
       </div>
     );
   }
