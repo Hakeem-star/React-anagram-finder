@@ -2,7 +2,7 @@
   text-align: center;
 }
 
-.container {
+.inputSubmitContainer, .resultDivContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -17,6 +17,8 @@ font-size: 40px;
 }
 
 .headerPortion{
+  position: sticky;
+  top:0;  
   display: flex;
   align-items: center;
   justify-content: center; 
@@ -26,14 +28,37 @@ font-size: 40px;
 }
 
 .selector {
+  color:#616161;
 padding: 5px 3px 5px 30px;
   height: 100%;
-  font-size: 16px;
-  width: 150px;
+  font-size: 25px;
+  font-weight: 600;
+  width: 220px;
 border:0;
+<<<<<<< Updated upstream
   
 }
 
+=======
+-webkit-appearance: none; 
+background: url(http://cdn1.iconfinder.com/data/icons/cc_mono_icon_set/blacks/16x16/br_down.png) no-repeat right rgb(241, 241, 241);
+background-position-x: 175px;
+transition: 0.3s;
+  border-radius: 20px 20px;
+
+}
+
+.selector:hover {
+  background-repeat: repeat-y;
+  animation: selectorHoverArrow 1s infinite linear;
+
+} 
+
+@keyframes selectorHoverArrow {
+  from {  background-position-y: 50%;}
+  to {  background-position-y: 189%;}
+}
+>>>>>>> Stashed changes
 
 .searchInput, .headerPortion, .selector{
 margin-bottom: 50px;
@@ -76,6 +101,41 @@ border-radius: 10%;
   padding:8px;
   border-color: rgb(182, 182, 182);
   border-width: 1px;
+<<<<<<< Updated upstream
   border-style: solid;
 
 }
+=======
+  border-style: inset;
+font-weight: 600;
+}
+
+.inputNameGroup{
+  display:flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items:stretch;
+  width:80%;
+  border:1px solid rgb(182, 182, 182);
+  margin-bottom:40px;
+
+}
+
+
+
+table {
+  border-collapse: collapse;
+  width:60%;
+}
+table, th, td {
+  border: 1px solid black;
+}
+th, td {
+  padding: 15px;
+}
+
+th {
+  height: 35px;
+  text-align: center;
+}
+>>>>>>> Stashed changes
