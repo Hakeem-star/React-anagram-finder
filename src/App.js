@@ -267,8 +267,8 @@ function SearchInput(props) {
   return (
     <div className="searchInput">
       <div className="inputName">{"Enter " + name}</div>
-      <input onChange={props.searchTerm} type="text" placeholder="Thanksmo,TRUMCDONALD,parsi/hl itno"></input>
-      <input type="button" value="Search" />
+      <input className="searchTextInput" onKeyPress={props.submitted} onChange={props.searchTerm} type="text" placeholder="Thanksmo,TRUMCDONALD,parsi/hl itno"></input>
+      <input onSubmit={props.submitted} type="button" value="Search" />
     </div>
   )
 }
