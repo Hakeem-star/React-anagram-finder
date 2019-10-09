@@ -1,3 +1,5 @@
+Rebuilding the [Celeb-Anagram-finder](https://github.com/Hakeem-star/Celebs_Anagram_Finder) project in React.
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
