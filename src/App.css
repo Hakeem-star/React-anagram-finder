@@ -23,12 +23,17 @@ font-size: 40px;
   align-items: center;
   justify-content: center; 
   width:100%;
-  background-color: rgb(241, 241, 241);
+  background-color: rgb(0, 0, 0);
   border-bottom: 5px solid rgb(182, 182, 182);
+  color:white;
+}
+
+h1{
+  font-weight: 600;
 }
 
 .selector {
-  color:#616161;
+  color:rgb(0, 0, 0);
 padding: 5px 3px 5px 30px;
   height: 100%;
   font-size: 25px;
@@ -36,11 +41,14 @@ padding: 5px 3px 5px 30px;
   width: 220px;
 border:0;
 -webkit-appearance: none; 
-background: url(http://cdn1.iconfinder.com/data/icons/cc_mono_icon_set/blacks/16x16/br_down.png) no-repeat right rgb(241, 241, 241);
+background: url(http://cdn1.iconfinder.com/data/icons/cc_mono_icon_set/blacks/16x16/br_down.png) no-repeat right rgb(255, 255, 255);
 background-position-x: 175px;
 transition: 0.3s;
   border-radius: 20px 20px;
 
+}
+.selector:focus{
+  outline: none;
 }
 
 .selector:hover {
@@ -59,7 +67,7 @@ margin-bottom: 50px;
 }
 
 .searchInput{
-  width:40%;
+  width:100%;
   display:flex;
   flex-direction: row;
   justify-content: center;
@@ -75,16 +83,19 @@ border-radius: 10%;
 
 }
 
-.searchInput > input[type="text"] {
-  width: 65%;
-  height: 16px;
+.searchTextInput {
+  box-sizing: border-box;
+  width: 100%;
+font-size: 2em;
   background-color: rgb(255, 255, 255);
   border-color: rgb(182, 182, 182);
   border-width: 1px;
-  margin-bottom:20px;
+  margin:20px 5px 50px 5px;
   padding:8px;
   }
   
+
+
 .inputName {
   display: flex;
   align-items: center;
@@ -109,7 +120,6 @@ font-weight: 600;
   margin-bottom:40px;
 
 }
-
 
 
 table {

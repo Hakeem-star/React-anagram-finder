@@ -261,14 +261,13 @@ function SearchSelector(props) {
 
 
 function SearchInput(props) {
-  let name;
-  props.name === "General" ? name = "Value" : name = "Name";
+  let placeholderText;
+  props.placeholder === "General" ? placeholderText = "This feature is coming soon" : placeholderText = "Thanksmo,TRUMCDONALD,parsi/hl itno";
 
   return (
     <div className="searchInput">
-      <div className="inputName">{"Enter " + name}</div>
-      <input className="searchTextInput" onKeyPress={props.submitted} onChange={props.searchTerm} type="text" placeholder="Thanksmo,TRUMCDONALD,parsi/hl itno"></input>
-      <input onSubmit={props.submitted} type="button" value="Search" />
+      <input className="searchTextInput" onKeyPress={props.submitted} onChange={props.searchTerm} type="text" placeholder={placeholderText}></input>
+      <input onClick={props.submitted} type="button" value="Search" />
     </div>
   )
 }
@@ -317,7 +316,7 @@ class App extends React.Component {
 
         <div className="inputSubmitContainer">
           <SearchSelector handleClick={(e) => this.searchSelected(e)} />
-          <SearchInput name={this.state.anagramType} submitted={(e) => this.searchSubmitted(e)} />
+          <SearchInput placeholder={this.state.anagramType} submitted={(e) => this.searchSubmitted(e)} />
         </div>
         <div>
           {rows}
