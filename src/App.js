@@ -72,6 +72,21 @@ function SearchInput(props) {
   )
 }
 
+function PreviousSearches(props) {
+  // props.history.length > 0 ? console.log(props.history[0].searchTerm.split()) : console.log("it failed");
+  let historyButtons = props.history.map((value, ind) =>
+
+    <div key={value + ind} data-index={ind} onClick={props.goback} title={value.searchTerm.slice(0, 60)}>{value.searchTerm.replace(',', '').slice(0, 9)}...</div>)
+
+
+  return (
+    <div className="resultsContainer">
+      <p>Previous Searches</p>
+      {historyButtons}
+    </div>
+  )
+}
+
 
 class App extends React.Component {
 
@@ -83,7 +98,20 @@ class App extends React.Component {
       searchTerm: "",
       results: "",
       resultsIndex: 0,
+      resultsHistory: [],
+    }
+  }
 
+  componentDidUpdate(prevProps, prevState, snapshot) {
+
+
+    if (prevState.searchTerm !== this.state.searchTerm) {
+      console.log(prevState, prevState.searchTerm, this.state, this.state.searchTerm)
+      let history = this.state.resultsHistory.slice(-4);
+      history.push({ searchTerm: this.state.searchTerm, results: this.state.results });
+      this.setState({
+        resultsHistory: history
+      });
     }
   }
 
@@ -93,14 +121,27 @@ class App extends React.Component {
   }
 
   async localCelebAnagramFinder(val) {
-    let test = await celebAnagramFinder(val);
-    this.setState({ results: test });
+    let searchResults = await celebAnagramFinder(val);
+
+    this.setState({
+      results: searchResults,
+      searchTerm: val,
+    });
   }
 
   searchSubmitted(e) {
     if (e.key === "Enter" || e.target.type === "button") {
       this.localCelebAnagramFinder(document.querySelectorAll(".searchTextInput")[0].value);
     }
+  }
+
+  goback(e) {
+    console.dir(e.target.dataset.index);
+    //history.push({ searchTerm: this.state.searchTerm, results: this.state.results });
+
+    this.setState({
+      results: this.state.resultsHistory[e.target.dataset.index].results,
+    });
   }
 
   render() {
@@ -124,6 +165,7 @@ class App extends React.Component {
             <SearchSelector handleClick={(e) => this.searchSelected(e)} />
             <SearchInput placeholder={this.state.anagramType} submitted={(e) => this.searchSubmitted(e)} />
           </div>
+          <PreviousSearches goback={(e) => this.goback(e)} history={this.state.resultsHistory} />
           <div>
             {rows}
           </div>

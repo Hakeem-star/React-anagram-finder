@@ -11,7 +11,26 @@
   width:100%;
 }
 
+.resultsContainer{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  width:100%;
+  margin-bottom: 30px;
+  margin-top: 20px;
+}
+.resultsContainer div{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 0px 15px 30px 15px;
+height:2em;
+background-color:rgb(255, 255, 255);
+border: 2px black solid;
+padding: 5px;
 
+}
 h1 {
 font-family: Arial, Helvetica, sans-serif;
 font-weight: 400;
