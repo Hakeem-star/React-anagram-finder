@@ -35,11 +35,19 @@ export default class ResultsFound extends React.Component {
           this.setState({ currentResultsPage: this.state.currentResultsPage - 1 })
         }
       }
+      console.log(this.state.currentResultsPage, this.state.maxPages-1)
       console.dir(e.target.textContent);
     }
-    componentDidMount() {
-      //console.log( this.chunk(Object.keys(this.props.results),10));
+
+    // componentDidMount() {
+    //   //console.log( this.chunk(Object.keys(this.props.results),10));
+    //   this.setState({ maxPages: this.chunk(Object.keys(this.props.results),10).length });
+    // }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+      if (prevProps.results !== this.props.results) {
       this.setState({ maxPages: this.chunk(Object.keys(this.props.results),10).length });
+      }
     }
   
     render() {
@@ -96,9 +104,9 @@ export default class ResultsFound extends React.Component {
   
     return (
       <div className="ResultsPageNumber">
-        <p className="next" onClick={props.prevResults}> « </p>
+        <p className="previous" onClick={props.prevResults}> « </p>
         <p>Showing {props.current} of {props.maximum}</p>
-        <p className="previous" onClick={props.nextResults}> » </p>
+        <p className="next" onClick={props.nextResults}> » </p>
       </div>
     )
   }
