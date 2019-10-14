@@ -76,13 +76,18 @@ function PreviousSearches(props) {
   // props.history.length > 0 ? console.log(props.history[0].searchTerm.split()) : console.log("it failed");
   let historyButtons = props.history.map((value, ind) =>
 
-    <div key={value + ind} data-index={ind} onClick={props.goback} title={value.searchTerm.slice(0, 60)}>{value.searchTerm.replace(',', '').slice(0, 9)}...</div>)
+    <div className="history" key={value + ind} data-index={ind} onClick={props.goback} title={value.searchTerm.slice(0, 60)}>{value.searchTerm.replace(',', '').slice(0, 9)}...</div>)
 
 
   return (
-    <div className="resultsContainer">
-      <p>Previous Searches</p>
-      {historyButtons}
+    <div className="container">
+      <div>
+        <p id="historyLabel">Previous Searches</p>
+        <div id="historyLabelArrows"></div>
+      </div>
+      <div className="resultsContainer">
+        {historyButtons}
+      </div>
     </div>
   )
 }
@@ -112,8 +117,16 @@ class App extends React.Component {
       this.setState({
         resultsHistory: history
       });
+      this.scrollToResults();
+
+    }
+
+    if (prevState.resultsHistory !== this.state.resultsHistory) {
+      this.scrollToResults();
+
     }
   }
+
 
   searchSelected(e) {
     //console.dir(e.target)
@@ -134,7 +147,11 @@ class App extends React.Component {
       this.localCelebAnagramFinder(document.querySelectorAll(".searchTextInput")[0].value);
     }
   }
-
+  scrollToResults() {
+    // document.querySelector("table").scrollIntoView({behavior: "smooth", block: "nearest", inline: "nearest"})
+    console.log(document.body.scrollHeight - document.querySelector("table").scrollHeight, document.body.scrollHeight, document.querySelector("table").scrollHeight)
+    window.scrollTo(0, 500);
+  }
   goback(e) {
     console.dir(e.target.dataset.index);
     //history.push({ searchTerm: this.state.searchTerm, results: this.state.results });

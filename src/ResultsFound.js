@@ -46,16 +46,17 @@ export default class ResultsFound extends React.Component {
   
       let rows = (Array(Object.keys(this.props.results).length).fill("").map((value, ind) => {
   
-        let anagramName = Object.keys(this.props.results)[ind]; //Thanksmo       
-        let val = this.props.results[anagramName][0] //return the array associated with the anagram
+        const anagramName = Object.keys(this.props.results)[ind]; //Thanksmo       
+        const val = this.props.results[anagramName][0] //return the array associated with the anagram
         /*0: {Tom Hanks: "100%"} */
-        let celebName = Object.keys(val)[0]; //Create an array based off the keys in the returned object. 
+        const celebName = Object.keys(val)[0]; //Create an array based off the keys in the returned object. 
         //"Tom Hanks"
-        let innerCurrent = val[celebName]
+        const celebNameURL = <a target="blank" href={"https://en.wikipedia.org/wiki/"+celebName} >{celebName}</a>; //Create a wiki link based off the celebname. 
+        const innerCurrent = val[celebName]
         return (
           <tr key={anagramName + celebName}>
             <td>{anagramName}</td>
-            <td>{celebName}</td>
+            <td>{celebNameURL}</td>
             <td>{innerCurrent}</td>
           </tr>
         )

@@ -20,7 +20,14 @@
   margin-bottom: 30px;
   margin-top: 20px;
 }
-.resultsContainer div{
+#historyLabel{
+  font-weight:600;
+  margin-bottom: 5px;
+  text-decoration: underline;
+
+}
+
+.history{
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -29,6 +36,7 @@ height:2em;
 background-color:rgb(255, 255, 255);
 border: 2px black solid;
 padding: 5px;
+cursor: pointer;
 
 }
 h1 {
