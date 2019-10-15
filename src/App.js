@@ -18,7 +18,7 @@ function ResultDivContain(props) {
     results = <NothingFound />;
   } else {
     results = <ResultsFound
-      page={props.resultsPage} results={props.results} />
+     results={props.results} />
   }
 
   return (

@@ -1,16 +1,21 @@
 import React from 'react';
-import ResultsFound from '../ResultsFound';
+import { ResultsFound } from '../ResultsFound';
 import { shallow } from 'enzyme';
 import renderer from 'react-test-renderer';
 
 
-it('renders without crashing', () => {
-    shallow(<ResultsFound />);
+describe('<ResultsFound />', () => {
+  let wrapper;
+
+  it('renders without crashing', () => {
+    wrapper = shallow(<ResultsFound results={JSON.parse(JSON.stringify({ THANKSMO: [{ 'Tom Hanks': "100%" }], TRUMCDONALD: [{ 'Donald Trump': "100%" }] }))} />);
   });
 
-// describe('<ResultsFound />', () => {
-//   it('matches the snapshot', () => {
-//     var tree = renderer.create(<ResultsFound />).toJSON();
-//     expect(tree).toMatchSnapshot();
-//   });
-// });
+  it('matches the snapshot', () => {
+    expect(wrapper).toMatchSnapshot();
+  });
+
+  it('lets <ResultsPageNumber/> navigate pages properly', () => {
+    
+  });
+});

@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<ResultsPageNumber /> matches the snapshot 1`] = `
+<div
+  className="ResultsPageNumber"
+>
+  <p
+    className="previous"
+  >
+     « 
+  </p>
+  <p>
+    Showing 
+     of 
+  </p>
+  <p
+    className="next"
+  >
+     » 
+  </p>
+</div>
+`;

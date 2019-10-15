@@ -158,7 +158,8 @@ export default async function celebAnagramFinder(value) {
           }
         }
       }
-  
+      
+      //{THANKSMO:[{Tom Hanks: "100%"}],TRUMCDONALD:[{Donald Trump:"100%"}]}
       console.log(matchRateResult)
   
       return new Promise(function (resolve, reject) {
