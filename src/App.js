@@ -123,11 +123,16 @@ class App extends React.Component {
       this.setState({
         resultsHistory: history
       });
-      this.scrollToResults();
+
+      if (Object.keys(this.state.results).length > 0) {
+        this.scrollToResults();
+      }
     }
 
     if (prevState.resultsHistory !== this.state.resultsHistory) {
-      this.scrollToResults();
+      if (Object.keys(this.state.results).length > 0) {
+        this.scrollToResults();
+      }
     }
   }
 

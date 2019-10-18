@@ -1,7 +1,10 @@
 import React from "react";
 import ResultsFound from "../ResultsFound";
 import toJson from "enzyme-to-json";
-import { mount } from "enzyme";
+import Enzyme, { mount } from "enzyme";
+import Adapter from "enzyme-adapter-react-16";
+
+Enzyme.configure({ adapter: new Adapter() });
 
 let resultsProps = JSON.parse(
   JSON.stringify({
@@ -29,12 +32,12 @@ describe("<ResultsFound />", () => {
   });
 
   it("lets <ResultsPageNumber/> navigate pages properly", () => {
-    //const onButtonClick = sinon.spy();
-    //const wrapper = shallow(<MyComponent />);
     wrapper = mount(<ResultsFound results={resultsProps} />);
-    console.log(wrapper.state("currentResultsPage"));
-    //wrapper.setState({ name: "bar" });
-    wrapper.find("next").simulate("click");
-    expect(wrapper.state("currentResultsPage")).to.equal(1);
+    const next = wrapper.find(".next");
+    next.simulate("click", { target: { textContent: " » " } });
+    expect(wrapper.state("currentResultsPage")).toBe(1);
+    const previous = wrapper.find(".previous");
+    previous.simulate("click", { target: { textContent: " « " } });
+    expect(wrapper.state("currentResultsPage")).toBe(0);
   });
 });

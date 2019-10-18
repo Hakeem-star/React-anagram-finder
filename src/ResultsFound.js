@@ -25,6 +25,7 @@ export default class ResultsFound extends React.Component {
   navigateResults(e) {
     if (e.target.textContent === " » ") {
       if (this.state.currentResultsPage < this.state.maxPages - 1) {
+        console.log(e.target.textContent === " » ");
         this.setState({
           currentResultsPage: this.state.currentResultsPage + 1
         });
@@ -36,8 +37,8 @@ export default class ResultsFound extends React.Component {
         });
       }
     }
-    console.log(this.state.currentResultsPage, this.state.maxPages - 1);
-    console.dir(e.target.textContent);
+    // console.log(this.state.currentResultsPage, this.state.maxPages - 1);
+    // console.dir(e.target.textContent);
   }
 
   // componentDidMount() {
@@ -45,12 +46,13 @@ export default class ResultsFound extends React.Component {
   //   this.setState({ maxPages: this.chunk(Object.keys(this.props.results),10).length });
   // }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps.results !== this.props.results) {
-      this.setState({
-        maxPages: this.chunk(Object.keys(this.props.results), 10).length
-      });
-    }
+  componentDidMount(prevProps, prevState, snapshot) {
+    // if (prevProps.results !== this.props.results) {
+    //   console.log("doing");
+    this.setState({
+      maxPages: this.chunk(Object.keys(this.props.results), 10).length
+    });
+    //  }
   }
 
   render() {
