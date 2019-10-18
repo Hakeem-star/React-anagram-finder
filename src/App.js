@@ -4,7 +4,7 @@ import ResultsFound from "./ResultsFound";
 import "./App.css";
 
 function NothingFound(props) {
-  return <h4>"Nothing was found!"</h4>;
+  return <h4>Nothing was found!</h4>;
 }
 
 function ResultDivContain(props) {
@@ -100,34 +100,14 @@ class App extends React.Component {
     this.state = {
       anagramType: PageTitle.defaultProps.title,
       SearchInputName: PageTitle.defaultProps.title,
-      searchTerm: "",
+      searchTerm: "Thanksmo,TRUMCDONALD,parsi/hl itno",
       results: "",
-      resultsIndex: 0,
       resultsHistory: []
     };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevState.searchTerm !== this.state.searchTerm) {
-      console.log(
-        prevState,
-        prevState.searchTerm,
-        this.state,
-        this.state.searchTerm
-      );
-      let history = this.state.resultsHistory.slice(-4);
-      history.push({
-        searchTerm: this.state.searchTerm,
-        results: this.state.results
-      });
-      this.setState({
-        resultsHistory: history
-      });
-
-      if (Object.keys(this.state.results).length > 0) {
-        this.scrollToResults();
-      }
-    }
+    //Update the History array that's keeping track of previous results
 
     if (prevState.resultsHistory !== this.state.resultsHistory) {
       if (Object.keys(this.state.results).length > 0) {
@@ -147,16 +127,28 @@ class App extends React.Component {
   async localCelebAnagramFinder(val) {
     let searchResults = await celebAnagramFinder(val);
 
-    this.setState({
-      results: searchResults,
-      searchTerm: val
+    let history = this.state.resultsHistory.slice(-4);
+    history.push({
+      searchTerm: this.state.searchTerm,
+      results: searchResults
     });
+
+    this.setState({
+      resultsHistory: history,
+      results: searchResults
+      //searchTerm: val
+    });
+  }
+
+  searchTerm(e) {
+    this.setState({ searchTerm: e.target.value });
   }
 
   searchSubmitted(e) {
     if (e.key === "Enter" || e.target.type === "button") {
       this.localCelebAnagramFinder(
-        document.querySelectorAll(".searchTextInput")[0].value
+        this.state.searchTerm
+        //document.querySelectorAll(".searchTextInput")[0].value
       );
     }
   }
@@ -183,14 +175,7 @@ class App extends React.Component {
     if (typeof this.state.results === "string") {
       rows = [];
     } else {
-      rows = (
-        <ResultDivContain
-          results={this.state.results}
-          prevResults={this.props.gotoPrevResults}
-          nextResults={this.props.gotoNextResults}
-          current={this.state.resultsIndex}
-        />
-      );
+      rows = <ResultDivContain results={this.state.results} />;
     }
 
     return (
@@ -203,6 +188,7 @@ class App extends React.Component {
             <SearchInput
               placeholder={this.state.anagramType}
               submitted={e => this.searchSubmitted(e)}
+              searchTerm={e => this.searchTerm(e)}
             />
           </div>
           <PreviousSearches

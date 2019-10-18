@@ -23,6 +23,13 @@ let resultsProps = JSON.parse(
   })
 );
 
+let resultsProps2 = JSON.parse(
+  JSON.stringify({
+    THANKSMO: [{ "Tom Hanks": "100%" }],
+    TRUMCDONALD: [{ "Donald Trump": "100%" }]
+  })
+);
+
 describe("<ResultsFound />", () => {
   let wrapper;
 
@@ -32,10 +39,13 @@ describe("<ResultsFound />", () => {
   });
 
   it("lets <ResultsPageNumber/> navigate pages properly", () => {
-    wrapper = mount(<ResultsFound results={resultsProps} />);
+    wrapper = mount(<ResultsFound results={resultsProps2} />);
+    wrapper.setProps({ results: resultsProps });
+    //wrapper.update();
     const next = wrapper.find(".next");
     next.simulate("click", { target: { textContent: " » " } });
     expect(wrapper.state("currentResultsPage")).toBe(1);
+
     const previous = wrapper.find(".previous");
     previous.simulate("click", { target: { textContent: " « " } });
     expect(wrapper.state("currentResultsPage")).toBe(0);
