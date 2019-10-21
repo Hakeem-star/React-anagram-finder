@@ -1,6 +1,7 @@
 import React from "react";
 import celebAnagramFinder from "./celebAnagramFinderAPICall";
 import ResultsFound from "./ResultsFound";
+import Loading from "./components/loading/dual-ring";
 import "./App.css";
 
 function NothingFound(props) {
@@ -13,7 +14,7 @@ function ResultDivContain(props) {
   if (Object.keys(props.results).length === 0) {
     results = <NothingFound />;
   } else {
-    results = <ResultsFound results={props.results} />;
+    results = <ResultsFound display={props.display} results={props.results} />;
   }
 
   return <div className="container">{results}</div>;
@@ -30,21 +31,19 @@ function PageTitle(props) {
 function SearchSelector(props) {
   return (
     <div>
-      <div>
-        <select
-          className="selector"
-          onChange={props.handleClick}
-          name="anagramQuerySelect"
-          id="anagramQuerySelect"
-        >
-          <option className="celebrities" value="Celebrities">
-            Celebrities
-          </option>
-          <option className="general" value="General">
-            General
-          </option>
-        </select>
-      </div>
+      <select
+        className="selector"
+        onChange={props.handleClick}
+        name="anagramQuerySelect"
+        id="anagramQuerySelect"
+      >
+        <option className="celebrities" value="Celebrities">
+          Celebrities
+        </option>
+        <option className="general" value="General">
+          General
+        </option>
+      </select>
     </div>
   );
 }
@@ -101,8 +100,9 @@ class App extends React.Component {
       anagramType: PageTitle.defaultProps.title,
       SearchInputName: PageTitle.defaultProps.title,
       searchTerm: "Thanksmo,TRUMCDONALD,parsi/hl itno",
-      results: "",
-      resultsHistory: []
+      results: [],
+      resultsHistory: [],
+      loading: "none"
     };
   }
 
@@ -125,8 +125,8 @@ class App extends React.Component {
   }
 
   async localCelebAnagramFinder(val) {
+    this.setState({ loading: "inherit" });
     let searchResults = await celebAnagramFinder(val);
-
     let history = this.state.resultsHistory.slice(-4);
     history.push({
       searchTerm: this.state.searchTerm,
@@ -135,7 +135,8 @@ class App extends React.Component {
 
     this.setState({
       resultsHistory: history,
-      results: searchResults
+      results: searchResults,
+      loading: "none"
       //searchTerm: val
     });
   }
@@ -145,11 +146,21 @@ class App extends React.Component {
   }
 
   searchSubmitted(e) {
-    if (e.key === "Enter" || e.target.type === "button") {
-      this.localCelebAnagramFinder(
-        this.state.searchTerm
-        //document.querySelectorAll(".searchTextInput")[0].value
-      );
+    // console.log(
+    //   this.state.resultsHistory[this.state.resultsHistory.length - 1]
+    // );
+    if (
+      this.state.resultsHistory.length === 0 ||
+      this.state.searchTerm !==
+        this.state.resultsHistory[this.state.resultsHistory.length - 1]
+          .searchTerm
+    ) {
+      if (e.key === "Enter" || e.target.type === "button") {
+        this.localCelebAnagramFinder(
+          this.state.searchTerm
+          //document.querySelectorAll(".searchTextInput")[0].value
+        );
+      }
     }
   }
   scrollToResults() {
@@ -162,7 +173,7 @@ class App extends React.Component {
     window.scrollTo(0, 500);
   }
   goback(e) {
-    console.dir(e.target.dataset.index);
+    //console.dir(e.target.dataset.index);
     //history.push({ searchTerm: this.state.searchTerm, results: this.state.results });
 
     this.setState({
@@ -172,10 +183,15 @@ class App extends React.Component {
 
   render() {
     let rows;
-    if (typeof this.state.results === "string") {
+    if (this.state.results.length === 0) {
       rows = [];
     } else {
-      rows = <ResultDivContain results={this.state.results} />;
+      rows = (
+        <ResultDivContain
+          display={this.state.loading}
+          results={this.state.results}
+        />
+      );
     }
 
     return (
@@ -195,6 +211,7 @@ class App extends React.Component {
             goback={e => this.goback(e)}
             history={this.state.resultsHistory}
           />
+          <Loading display={this.state.loading} />
           <div>{rows}</div>
         </div>
       </div>

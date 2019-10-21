@@ -82,9 +82,10 @@ export default class ResultsFound extends React.Component {
         ? this.chunk(rows, 10)[this.state.currentResultsPage].length +
           this.state.currentResultsPage * 10
         : this.chunk(rows, 10)[this.state.currentResultsPage].length;
-
+    const tableDisplay = () =>
+      this.props.display === "none" ? "flex" : "none";
     return (
-      <div className="container">
+      <div style={{ display: tableDisplay() }} className="container">
         <table>
           <thead>
             <tr>
