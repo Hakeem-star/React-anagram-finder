@@ -14,6 +14,7 @@ function ResultDivContain(props) {
   if (Object.keys(props.results).length === 0) {
     results = <NothingFound />;
   } else {
+    console.log("LOOK", props.results);
     results = <ResultsFound display={props.display} results={props.results} />;
   }
 
@@ -170,7 +171,12 @@ class App extends React.Component {
       document.body.scrollHeight,
       document.querySelector("table").scrollHeight
     );
-    window.scrollTo(0, 500);
+    //window.scrollTo(0, 500);
+    document.querySelector("table").scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+      inline: "nearest"
+    });
   }
   goback(e) {
     //console.dir(e.target.dataset.index);

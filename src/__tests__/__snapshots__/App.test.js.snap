@@ -14,27 +14,25 @@ exports[`<App /> matches the snapshot 1`] = `
       className="inputSubmitContainer"
     >
       <div>
-        <div>
-          <select
-            className="selector"
-            id="anagramQuerySelect"
-            name="anagramQuerySelect"
-            onChange={[Function]}
+        <select
+          className="selector"
+          id="anagramQuerySelect"
+          name="anagramQuerySelect"
+          onChange={[Function]}
+        >
+          <option
+            className="celebrities"
+            value="Celebrities"
           >
-            <option
-              className="celebrities"
-              value="Celebrities"
-            >
-              Celebrities
-            </option>
-            <option
-              className="general"
-              value="General"
-            >
-              General
-            </option>
-          </select>
-        </div>
+            Celebrities
+          </option>
+          <option
+            className="general"
+            value="General"
+          >
+            General
+          </option>
+        </select>
       </div>
       <div
         className="searchInput"
@@ -68,6 +66,18 @@ exports[`<App /> matches the snapshot 1`] = `
       </div>
       <div
         className="resultsContainer"
+      />
+    </div>
+    <div
+      className="container"
+    >
+      <div
+        className="lds-dual-ring"
+        style={
+          Object {
+            "display": "none",
+          }
+        }
       />
     </div>
     <div />

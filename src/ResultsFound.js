@@ -1,12 +1,39 @@
 import React from "react";
-
+let pageReset = 0;
 export default class ResultsFound extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentResultsPage: 0,
+      currentResultsPage: this.props.pageReset,
       maxPages: 1
     };
+  }
+
+  componentDidMount() {
+    //console.log( this.chunk(Object.keys(this.props.results),10));
+    this.setState({
+      maxPages: this.chunk(Object.keys(this.props.results), 10).length,
+      currentResultsPage: 0
+    });
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps.results !== this.props.results) {
+      pageReset = 0;
+      console.log(pageReset);
+      this.setState({
+        maxPages: this.chunk(Object.keys(this.props.results), 10).length,
+        currentResultsPage: 0
+      });
+    }
+
+    if (prevProps.display !== this.props.display) {
+      pageReset = 0;
+      this.setState({
+        maxPages: this.chunk(Object.keys(this.props.results), 10).length,
+        currentResultsPage: 0
+      });
+    }
   }
 
   //Seperate the results into chunks, so we can have different pages for the results
@@ -25,12 +52,14 @@ export default class ResultsFound extends React.Component {
   navigateResults(e) {
     if (e.target.textContent === " » ") {
       if (this.state.currentResultsPage < this.state.maxPages - 1) {
+        pageReset++;
         this.setState({
           currentResultsPage: this.state.currentResultsPage + 1
         });
       }
     } else if (e.target.textContent === " « ") {
       if (this.state.currentResultsPage > 0) {
+        pageReset--;
         this.setState({
           currentResultsPage: this.state.currentResultsPage - 1
         });
@@ -40,21 +69,34 @@ export default class ResultsFound extends React.Component {
     // console.dir(e.target.textContent);
   }
 
-  // componentDidMount() {
-  //   //console.log( this.chunk(Object.keys(this.props.results),10));
-  //   this.setState({ maxPages: this.chunk(Object.keys(this.props.results),10).length });
-  // }
-
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps.results !== this.props.results) {
-      this.setState({
-        maxPages: this.chunk(Object.keys(this.props.results), 10).length
-      });
+  //This keeps a look at where you are in the viewing
+  resultsCounter() {
+    try {
+      if (pageReset > 0) {
+        return (
+          //Showing 1 0f 10
+          //length of the page minus (length of the page minus 1)
+          this.chunk(this.rows(), 10)[pageReset].length -
+          (this.chunk(this.rows(), 10)[pageReset].length - 1) +
+          "-" +
+          this.chunk(this.rows(), 10)[pageReset].length
+        );
+      } else {
+        return (
+          this.chunk(this.rows(), 10)[pageReset].length +
+          "-" +
+          this.chunk(this.rows(), 10).length * 10
+        );
+      }
+    } catch (error) {
+      console.log("HERE");
+      return `0 - ${this.chunk(this.rows(), 10)[0].length}`;
     }
   }
 
-  render() {
-    let rows = Array(Object.keys(this.props.results).length)
+  rows() {
+    // console.log(this.props.results);
+    return Array(Object.keys(this.props.results).length)
       .fill("")
       .map((value, ind) => {
         const anagramName = Object.keys(this.props.results)[ind]; //Thanksmo
@@ -76,12 +118,9 @@ export default class ResultsFound extends React.Component {
           </tr>
         );
       });
+  }
 
-    let resultsCounter =
-      this.state.currentResultsPage > 0
-        ? this.chunk(rows, 10)[this.state.currentResultsPage].length +
-          this.state.currentResultsPage * 10
-        : this.chunk(rows, 10)[this.state.currentResultsPage].length;
+  render() {
     const tableDisplay = () =>
       this.props.display === "none" ? "flex" : "none";
     return (
@@ -94,13 +133,15 @@ export default class ResultsFound extends React.Component {
               <th>Match Rate</th>
             </tr>
           </thead>
-          <tbody>{this.chunk(rows, 10)[this.state.currentResultsPage]}</tbody>
+          <tbody>
+            {this.chunk(this.rows(), 10)[this.state.currentResultsPage]}
+          </tbody>
         </table>
         <ResultsPageNumber
           prevResults={e => this.navigateResults(e)}
-          current={resultsCounter}
+          current={this.resultsCounter()}
           nextResults={e => this.navigateResults(e)}
-          maximum={rows.length}
+          maximum={this.rows().length}
         />
       </div>
     );
