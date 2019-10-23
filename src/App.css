@@ -1,3 +1,7 @@
+a:visited {
+  color: #0000ee;
+}
+
 .App {
   text-align: center;
 }
@@ -35,6 +39,12 @@
   border: 2px black solid;
   padding: 5px;
   cursor: pointer;
+}
+
+.history.dash {
+  justify-content: center;
+  font-weight: 800;
+  width: 5rem;
 }
 h1 {
   font-family: Arial, Helvetica, sans-serif;

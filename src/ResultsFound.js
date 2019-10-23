@@ -4,7 +4,7 @@ export default class ResultsFound extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentResultsPage: this.props.pageReset,
+      currentResultsPage: 0,
       maxPages: 1
     };
   }
@@ -19,7 +19,7 @@ export default class ResultsFound extends React.Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.results !== this.props.results) {
-      pageReset = 0;
+      //pageReset = 0;
       console.log(pageReset);
       this.setState({
         maxPages: this.chunk(Object.keys(this.props.results), 10).length,
@@ -28,7 +28,7 @@ export default class ResultsFound extends React.Component {
     }
 
     if (prevProps.display !== this.props.display) {
-      pageReset = 0;
+      //pageReset = 0;
       this.setState({
         maxPages: this.chunk(Object.keys(this.props.results), 10).length,
         currentResultsPage: 0
@@ -52,14 +52,14 @@ export default class ResultsFound extends React.Component {
   navigateResults(e) {
     if (e.target.textContent === " » ") {
       if (this.state.currentResultsPage < this.state.maxPages - 1) {
-        pageReset++;
+        //pageReset++;
         this.setState({
           currentResultsPage: this.state.currentResultsPage + 1
         });
       }
     } else if (e.target.textContent === " « ") {
       if (this.state.currentResultsPage > 0) {
-        pageReset--;
+        //pageReset--;
         this.setState({
           currentResultsPage: this.state.currentResultsPage - 1
         });
@@ -72,21 +72,19 @@ export default class ResultsFound extends React.Component {
   //This keeps a look at where you are in the viewing
   resultsCounter() {
     try {
-      if (pageReset > 0) {
+      let chunked = this.chunk(this.rows(), 10)[this.state.currentResultsPage];
+      if (this.state.currentResultsPage > 0) {
         return (
           //Showing 1 0f 10
           //length of the page minus (length of the page minus 1)
-          this.chunk(this.rows(), 10)[pageReset].length -
-          (this.chunk(this.rows(), 10)[pageReset].length - 1) +
-          "-" +
-          this.chunk(this.rows(), 10)[pageReset].length
+
+          `${this.state.currentResultsPage * 10 + 1} - ${this.state
+            .currentResultsPage *
+            10 +
+            chunked.length} `
         );
       } else {
-        return (
-          this.chunk(this.rows(), 10)[pageReset].length +
-          "-" +
-          this.chunk(this.rows(), 10).length * 10
-        );
+        return `1 - ${chunked.length}`;
       }
     } catch (error) {
       console.log("HERE");

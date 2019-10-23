@@ -71,17 +71,34 @@ function SearchInput(props) {
 
 function PreviousSearches(props) {
   // props.history.length > 0 ? console.log(props.history[0].searchTerm.split()) : console.log("it failed");
-  let historyButtons = props.history.map((value, ind) => (
-    <div
-      className="history"
-      key={value + ind}
-      data-index={ind}
-      onClick={props.goback}
-      title={value.searchTerm.slice(0, 60)}
-    >
-      {value.searchTerm.replace(",", "").slice(0, 9)}...
-    </div>
-  ));
+  //Create an empty array with length of 5
+
+  let historyButtons = Array(5)
+    .fill("")
+    .map((val, ind) => {
+      let searchResults = props.history[ind];
+      if (searchResults) {
+        console.log(searchResults);
+        return (
+          <div
+            className="history"
+            key={searchResults + ind}
+            data-index={ind}
+            onClick={props.goback}
+            title={searchResults.searchTerm.slice(0, 60)}
+          >
+            {searchResults.searchTerm.replace(",", "").slice(0, 9)}
+            ...
+          </div>
+        );
+      } else {
+        return (
+          <div className="history dash" key={val + ind}>
+            -
+          </div>
+        );
+      }
+    });
 
   return (
     <div className="container">
