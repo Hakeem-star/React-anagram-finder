@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/React-celeb-anagram-finder/static/css/main.bde97ec6.chunk.css",
+    "main.js": "/React-celeb-anagram-finder/static/js/main.17fa198b.chunk.js",
+    "main.js.map": "/React-celeb-anagram-finder/static/js/main.17fa198b.chunk.js.map",
+    "runtime-main.js": "/React-celeb-anagram-finder/static/js/runtime-main.b56b21e0.js",
+    "runtime-main.js.map": "/React-celeb-anagram-finder/static/js/runtime-main.b56b21e0.js.map",
+    "static/js/2.7df4fa48.chunk.js": "/React-celeb-anagram-finder/static/js/2.7df4fa48.chunk.js",
+    "static/js/2.7df4fa48.chunk.js.map": "/React-celeb-anagram-finder/static/js/2.7df4fa48.chunk.js.map",
+    "index.html": "/React-celeb-anagram-finder/index.html",
+    "precache-manifest.4429d6e0e51d4f09ffff175c6ed3c5ad.js": "/React-celeb-anagram-finder/precache-manifest.4429d6e0e51d4f09ffff175c6ed3c5ad.js",
+    "service-worker.js": "/React-celeb-anagram-finder/service-worker.js",
+    "static/css/main.bde97ec6.chunk.css.map": "/React-celeb-anagram-finder/static/css/main.bde97ec6.chunk.css.map"
+  }
+}
