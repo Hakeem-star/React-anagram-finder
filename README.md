@@ -1,3 +1,4 @@
+# React Celebs Anagram Finder
 A version of the previous Celeb anagram finder, but this time built using React and with a few added features.
 
 Live at -
