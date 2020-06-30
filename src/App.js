@@ -120,7 +120,7 @@ class App extends React.Component {
       searchTerm: "Thanksmo,TRUMCDONALD,parsi/hl itno",
       results: [],
       resultsHistory: [],
-      loading: "none"
+      loading: "none",
     };
   }
 
@@ -138,25 +138,27 @@ class App extends React.Component {
     //console.dir(e.target)
     this.setState({
       anagramType: e.target.value,
-      SearchInputName: e.target.value
+      SearchInputName: e.target.value,
     });
   }
 
   async localCelebAnagramFinder(val) {
     this.setState({ loading: "inherit" });
     let searchResults = await celebAnagramFinder(val);
-    let history = this.state.resultsHistory.slice(-4);
-    history.push({
-      searchTerm: this.state.searchTerm,
-      results: searchResults
-    });
 
-    this.setState({
-      resultsHistory: history,
-      results: searchResults,
-      loading: "none"
-      //searchTerm: val
-    });
+    // let history = this.state.resultsHistory.slice(-4);
+
+    // history.push({
+    //   searchTerm: this.state.searchTerm,
+    //   results: searchResults,
+    // });
+
+    // this.setState({
+    //   resultsHistory: history,
+    //   results: searchResults,
+    //   loading: "none",
+    //   //searchTerm: val
+    // });
   }
 
   searchTerm(e) {
@@ -192,7 +194,7 @@ class App extends React.Component {
     document.querySelector("table").scrollIntoView({
       behavior: "smooth",
       block: "start",
-      inline: "nearest"
+      inline: "nearest",
     });
   }
   goback(e) {
@@ -200,22 +202,22 @@ class App extends React.Component {
     //history.push({ searchTerm: this.state.searchTerm, results: this.state.results });
 
     this.setState({
-      results: this.state.resultsHistory[e.target.dataset.index].results
+      results: this.state.resultsHistory[e.target.dataset.index].results,
     });
   }
 
   render() {
     let rows;
-    if (this.state.results.length === 0) {
-      rows = [];
-    } else {
-      rows = (
-        <ResultDivContain
-          display={this.state.loading}
-          results={this.state.results}
-        />
-      );
-    }
+    // if (this.state.results.length === 0) {
+    //   rows = [];
+    // } else {
+    //   rows = (
+    //     <ResultDivContain
+    //       display={this.state.loading}
+    //       results={this.state.results}
+    //     />
+    //   );
+    // }
 
     return (
       <div>
@@ -223,15 +225,15 @@ class App extends React.Component {
           <PageTitle title={this.state.anagramType} />
 
           <div className="inputSubmitContainer">
-            <SearchSelector handleClick={e => this.searchSelected(e)} />
+            <SearchSelector handleClick={(e) => this.searchSelected(e)} />
             <SearchInput
               placeholder={this.state.anagramType}
-              submitted={e => this.searchSubmitted(e)}
-              searchTerm={e => this.searchTerm(e)}
+              submitted={(e) => this.searchSubmitted(e)}
+              searchTerm={(e) => this.searchTerm(e)}
             />
           </div>
           <PreviousSearches
-            goback={e => this.goback(e)}
+            goback={(e) => this.goback(e)}
             history={this.state.resultsHistory}
           />
           <Loading display={this.state.loading} />
@@ -244,7 +246,7 @@ class App extends React.Component {
 
 PageTitle.defaultProps = {
   title: "Celebrity",
-  SearchInputName: "Name"
+  SearchInputName: "Name",
 };
 
 export default App;
