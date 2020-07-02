@@ -1,252 +1,149 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import celebAnagramFinder from "./celebAnagramFinderAPICall";
-import ResultsFound from "./ResultsFound";
-import Loading from "./components/loading/dual-ring";
-import "./App.css";
+import { Layout, Menu, Input, Divider, Table, Row, Col, Slider } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
 
-function NothingFound(props) {
-  return <h4>Nothing was found!</h4>;
-}
+import "antd/dist/antd.less";
+import "./App.less";
 
-function ResultDivContain(props) {
-  let results;
+const { Header, Content, Sider } = Layout;
 
-  if (Object.keys(props.results).length === 0) {
-    results = <NothingFound />;
-  } else {
-    console.log("LOOK", props.results);
-    results = <ResultsFound display={props.display} results={props.results} />;
-  }
-
-  return <div className="container">{results}</div>;
-}
-
-function PageTitle(props) {
-  return (
-    <div className="headerPortion">
-      <h1>{props.title + " Anagram Finder"}</h1>
-    </div>
-  );
-}
-
-function SearchSelector(props) {
-  return (
-    <div>
-      <select
-        className="selector"
-        onChange={props.handleClick}
-        name="anagramQuerySelect"
-        id="anagramQuerySelect"
-      >
-        <option className="celebrities" value="Celebrities">
-          Celebrities
-        </option>
-        <option className="general" value="General">
-          General
-        </option>
-      </select>
-    </div>
-  );
-}
-
-function SearchInput(props) {
-  let placeholderText;
-  props.placeholder === "General"
-    ? (placeholderText = "This feature is coming soon")
-    : (placeholderText = "Thanksmo,TRUMCDONALD,parsi/hl itno");
-
-  return (
-    <div className="searchInput">
-      <input
-        className="searchTextInput"
-        onKeyPress={props.submitted}
-        onChange={props.searchTerm}
-        type="text"
-        defaultValue={placeholderText}
-      ></input>
-      <input onClick={props.submitted} type="button" value="Search" />
-    </div>
-  );
-}
-
-function PreviousSearches(props) {
-  // props.history.length > 0 ? console.log(props.history[0].searchTerm.split()) : console.log("it failed");
-  //Create an empty array with length of 5
-
-  let historyButtons = Array(5)
-    .fill("")
-    .map((val, ind) => {
-      let searchResults = props.history[ind];
-      if (searchResults) {
-        console.log(searchResults);
-        return (
-          <div
-            className="history"
-            key={searchResults + ind}
-            data-index={ind}
-            onClick={props.goback}
-            title={searchResults.searchTerm.slice(0, 60)}
-          >
-            {searchResults.searchTerm.replace(",", "").slice(0, 9)}
-            ...
-          </div>
-        );
-      } else {
-        return (
-          <div className="history dash" key={val + ind}>
-            -
-          </div>
-        );
-      }
-    });
-
-  return (
-    <div className="container">
-      <div>
-        <p id="historyLabel">Previous Searches</p>
-        <div id="historyLabelArrows"></div>
-      </div>
-      <div className="resultsContainer">{historyButtons}</div>
-    </div>
-  );
-}
-
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      anagramType: PageTitle.defaultProps.title,
-      SearchInputName: PageTitle.defaultProps.title,
-      searchTerm: "Thanksmo,TRUMCDONALD,parsi/hl itno",
-      results: [],
-      resultsHistory: [],
-      loading: "none",
-    };
-  }
-
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    //Update the History array that's keeping track of previous results
-
-    if (prevState.resultsHistory !== this.state.resultsHistory) {
-      if (Object.keys(this.state.results).length > 0) {
-        this.scrollToResults();
-      }
-    }
-  }
-
-  searchSelected(e) {
-    //console.dir(e.target)
-    this.setState({
-      anagramType: e.target.value,
-      SearchInputName: e.target.value,
-    });
-  }
-
-  async localCelebAnagramFinder(val) {
-    this.setState({ loading: "inherit" });
-    let searchResults = await celebAnagramFinder(val);
-
-    // let history = this.state.resultsHistory.slice(-4);
-
-    // history.push({
-    //   searchTerm: this.state.searchTerm,
-    //   results: searchResults,
-    // });
-
-    // this.setState({
-    //   resultsHistory: history,
-    //   results: searchResults,
-    //   loading: "none",
-    //   //searchTerm: val
-    // });
-  }
-
-  searchTerm(e) {
-    this.setState({ searchTerm: e.target.value });
-  }
-
-  searchSubmitted(e) {
-    // console.log(
-    //   this.state.resultsHistory[this.state.resultsHistory.length - 1]
-    // );
-    if (
-      this.state.resultsHistory.length === 0 ||
-      this.state.searchTerm !==
-        this.state.resultsHistory[this.state.resultsHistory.length - 1]
-          .searchTerm
-    ) {
-      if (e.key === "Enter" || e.target.type === "button") {
-        this.localCelebAnagramFinder(
-          this.state.searchTerm
-          //document.querySelectorAll(".searchTextInput")[0].value
-        );
-      }
-    }
-  }
-  scrollToResults() {
-    // document.querySelector("table").scrollIntoView({behavior: "smooth", block: "nearest", inline: "nearest"})
-    console.log(
-      document.body.scrollHeight - document.querySelector("table").scrollHeight,
-      document.body.scrollHeight,
-      document.querySelector("table").scrollHeight
-    );
-    //window.scrollTo(0, 500);
-    document.querySelector("table").scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-      inline: "nearest",
-    });
-  }
-  goback(e) {
-    //console.dir(e.target.dataset.index);
-    //history.push({ searchTerm: this.state.searchTerm, results: this.state.results });
-
-    this.setState({
-      results: this.state.resultsHistory[e.target.dataset.index].results,
-    });
-  }
-
-  render() {
-    let rows;
-    // if (this.state.results.length === 0) {
-    //   rows = [];
-    // } else {
-    //   rows = (
-    //     <ResultDivContain
-    //       display={this.state.loading}
-    //       results={this.state.results}
-    //     />
-    //   );
-    // }
-
-    return (
-      <div>
-        <div>
-          <PageTitle title={this.state.anagramType} />
-
-          <div className="inputSubmitContainer">
-            <SearchSelector handleClick={(e) => this.searchSelected(e)} />
-            <SearchInput
-              placeholder={this.state.anagramType}
-              submitted={(e) => this.searchSubmitted(e)}
-              searchTerm={(e) => this.searchTerm(e)}
-            />
-          </div>
-          <PreviousSearches
-            goback={(e) => this.goback(e)}
-            history={this.state.resultsHistory}
-          />
-          <Loading display={this.state.loading} />
-          <div>{rows}</div>
-        </div>
-      </div>
-    );
-  }
-}
-
-PageTitle.defaultProps = {
-  title: "Celebrity",
-  SearchInputName: "Name",
+const menuItemStyle = {
+  width: "49%",
+  textAlign: "center",
+  height: "100%",
+  lineHeight: "100px",
+  fontSize: "37px",
 };
 
-export default App;
+const pageTitleStyle = {
+  color: "white",
+  fontSize: "23px",
+  textAlign: "center",
+  paddingTop: "37px",
+};
+
+const dataSource = [
+  {
+    key: "1",
+    Anagram: "Anagram",
+    Name: "Mike",
+    "%": "10 Downing Street",
+  },
+  {
+    key: "2",
+    Anagram: 42,
+    Name: "John",
+    "%": "10 Downing Street",
+  },
+];
+
+const columns = [
+  {
+    title: "Anagram",
+    dataIndex: "Anagram",
+    key: "Anagram",
+  },
+  {
+    title: "Name",
+    dataIndex: "Name",
+    key: "Name",
+  },
+
+  {
+    title: "%",
+    dataIndex: "%",
+    key: "%",
+  },
+];
+
+function formatter(value) {
+  return `${value}%`;
+}
+
+export default function App() {
+  const [tableData, updateTableData] = useState([]);
+  const [fetchingTableDataStatus, updateFetchingTableDataStatus] = useState(
+    false
+  );
+
+  useEffect(() => {
+    if (fetchingTableDataStatus) {
+    }
+  }, [fetchingTableDataStatus]);
+
+  return (
+    <Layout style={{ height: "100vh" }}>
+      <Sider width={300} className="site-layout-background">
+        <div style={pageTitleStyle}>Anagram Finder</div>
+      </Sider>
+      <Layout>
+        <Header style={{ padding: "0", height: "100px" }}>
+          <Menu style={{ width: "100%", height: "100%" }} mode="horizontal">
+            <Menu.Item style={menuItemStyle} key="General">
+              General
+            </Menu.Item>
+            <Divider style={{ height: "100%" }} type="vertical" />
+            <Menu.Item style={menuItemStyle} key="Celebs">
+              Celebs
+            </Menu.Item>
+          </Menu>
+        </Header>
+        <Input
+          className="search"
+          placeholder="input anagram"
+          size="37px"
+          style={{
+            borderTop: 0,
+            width: "100%",
+            height: "100px",
+            paddingLeft: "40px",
+          }}
+          onPressEnter={async (e) => {
+            updateFetchingTableDataStatus(true);
+            let input = await celebAnagramFinder(e.target.value);
+            updateFetchingTableDataStatus(false);
+            updateTableData(input);
+            console.log(input);
+          }}
+          suffix={
+            <SearchOutlined
+              style={{
+                fontSize: "21px",
+                marginRight: "50px",
+              }}
+            />
+          }
+        />
+        <Content style={{ marginTop: "80px" }}>
+          <Row justify="left">
+            <Col offset={2} span={20}>
+              <div>Results</div>
+            </Col>
+          </Row>
+          <Row justify="center">
+            <Col span={16}>
+              <Slider
+                defaultValue={[1, 100]}
+                range
+                min={1}
+                className="threshold-slider"
+                tooltipVisible={true}
+                tipFormatter={formatter}
+              />
+            </Col>
+          </Row>
+          <Row justify="center">
+            <Col span={20}>
+              <Table
+                loading={fetchingTableDataStatus}
+                dataSource={tableData}
+                columns={columns}
+              />
+            </Col>
+          </Row>
+        </Content>
+      </Layout>
+    </Layout>
+  );
+}

@@ -1,4 +1,4 @@
-function cleanInputValue(value) {
+export function cleanInputValue(value) {
   //write input value to anagram variable
   //Check if there are multiple ANAGRAMS and split into array
 
@@ -15,17 +15,19 @@ function cleanInputValue(value) {
         .split(",")
         //Remove any non alphabet values
         .map((val, index) => val.replace(/[^A-Z]/g, ""))
+        .filter((el) => el !== "")
     );
   } else {
     //If there is only one ANAGRAM value
-
     //Place Anagram into Array
     //Remove any non alphabet values
-    return [uppercase_spaceless_value.replace(/[^A-Z]/g, "")];
+    return [uppercase_spaceless_value.replace(/[^A-Z]/g, "")].filter(
+      (el) => el !== ""
+    );
   }
 }
 
-function celebNameCleanup(value) {
+export function celebNameCleanup(value) {
   return (
     value
       .toUpperCase()
@@ -35,7 +37,7 @@ function celebNameCleanup(value) {
   );
 }
 
-function occuranceCount(anagramToCount) {
+export function occuranceCount(anagramToCount) {
   //Count the occurances of letters within the current anagram
   let anagramLetterCount = {};
   // debugger;
@@ -67,7 +69,7 @@ function occuranceCount(anagramToCount) {
   return anagramLetterCount;
 }
 
-function matchMaker(userInputArray, celebArray) {
+export function matchMaker(userInputArray, celebArray) {
   let recordKeeper = {};
   // {"TRUMCDONALD":{"t":1,"r":1}}
   //For all the anagrams the user entered
@@ -110,7 +112,10 @@ function matchMaker(userInputArray, celebArray) {
             }
           }
           //if we are at the last one, I want to calculate the percentage
-          if (index === orig.length - 1) {
+          if (
+            index === orig.length - 1 &&
+            recordKeeper[userInputAnagrams][celebName] !== undefined
+          ) {
             recordKeeper[userInputAnagrams][celebName] = (
               (recordKeeper[userInputAnagrams][celebName] / celebName.length) *
               100
@@ -120,10 +125,32 @@ function matchMaker(userInputArray, celebArray) {
       }
     }
   }
-  console.log(recordKeeper);
   return recordKeeper;
+  //{"TRUMCDONALD":{"DONALDTRUMP":90}}
 }
 
+// TRUMP:
+//   AAMIRKHAN: "22"
+//   AARONCARTER: "18"
+//   AARONPAUL: "33"
+//   ADAMSANDLER: "18"
+
+function formatForTable(builtResult) {
+  let arr = [];
+  //Iterate through each anagram
+  for (const key in builtResult) {
+    //Iterate through the compared values for each
+    for (const resultMatch in builtResult[key]) {
+      arr.push({
+        key: arr.length + 1,
+        Anagram: key,
+        Name: resultMatch,
+        "%": builtResult[key][resultMatch],
+      });
+    }
+  }
+  return arr;
+}
 export default async function celebAnagramFinder(userInput, threshold) {
   let anagram = cleanInputValue(userInput);
 
@@ -134,11 +161,9 @@ export default async function celebAnagramFinder(userInput, threshold) {
   //Fetch the json of celebs
   let resFetch = await fetch(proxyUrl + targetUrl);
 
+  //convert result to JSON
   let celebsFromApi = await resFetch.json();
 
-  //convert result to JSON
-
-  // function apiChange() {
   //If it fails, log message and quit
   if (resFetch.status !== 200) {
     console.log(
@@ -170,6 +195,10 @@ export default async function celebAnagramFinder(userInput, threshold) {
   });
 
   const countedCelebNames = occuranceCount(celebNames);
-
-  matchMaker(countedUserInputAnagrams, countedCelebNames);
+  console.log(
+    formatForTable(matchMaker(countedUserInputAnagrams, countedCelebNames))
+  );
+  return formatForTable(
+    matchMaker(countedUserInputAnagrams, countedCelebNames)
+  );
 }
