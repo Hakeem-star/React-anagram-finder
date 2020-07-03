@@ -10,6 +10,7 @@ import {
   Col,
   Slider,
   message,
+  InputNumber,
 } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import PreviousSearches from "./components/loading/PreviousSearches";
@@ -98,6 +99,7 @@ export default function App() {
   const [fetchingTableDataStatus, updateFetchingTableDataStatus] = useState(
     false
   );
+  const [thresholdSliders, updateThresholdSliders] = useState([1, 100]);
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
@@ -195,19 +197,44 @@ export default function App() {
             }
           />
           <Content style={{ paddingTop: "60px" }}>
-            <Row justify="left">
+            {/* <Row justify="left">
               <Col offset={2} span={20}>
                 <div>Results</div>
+              </Col>
+            </Row> */}
+            <Row justify="center">
+              <Col style={{ textAlign: "left" }} span={16}>
+                <p>Threshold</p>
               </Col>
             </Row>
             <Row justify="center">
               <Col span={16}>
+                <InputNumber
+                  min={1}
+                  max={100}
+                  value={thresholdSliders[0]}
+                  onChange={(value) => {
+                    updateThresholdSliders([value, thresholdSliders[1]]);
+                  }}
+                />
+                <InputNumber
+                  min={1}
+                  max={100}
+                  value={thresholdSliders[1]}
+                  onChange={(value) => {
+                    updateThresholdSliders([thresholdSliders[0], value]);
+                  }}
+                />
                 <Slider
                   defaultValue={[1, 100]}
                   range
                   min={1}
                   className="threshold-slider"
-                  tooltipVisible={true}
+                  // tooltipVisible={false}
+                  value={thresholdSliders}
+                  onChange={(value) => {
+                    updateThresholdSliders(value);
+                  }}
                   tipFormatter={formatter}
                 />
               </Col>
