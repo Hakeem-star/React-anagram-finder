@@ -1,3 +1,5 @@
+import celebAPIResult_local from "./celebAPIResult_local.json";
+
 export function cleanInputValue(value) {
   //write input value to anagram variable
   //Check if there are multiple ANAGRAMS and split into array
@@ -159,18 +161,20 @@ export default async function celebAnagramFinder(userInput, threshold) {
   let targetUrl = "https://celebritybucks.com/developers/export/JSON";
 
   //Fetch the json of celebs
-  let resFetch = await fetch(proxyUrl + targetUrl);
+  // let resFetch = await fetch(proxyUrl + targetUrl);
 
   //convert result to JSON
-  let celebsFromApi = await resFetch.json();
+  // let celebsFromApi = await resFetch.json();
+  //local results to prevent too many API calls
+  let celebsFromApi = celebAPIResult_local;
 
   //If it fails, log message and quit
-  if (resFetch.status !== 200) {
-    console.log(
-      "Looks like there was a problem. Status Code: " + resFetch.status
-    );
-    return;
-  }
+  // if (resFetch.status !== 200) {
+  //   console.log(
+  //     "Looks like there was a problem. Status Code: " + resFetch.status
+  //   );
+  //   return;
+  // }
 
   // STRUCTURE---- celebsFromApi = {CelebrityValues: [{ name: "Serena Williams" },{ name: "Kacey Musgraves" }, { name: "Ivana Milicevic" } ] };
   // console.log("Celebs from API", celebsFromApi.CelebrityValues)
