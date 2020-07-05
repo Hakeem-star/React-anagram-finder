@@ -105,7 +105,10 @@ export default function App() {
     <Layout style={{ minHeight: "100vh" }}>
       <Sider width={300} className="site-layout-background">
         <div style={pageTitleStyle}>Anagram Finder</div>
-        <PreviousSearches results={previousSearches}></PreviousSearches>
+        <PreviousSearches
+          activateHistory={updateActiveHistoryButtonStatus}
+          results={previousSearches}
+        ></PreviousSearches>
       </Sider>
       <Row style={{ width: "100%" }}>
         <Col span={24}>
@@ -197,11 +200,6 @@ export default function App() {
             }
           />
           <Content style={{ paddingTop: "60px" }}>
-            {/* <Row justify="left">
-              <Col offset={2} span={20}>
-                <div>Results</div>
-              </Col>
-            </Row> */}
             <Row justify="center">
               <Col style={{ textAlign: "left" }} span={16}>
                 <p>Threshold</p>
@@ -230,7 +228,6 @@ export default function App() {
                   range
                   min={1}
                   className="threshold-slider"
-                  // tooltipVisible={false}
                   value={thresholdSliders}
                   onChange={(value) => {
                     updateThresholdSliders(value);

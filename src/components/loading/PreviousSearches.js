@@ -2,7 +2,7 @@ import React from "react";
 import { Popover, Button, Row, Col } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 
-export default function PreviousSearches({ results }) {
+export default function PreviousSearches({ results, activateHistory }) {
   if (results.length < 1) {
     return <div></div>;
   }
@@ -17,7 +17,10 @@ export default function PreviousSearches({ results }) {
               title={result.title}
             >
               <Button
-                onClick={() => {}}
+                onClick={() => {
+                  console.log(index);
+                  activateHistory(index);
+                }}
                 style={{ width: "100%" }}
                 type="primary"
               >
