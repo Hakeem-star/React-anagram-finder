@@ -1,10 +1,9 @@
 import React, { useState, useEffect, Fragment } from "react";
-import celebAnagramFinder from "./celebAnagramFinderAPICall";
+import celebAnagramFinder from "./utils/celebAnagramFinderAPICall";
 import {
   Layout,
   Menu,
   Input,
-  Divider,
   Table,
   Row,
   Col,
@@ -24,7 +23,7 @@ message.config({
   top: 24,
   duration: 1.5,
   maxCount: 1,
-  rtl: false,
+  rtl: true,
 });
 
 const menuItemStyle = {
@@ -53,12 +52,32 @@ const columns = [
     title: "Name",
     dataIndex: "Name",
     key: "Name",
-  },
+    sorter: {
+      compare: (a, b) => {
+        const nameA = a.Name.toUpperCase(); // ignore upper and lowercase
+        const nameB = b.Name.toUpperCase(); // ignore upper and lowercase
+        if (nameA < nameB) {
+          return -1;
+        }
+        if (nameA > nameB) {
+          return 1;
+        }
 
+        // names must be equal
+        return 0;
+      },
+    },
+  },
   {
     title: "%",
     dataIndex: "%",
     key: "%",
+    defaultSortOrder: "descend",
+    sorter: {
+      compare: (a, b) => a["%"] - b["%"],
+    },
+    // onFilter: (value, record) => record.name.indexOf(value) === 0,
+    // filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => null,
   },
 ];
 
@@ -92,15 +111,34 @@ const updateActiveHistoryButtonStatus = (matchesPreviousSearchResult) => {
 
   //highlight previous history selection
   element.classList.add("--active");
+
+  //update history search
 };
 export default function App() {
   const [tableData, updateTableData] = useState([]);
+  const [filteredtableData, updateFilteredTableData] = useState([]);
   const [previousSearches, updatePreviousSearchesState] = useState([]); //[{value:tableData,title:Date.now()}]
   const [fetchingTableDataStatus, updateFetchingTableDataStatus] = useState(
     false
   );
   const [thresholdSliders, updateThresholdSliders] = useState([1, 100]);
 
+  useEffect(() => {
+    //Filter table data using current threshold values
+    updateFilteredTableData(() => {
+      return tableData.filter(
+        (data) =>
+          data["%"] >= thresholdSliders[0] && data["%"] <= thresholdSliders[1]
+      );
+    });
+  }, [tableData, thresholdSliders]);
+
+  useEffect(() => {
+    //Highlight the most recent search button
+    if (previousSearches.length !== 0) {
+      updateActiveHistoryButtonStatus(0);
+    }
+  }, [previousSearches]);
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Sider width={300} className="site-layout-background">
@@ -164,14 +202,14 @@ export default function App() {
                     updateFetchingTableDataStatus(false);
                   })()
                 : (async () => {
+                    //If it's a new search
                     updateFetchingTableDataStatus(true);
                     let input = await celebAnagramFinder(searchValue);
                     updateFetchingTableDataStatus(false);
                     if (input.length === 0) {
-                      message.error("No reults found");
+                      message.error("No results found");
                     } else {
                       updateTableData(input);
-
                       updatePreviousSearchesState((search) => {
                         //Make a copy and enforce a maximum of 10 previous searches
                         let result = search.slice(0, 9);
@@ -179,7 +217,6 @@ export default function App() {
                         const trailingDots =
                           searchValue.length > 7 ? "..." : "";
                         let name = `${searchValue.substr(0, 8)}${trailingDots}`;
-
                         result.unshift({
                           value: searchValue,
                           title: time.toGMTString(),
@@ -213,6 +250,12 @@ export default function App() {
                   value={thresholdSliders[0]}
                   onChange={(value) => {
                     updateThresholdSliders([value, thresholdSliders[1]]);
+                    updateFilteredTableData(() => {
+                      return tableData.filter(
+                        (data) =>
+                          data["%"] >= value && data["%"] <= thresholdSliders[1]
+                      );
+                    });
                   }}
                 />
                 <InputNumber
@@ -221,6 +264,12 @@ export default function App() {
                   value={thresholdSliders[1]}
                   onChange={(value) => {
                     updateThresholdSliders([thresholdSliders[0], value]);
+                    updateFilteredTableData(() => {
+                      return tableData.filter(
+                        (data) =>
+                          data["%"] >= thresholdSliders[0] && data["%"] <= value
+                      );
+                    });
                   }}
                 />
                 <Slider
@@ -231,6 +280,11 @@ export default function App() {
                   value={thresholdSliders}
                   onChange={(value) => {
                     updateThresholdSliders(value);
+                    updateFilteredTableData(() => {
+                      return tableData.filter(
+                        (data) => data["%"] >= value[0] && data["%"] <= value[1]
+                      );
+                    });
                   }}
                   tipFormatter={formatter}
                 />
@@ -240,7 +294,7 @@ export default function App() {
               <Col span={20}>
                 <Table
                   loading={fetchingTableDataStatus}
-                  dataSource={tableData}
+                  dataSource={filteredtableData}
                   columns={columns}
                 />
               </Col>

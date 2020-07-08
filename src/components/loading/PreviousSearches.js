@@ -18,7 +18,7 @@ export default function PreviousSearches({ results, activateHistory }) {
             >
               <Button
                 onClick={() => {
-                  console.log(index);
+                  // console.log(index);
                   activateHistory(index);
                 }}
                 style={{ width: "100%" }}

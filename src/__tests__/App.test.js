@@ -1,6 +1,7 @@
 import React from "react";
 import App from "../App";
-import { render, fireEvent } from "@testing-library/react";
+import { waitFor, render, fireEvent } from "@testing-library/react";
+import "@testing-library/jest-dom";
 
 let resultsProps = JSON.parse(
   JSON.stringify({
@@ -18,6 +19,8 @@ let resultsProps = JSON.parse(
     TRUMCDONALD6: [{ "Donald Trump": "100%" }],
   })
 );
+
+// jest.mock("../utils/celebAnagramFinderAPICall");
 
 Object.defineProperty(window, "matchMedia", {
   writable: true,
@@ -41,17 +44,15 @@ describe("<App />", () => {
   test("Displays a results table when a result is found", async () => {
     const { findAllByText, getByPlaceholderText } = render(<App />);
     const input = getByPlaceholderText("input anagram");
-    // input.value = "trump";
     fireEvent.input(input, { target: { value: "trump" } });
-    fireEvent.keyPress(input, { key: "Enter", code: 13, charCode: 13 });
-    expect(await findAllByText(/TRUMP/i));
+    fireEvent.keyDown(input, { key: "Enter", keyCode: 13 });
+    expect(await findAllByText(/donald/gi));
   });
 
-  test("Displays 'Nothing was Found' when a result is not found", () => {
-    // wrapper = mount(<App />);
-    // wrapper.setState({ results: {} });
-    // //console.log(toJson(wrapper.find(".ResultsPageNumber")));
-    // const nothingFound = wrapper.find("h4");
-    // expect(nothingFound.text()).toBe("Nothing was found!");
+  test("Displays 'No results found' when a result is not found", async () => {
+    const { findAllByText, getByPlaceholderText } = render(<App />);
+    const input = getByPlaceholderText("input anagram");
+    fireEvent.keyDown(input, { key: "Enter", keyCode: 13 });
+    expect(await findAllByText(/found/gi));
   });
 });

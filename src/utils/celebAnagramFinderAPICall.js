@@ -1,43 +1,42 @@
-import celebAPIResult_local from "./celebAPIResult_local.json";
+import celebAPIResult_local from "../celebAPIResult_local.json";
 
 export function cleanInputValue(value) {
   //write input value to anagram variable
   //Check if there are multiple ANAGRAMS and split into array
-
+  let cleanValue = [];
   //Clean value
-  const uppercase_spaceless_value = value
-    .toUpperCase()
-    //remove spaces
-    .replace(/\s/g, "");
-
+  // console.log(value);
   if (value.includes(",")) {
     //Create array from comma seperated anagram and remove spaces
-    return (
-      uppercase_spaceless_value
-        .split(",")
-        //Remove any non alphabet values
-        .map((val, index) => val.replace(/[^A-Z]/g, ""))
-        .filter((el) => el !== "")
-    );
+    cleanValue = value
+      .split(",")
+      //Remove any non alphabet values
+      .map((val, index, orig) => {
+        return [val.replace(/\W/g, "").toUpperCase(), orig[index]];
+      })
+      .filter((el) => el[0] !== "");
   } else {
     //If there is only one ANAGRAM value
     //Place Anagram into Array
     //Remove any non alphabet values
-    return [uppercase_spaceless_value.replace(/[^A-Z]/g, "")].filter(
-      (el) => el !== ""
-    );
+    // console.log(value);
+    cleanValue = [[value.replace(/\W/g, "").toUpperCase(), value]];
   }
+  return cleanValue;
 }
 
-export function celebNameCleanup(value) {
-  return (
-    value
-      .toUpperCase()
-      //remove spaces
-      .replace(/\s/g, "")
-      .replace(/[^A-Z]/g, "")
-  );
-}
+// export function celebNameCleanup(value) {
+//   console.log(value);
+//   return [
+//     [
+//       value
+//         .toUpperCase()
+//         //remove spaces
+//         .replace(/\W/g, ""),
+//       value,
+//     ],
+//   ];
+// }
 
 export function occuranceCount(anagramToCount) {
   //Count the occurances of letters within the current anagram
@@ -46,19 +45,20 @@ export function occuranceCount(anagramToCount) {
   //Go through the anagram array
   anagramToCount.forEach((anagramsArrayCounter) => {
     //Split the anagram into an array of individual letters
-    let singleAnagramArray = anagramsArrayCounter.split("");
+    // console.log(anagramsArrayCounter);
+    let singleAnagramArray = anagramsArrayCounter[0].split("");
     //console.log(splitAnagramToLetters)
     //[S,H,A,V,E,R,S,I,N]
 
-    //make an array of each letter and iterate through
+    //iterate through each letter
     singleAnagramArray.forEach(function (anagramLetter, index, initialArray) {
-      if (anagramLetterCount[anagramsArrayCounter] === undefined) {
-        anagramLetterCount[anagramsArrayCounter] = {};
+      if (anagramLetterCount[anagramsArrayCounter[1]] === undefined) {
+        anagramLetterCount[anagramsArrayCounter[1]] = {};
       }
       //Create an object that uses the letter as a key
       //Then with a filter, it iterates through the array containing all the ANAGRAM letters to compare the key letter
       //Then uses the length of the filtered result as the amount of occurances
-      anagramLetterCount[anagramsArrayCounter][
+      anagramLetterCount[anagramsArrayCounter[1]][
         anagramLetter
       ] = initialArray.filter(
         (filteredSingleAnagramArray) =>
@@ -68,58 +68,121 @@ export function occuranceCount(anagramToCount) {
     });
     //anagramLetterCount = {"TRUMCDONALD":{"t":1,"r":1}}
   });
+
   return anagramLetterCount;
 }
 
 export function matchMaker(userInputArray, celebArray) {
+  //Normalize values
+  //Input
+
+  //clean - remove special characters
+  const userInputAnagram = cleanInputValue(userInputArray);
+  //[["TRUMP", "trump"]]
+
+  //count
+  const userInputAnagramOccuranceCount = occuranceCount(userInputAnagram);
+  //{trump: {T: 1, R: 1, U: 1, M: 1, P: 1}}
+
+  const userInputAnagramOccuranceCountKeys = Object.keys(
+    userInputAnagramOccuranceCount
+  );
+  //["trump"]
+
+  //Celebs
+  //clean - remove special characters
+  const celebNames = celebArray.map(
+    (celebName) => cleanInputValue(celebName)[0]
+  );
+  //[["DONALDTRUMP", "Donald Trump"]]
+
+  //count
+  const countedCelebNames = occuranceCount(celebNames);
+  //{50 Cent: {0: 1, 5: 1, C: 1, E: 1, N: 1, T: 1},
+  //Aaron Carter: {A: 3, R: 3, O: 1, N: 1, C: 1}}
+
+  const countedCelebNamesKeys = Object.keys(countedCelebNames);
+  //["Donald Trump"]
+
   let recordKeeper = {};
   // {"TRUMCDONALD":{"t":1,"r":1}}
   //For all the anagrams the user entered
 
-  for (const userInputAnagrams in userInputArray) {
-    recordKeeper[userInputAnagrams] = {};
-    // userInputArray[anagram]
+  for (
+    let userInputIterator = 0;
+    userInputIterator < userInputAnagramOccuranceCountKeys.length;
+    userInputIterator++
+  ) {
+    const currentUserInputAnagramName =
+      userInputAnagramOccuranceCountKeys[userInputIterator];
+    const cleanUserAnagrams = userInputAnagram[userInputIterator][0];
 
-    // TRUMCDONALD.length
-    let userInputAnagramsLength = userInputAnagrams.length;
+    recordKeeper[cleanUserAnagrams] = {};
+
     //For each of the celeb names
-    for (const celebName in celebArray) {
+    for (
+      let celebNameIterator = 0;
+      celebNameIterator < countedCelebNamesKeys.length;
+      celebNameIterator++
+    ) {
+      const cleanCelebName = celebNames[celebNameIterator][0];
+
       //Check if total of the user input is larger than the celeb name
-      if (userInputAnagramsLength <= celebName.length) {
+      // TRUMCDONALD.length
+      if (cleanUserAnagrams.length <= cleanCelebName.length) {
         //DONALDTRUMP
         //Look through the results object for the user input anagram to compare
         //T
-        let userInputLettersArray = Object.keys(
-          userInputArray[userInputAnagrams]
+        const userInputLettersArray = Object.keys(
+          userInputAnagramOccuranceCount[currentUserInputAnagramName]
         );
+
         userInputLettersArray.forEach((userInputLetter, index, orig) => {
-          const userinputAnagramResultsCountObject =
-            userInputArray[userInputAnagrams];
-          const celebArrayAnagramResultsCountObject = celebArray[celebName];
-          //If the celebs anagram contains the letter in the user input
-          if (
-            celebArrayAnagramResultsCountObject.hasOwnProperty(userInputLetter)
-          ) {
-            //If user unput anagram letter count is smaller than the celeb anagram
+          //D
+          const currentUserInputLetter =
+            userInputAnagramOccuranceCountKeys[userInputIterator];
+
+          const userInputCurrentLetterOccurance =
+            userInputAnagramOccuranceCount[currentUserInputLetter];
+          //countedUserInputAnagram[userAnagrams];
+          //donaldtrumf
+          const userAnagrams = currentUserInputAnagramName;
+
+          const celebName = countedCelebNamesKeys[celebNameIterator];
+          const cleanCelebname = celebNames[celebNameIterator][0];
+          // debugger;
+          //"Donald Trump"
+
+          //DONALDTRUMP
+          const celebArrayCurrentCelebOccurance = countedCelebNames[celebName];
+
+          // countedCelebNames[celebName];
+
+          //If the celebs anagram contains the letter from the user input
+          if (celebArrayCurrentCelebOccurance.hasOwnProperty(userInputLetter)) {
+            //If user input anagram letter count is smaller than the celeb anagram
             if (
-              userinputAnagramResultsCountObject[userInputLetter] <=
-              celebArrayAnagramResultsCountObject[userInputLetter]
+              userInputCurrentLetterOccurance[userInputLetter] <=
+              celebArrayCurrentCelebOccurance[userInputLetter]
             ) {
               //If there is no previous record of this anagram & celebName
-              recordKeeper[userInputAnagrams][celebName] === undefined
-                ? (recordKeeper[userInputAnagrams][celebName] =
-                    userinputAnagramResultsCountObject[userInputLetter])
-                : (recordKeeper[userInputAnagrams][celebName] +=
-                    userinputAnagramResultsCountObject[userInputLetter]);
+              recordKeeper[cleanUserAnagrams][celebName] === undefined
+                ? (recordKeeper[cleanUserAnagrams][celebName] =
+                    userInputCurrentLetterOccurance[userInputLetter])
+                : (recordKeeper[cleanUserAnagrams][celebName] +=
+                    userInputCurrentLetterOccurance[userInputLetter]);
             }
           }
+          // debugger;
+
           //if we are at the last one, I want to calculate the percentage
           if (
             index === orig.length - 1 &&
-            recordKeeper[userInputAnagrams][celebName] !== undefined
+            recordKeeper[cleanUserAnagrams][celebName] !== undefined
           ) {
-            recordKeeper[userInputAnagrams][celebName] = (
-              (recordKeeper[userInputAnagrams][celebName] / celebName.length) *
+            recordKeeper[cleanUserAnagrams][celebName] = (
+              (recordKeeper[cleanUserAnagrams][celebName] /
+                cleanCelebname.length) *
               100
             ).toFixed(0);
           }
@@ -154,8 +217,6 @@ function formatForTable(builtResult) {
   return arr;
 }
 export default async function celebAnagramFinder(userInput, threshold) {
-  let anagram = cleanInputValue(userInput);
-
   //Bypass CORS if needed. Replace fetch url with proxyUrl + targetUrl
   let proxyUrl = "https://cors-anywhere.herokuapp.com/";
   let targetUrl = "https://celebritybucks.com/developers/export/JSON";
@@ -192,17 +253,13 @@ export default async function celebAnagramFinder(userInput, threshold) {
            "JEDIMATHST", "JEDIMATHSU"];
   */
 
-  const countedUserInputAnagrams = occuranceCount(anagram);
-
   const celebNames = celebsFromApi.CelebrityValues.map((celeb) => {
-    return celebNameCleanup(celeb.name);
+    return celeb.name;
   });
 
-  const countedCelebNames = occuranceCount(celebNames);
-  console.log(
-    formatForTable(matchMaker(countedUserInputAnagrams, countedCelebNames))
-  );
-  return formatForTable(
-    matchMaker(countedUserInputAnagrams, countedCelebNames)
-  );
+  // console.log(
+  //   formatForTable(matchMaker(countedUserInputAnagrams, countedCelebNames))
+  // );
+  // console.log(formatForTable(matchMaker(userInput, celebNames)));
+  return formatForTable(matchMaker(userInput, celebNames));
 }
