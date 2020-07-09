@@ -1,5 +1,3 @@
-import celebAPIResult_local from "../celebAPIResult_local.json";
-
 export function cleanInputValue(value) {
   //write input value to anagram variable
   //Check if there are multiple ANAGRAMS and split into array
@@ -216,26 +214,10 @@ function formatForTable(builtResult) {
   }
   return arr;
 }
-export default async function celebAnagramFinder(userInput, threshold) {
-  //Bypass CORS if needed. Replace fetch url with proxyUrl + targetUrl
-  let proxyUrl = "https://cors-anywhere.herokuapp.com/";
-  let targetUrl = "https://celebritybucks.com/developers/export/JSON";
 
-  //Fetch the json of celebs
-  // let resFetch = await fetch(proxyUrl + targetUrl);
-
-  //convert result to JSON
-  // let celebsFromApi = await resFetch.json();
+export default async function celebAnagramFinder(userInput, fetchFromCelebApi) {
   //local results to prevent too many API calls
-  let celebsFromApi = celebAPIResult_local;
-
-  //If it fails, log message and quit
-  // if (resFetch.status !== 200) {
-  //   console.log(
-  //     "Looks like there was a problem. Status Code: " + resFetch.status
-  //   );
-  //   return;
-  // }
+  // let celebsFromApi = celebAPIResult_local;
 
   // STRUCTURE---- celebsFromApi = {CelebrityValues: [{ name: "Serena Williams" },{ name: "Kacey Musgraves" }, { name: "Ivana Milicevic" } ] };
   // console.log("Celebs from API", celebsFromApi.CelebrityValues)
@@ -252,14 +234,13 @@ export default async function celebAnagramFinder(userInput, threshold) {
            "ONEMUTTISLANDT", "ONEMUTTISLANDU", "JEDIMATHSA", "JEDIMATHSE", "JEDIMATHSI", "JEDIMATHSL", "JEDIMATHSN", "JEDIMATHSO", "JEDIMATHSR", "JEDIMATHSS",
            "JEDIMATHST", "JEDIMATHSU"];
   */
-
-  const celebNames = celebsFromApi.CelebrityValues.map((celeb) => {
-    return celeb.name;
-  });
+  //  const celebNames = await _fetchFromCelebApi();
 
   // console.log(
   //   formatForTable(matchMaker(countedUserInputAnagrams, countedCelebNames))
   // );
   // console.log(formatForTable(matchMaker(userInput, celebNames)));
+  const celebNames = await fetchFromCelebApi();
+
   return formatForTable(matchMaker(userInput, celebNames));
 }

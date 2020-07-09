@@ -9,7 +9,7 @@ export default function PreviousSearches({ results, activateHistory }) {
   return (
     <div className="previous-search">
       {results.map((result, index) => (
-        <Row key={`${result.title}${index}`} gutter={[0, 20]}>
+        <Row key={`${result.title}${index}`}>
           <Col span={12} push={6}>
             <Popover
               className={`previous-search__item result-${index}`}

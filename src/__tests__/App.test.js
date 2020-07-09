@@ -3,24 +3,24 @@ import App from "../App";
 import { waitFor, render, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
 
-let resultsProps = JSON.parse(
-  JSON.stringify({
-    THANKSMO: [{ "Tom Hanks": "100%" }],
-    TRUMCDONALD: [{ "Donald Trump": "100%" }],
-    THANKSMO2: [{ "Tom Hanks": "100%" }],
-    TRUMCDONALD2: [{ "Donald Trump": "100%" }],
-    THANKSMO3: [{ "Tom Hanks": "100%" }],
-    TRUMCDONALD3: [{ "Donald Trump": "100%" }],
-    THANKSMO4: [{ "Tom Hanks": "100%" }],
-    TRUMCDONALD4: [{ "Donald Trump": "100%" }],
-    THANKSMO5: [{ "Tom Hanks": "100%" }],
-    TRUMCDONALD5: [{ "Donald Trump": "100%" }],
-    THANKSMO6: [{ "Tom Hanks": "100%" }],
-    TRUMCDONALD6: [{ "Donald Trump": "100%" }],
-  })
-);
+// let resultsProps = JSON.parse(
+//   JSON.stringify({
+//     THANKSMO: [{ "Tom Hanks": "100%" }],
+//     TRUMCDONALD: [{ "Donald Trump": "100%" }],
+//     THANKSMO2: [{ "Tom Hanks": "100%" }],
+//     TRUMCDONALD2: [{ "Donald Trump": "100%" }],
+//     THANKSMO3: [{ "Tom Hanks": "100%" }],
+//     TRUMCDONALD3: [{ "Donald Trump": "100%" }],
+//     THANKSMO4: [{ "Tom Hanks": "100%" }],
+//     TRUMCDONALD4: [{ "Donald Trump": "100%" }],
+//     THANKSMO5: [{ "Tom Hanks": "100%" }],
+//     TRUMCDONALD5: [{ "Donald Trump": "100%" }],
+//     THANKSMO6: [{ "Tom Hanks": "100%" }],
+//     TRUMCDONALD6: [{ "Donald Trump": "100%" }],
+//   })
+// );
 
-// jest.mock("../utils/celebAnagramFinderAPICall");
+jest.mock("../utils/fetchCelebData");
 
 Object.defineProperty(window, "matchMedia", {
   writable: true,
@@ -34,6 +34,11 @@ Object.defineProperty(window, "matchMedia", {
     removeEventListener: jest.fn(),
     dispatchEvent: jest.fn(),
   })),
+});
+
+Object.defineProperty(window.HTMLElement.prototype, "scrollIntoView", {
+  writable: true,
+  value: jest.fn().mockImplementation((query) => ({})),
 });
 
 describe("<App />", () => {
