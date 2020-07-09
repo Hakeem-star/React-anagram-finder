@@ -10,6 +10,8 @@ export default function StickySide({
   previousSearches,
   toggleCollapedSider,
   setToggleCollapedSider,
+
+  updateTableData,
 }) {
   // useEffect(()=>{
 
@@ -28,7 +30,8 @@ export default function StickySide({
         <div>History</div>
         <PreviousSearches
           activateHistory={updateActiveHistoryButtonStatus}
-          results={previousSearches}
+          previousSearches={previousSearches}
+          updateTableData={updateTableData}
         ></PreviousSearches>
       </Sider>
       <div className="sider-container__history-icon-container">

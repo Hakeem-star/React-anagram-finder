@@ -39,43 +39,47 @@ export default function SearchInput({
               updateActiveHistoryButtonStatus(previousSearchMatch.index);
               //update current table results
               updateFetchingTableDataStatus(true);
-              let input = await celebAnagramFinder(
+              let anagramResult = await celebAnagramFinder(
                 searchValue,
                 fetchFromCelebApi
               );
-              updateTableData(input);
+              updateTableData(anagramResult);
               updateFetchingTableDataStatus(false);
             })()
           : (async () => {
               //If it's a new search
               updateFetchingTableDataStatus(true);
-              let input = await celebAnagramFinder(
+              let anagramResult = await celebAnagramFinder(
                 searchValue,
                 fetchFromCelebApi
               );
               updateFetchingTableDataStatus(false);
-              if (input.length === 0) {
+              if (anagramResult.length === 0) {
                 message.error("No results found");
               } else {
                 //Scroll to input on top
-                updateTableData(input);
+                updateTableData(anagramResult);
                 const scrollOptions = {
                   behavior: "smooth",
                   block: "start",
                   inline: "nearest",
                 };
                 document.querySelector(".search").scrollIntoView(scrollOptions);
+                //Update previous searches object array with search, time & result
                 updatePreviousSearchesState((search) => {
                   //Make a copy and enforce a maximum of 10 previous searches
                   let result = search.slice(0, 9);
                   let time = new Date();
                   const trailingDots = searchValue.length > 7 ? "..." : "";
                   let name = `${searchValue.substr(0, 8)}${trailingDots}`;
+
                   result.unshift({
                     value: searchValue,
                     title: time.toGMTString(),
                     name,
+                    tableData: anagramResult,
                   });
+
                   return result;
                 });
               }

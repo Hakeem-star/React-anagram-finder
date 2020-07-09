@@ -1,24 +1,6 @@
 import React from "react";
 import App from "../App";
 import { waitFor, render, fireEvent } from "@testing-library/react";
-import "@testing-library/jest-dom";
-
-// let resultsProps = JSON.parse(
-//   JSON.stringify({
-//     THANKSMO: [{ "Tom Hanks": "100%" }],
-//     TRUMCDONALD: [{ "Donald Trump": "100%" }],
-//     THANKSMO2: [{ "Tom Hanks": "100%" }],
-//     TRUMCDONALD2: [{ "Donald Trump": "100%" }],
-//     THANKSMO3: [{ "Tom Hanks": "100%" }],
-//     TRUMCDONALD3: [{ "Donald Trump": "100%" }],
-//     THANKSMO4: [{ "Tom Hanks": "100%" }],
-//     TRUMCDONALD4: [{ "Donald Trump": "100%" }],
-//     THANKSMO5: [{ "Tom Hanks": "100%" }],
-//     TRUMCDONALD5: [{ "Donald Trump": "100%" }],
-//     THANKSMO6: [{ "Tom Hanks": "100%" }],
-//     TRUMCDONALD6: [{ "Donald Trump": "100%" }],
-//   })
-// );
 
 jest.mock("../utils/fetchCelebData");
 
@@ -58,6 +40,39 @@ describe("<App />", () => {
     const { findAllByText, getByPlaceholderText } = render(<App />);
     const input = getByPlaceholderText("input anagram");
     fireEvent.keyDown(input, { key: "Enter", keyCode: 13 });
-    expect(await findAllByText(/found/gi));
+    expect(await findAllByText(/No results found/gi));
+  });
+
+  test("clicking on previous history searches for historical anagram", async () => {
+    const { findAllByText, getByPlaceholderText } = render(<App />);
+    const input = getByPlaceholderText("input anagram");
+    //Search for trump
+    fireEvent.input(input, { target: { value: "trump" } });
+    fireEvent.keyDown(input, { key: "Enter", keyCode: 13 });
+    //wait for result
+    expect(await findAllByText(/donald/gi));
+    //Search for test
+    fireEvent.input(input, { target: { value: "test" } });
+    fireEvent.keyDown(input, { key: "Enter", keyCode: 13 });
+    //wait for result
+    const testResult = await findAllByText(/test/gi);
+    expect(testResult.length).toBeGreaterThan(5);
+
+    //Open the history toggle
+    const expandHistoryToggle = document.querySelector(
+      ".sider-container__history-icon-container__icon"
+    );
+    fireEvent.click(expandHistoryToggle, { button: 1 });
+
+    //Click on the trump history
+    const trumpHistoryButton = document.querySelector(".result-0");
+    fireEvent.click(trumpHistoryButton, { button: 1 });
+    // await waitFor(() => {}, { timeout: 50 });
+
+    const secondTestResult = await findAllByText("test");
+    const trumpResult = await findAllByText(/trump/gi);
+    //wait for result
+    expect(secondTestResult.length).toBeLessThan(5);
+    expect(trumpResult.length).toBeGreaterThan(10);
   });
 });

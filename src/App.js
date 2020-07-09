@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Layout, Row, Col } from "antd";
 
 import "antd/dist/antd.less";
@@ -50,6 +50,7 @@ export default function App() {
   const [thresholdSliders, updateThresholdSliders] = useState([1, 100]);
 
   const [toggleCollapedSider, setToggleCollapedSider] = useState(true);
+  const previousSearchHistory = useRef([]);
 
   useEffect(() => {
     //Filter table data using current threshold values
@@ -61,12 +62,19 @@ export default function App() {
     });
   }, [tableData, thresholdSliders]);
 
-  useEffect(() => {
-    //Highlight the most recent search button
-    if (previousSearches.length !== 0) {
-      updateActiveHistoryButtonStatus(0);
-    }
-  }, [previousSearches]);
+  // useEffect(() => {
+  //   if (tableData.length > 0) {
+  //     previousSearchHistory.current.unshift(tableData);
+  //   }
+  // }, [tableData]);
+
+  // useEffect(() => {
+  //   //Highlight the most recent search button
+  //   if (previousSearches.length !== 0) {
+  //     updateActiveHistoryButtonStatus(0);
+  //   }
+  // }, [previousSearches]);
+
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <StickySide
@@ -74,6 +82,7 @@ export default function App() {
         updateActiveHistoryButtonStatus={updateActiveHistoryButtonStatus}
         previousSearches={previousSearches}
         setToggleCollapedSider={setToggleCollapedSider}
+        updateTableData={updateTableData}
       />
       <Row style={{ width: "100%" }}>
         <Col span={24}>
@@ -82,7 +91,13 @@ export default function App() {
             updateFetchingTableDataStatus={updateFetchingTableDataStatus}
             updateActiveHistoryButtonStatus={updateActiveHistoryButtonStatus}
             matchesPreviousSearch={matchesPreviousSearch}
-            updateTableData={updateTableData}
+            updateTableData={(value) => {
+              updateTableData(() => {
+                previousSearchHistory.current.unshift(value);
+                // console.log(previousSearchHistory.current);
+                return value;
+              });
+            }}
             updatePreviousSearchesState={updatePreviousSearchesState}
             previousSearches={previousSearches}
           />

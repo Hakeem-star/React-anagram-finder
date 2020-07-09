@@ -16,7 +16,13 @@ export default function PageHeader({}) {
         style={{ width: "100%", height: "100%", lineHeight: "0" }}
         mode="horizontal"
       >
-        <Menu.Item className="page-header__menu__menu-item" key="General">
+        <Menu.Item
+          onClick={() => {
+            "test";
+          }}
+          className="page-header__menu__menu-item"
+          key="General"
+        >
           General
         </Menu.Item>
         <li className="page-header__menu__custom-menu-divider"></li>
