@@ -8,15 +8,17 @@ import PageHeader from "./components/PageHeader";
 import SearchInput from "./components/SearchInput";
 import ThresholdSlider from "./components/ThresholdSlider";
 import ResultsTable from "./components/ResultsTable";
+import { getSharedSearchToFirestore } from "./firebase/firebase-setup";
 
 const { Content } = Layout;
 
 const matchesPreviousSearch = (previousSearchesState, newSearch) => {
   //go through the previous searches and compare it to the new search
   for (let index = 0; index < previousSearchesState.length; index++) {
+    const correctIndex = previousSearchesState.length - index - 1;
     if (previousSearchesState[index].value === newSearch) {
       //If a match is found, return the match status as well as the index it was found
-      return { match: true, index };
+      return { match: true, index: correctIndex };
     }
   }
   return { match: false, index: null };
@@ -25,7 +27,7 @@ const matchesPreviousSearch = (previousSearchesState, newSearch) => {
 const updateActiveHistoryButtonStatus = (matchesPreviousSearchResult) => {
   //get data from previous history
   //Remove class from other elements that already have the active class
-  Array.from(document.querySelectorAll(`.previous-search__item`)).forEach(
+  Array.from(document.querySelectorAll(`.previous-search .ant-row`)).forEach(
     (element) => {
       element.classList.remove("--active");
     }
@@ -41,9 +43,10 @@ const updateActiveHistoryButtonStatus = (matchesPreviousSearchResult) => {
   //update history search
 };
 export default function App() {
+  const [anagramType, setAnagramType] = useState("celeb");
   const [tableData, updateTableData] = useState([]);
   const [filteredtableData, updateFilteredTableData] = useState([]);
-  const [previousSearches, updatePreviousSearchesState] = useState([]); //[{value:tableData,title:Date.now()}]
+  const [previousSearches, updatePreviousSearchesState] = useState([]); //[{value:"test",tableData:[{}],title:Date.now()}]
   const [fetchingTableDataStatus, updateFetchingTableDataStatus] = useState(
     false
   );
@@ -51,6 +54,26 @@ export default function App() {
 
   const [toggleCollapedSider, setToggleCollapedSider] = useState(true);
   const previousSearchHistory = useRef([]);
+
+  useEffect(() => {
+    //Grab url
+    const url = window.location.search;
+    //Get query string
+    function getParams(url) {
+      const searchParams = new URLSearchParams(url);
+      return {
+        search: searchParams.get("search") || "",
+      };
+    }
+    const id = getParams(url).search;
+    console.log(getParams(url));
+    //get the search term of the id from firebase
+    if (getParams.length > 0) {
+      getSharedSearchToFirestore(id);
+    }
+
+    //Update table as if a request was made
+  }, []);
 
   useEffect(() => {
     //Filter table data using current threshold values
@@ -86,7 +109,7 @@ export default function App() {
       />
       <Row style={{ width: "100%" }}>
         <Col span={24}>
-          <PageHeader />
+          <PageHeader setAnagramType={setAnagramType} />
           <SearchInput
             updateFetchingTableDataStatus={updateFetchingTableDataStatus}
             updateActiveHistoryButtonStatus={updateActiveHistoryButtonStatus}

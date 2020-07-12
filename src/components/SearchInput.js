@@ -70,13 +70,10 @@ export default function SearchInput({
                   //Make a copy and enforce a maximum of 10 previous searches
                   let result = search.slice(0, 9);
                   let time = new Date();
-                  const trailingDots = searchValue.length > 7 ? "..." : "";
-                  let name = `${searchValue.substr(0, 8)}${trailingDots}`;
 
                   result.unshift({
                     value: searchValue,
                     title: time.toGMTString(),
-                    name,
                     tableData: anagramResult,
                   });
 

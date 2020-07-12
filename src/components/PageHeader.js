@@ -5,7 +5,7 @@ import "./PageHeader.less";
 
 const { Header } = Layout;
 
-export default function PageHeader({}) {
+export default function PageHeader({ setAnagramType }) {
   return (
     <Header className="page-header">
       <div>
@@ -18,7 +18,7 @@ export default function PageHeader({}) {
       >
         <Menu.Item
           onClick={() => {
-            "test";
+            setAnagramType("General");
           }}
           className="page-header__menu__menu-item"
           key="General"
@@ -27,7 +27,13 @@ export default function PageHeader({}) {
         </Menu.Item>
         <li className="page-header__menu__custom-menu-divider"></li>
 
-        <Menu.Item className="page-header__menu__menu-item" key="Celebs">
+        <Menu.Item
+          onClick={() => {
+            setAnagramType("Celebs");
+          }}
+          className="page-header__menu__menu-item"
+          key="Celebs"
+        >
           Celebs
         </Menu.Item>
       </Menu>

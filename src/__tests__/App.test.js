@@ -1,6 +1,7 @@
 import React from "react";
 import App from "../App";
-import { waitFor, render, fireEvent } from "@testing-library/react";
+import { waitFor, render, fireEvent, getByText } from "@testing-library/react";
+import "@testing-library/jest-dom";
 
 jest.mock("../utils/fetchCelebData");
 
@@ -34,6 +35,21 @@ describe("<App />", () => {
     fireEvent.input(input, { target: { value: "trump" } });
     fireEvent.keyDown(input, { key: "Enter", keyCode: 13 });
     expect(await findAllByText(/donald/gi));
+  });
+
+  test("It highlights a historical search item when a previous search is repeated ", async () => {
+    const { findAllByText, getByPlaceholderText } = render(<App />);
+    const input = getByPlaceholderText("input anagram");
+    function searchAndEnter(searchterm) {
+      fireEvent.input(input, { target: { value: searchterm } });
+      fireEvent.keyDown(input, { key: "Enter", keyCode: 13 });
+    }
+    searchAndEnter("trump//");
+    searchAndEnter("dennis");
+    await waitFor(() => {}, { timeout: 50 });
+    searchAndEnter("trump//");
+    const result = await findAllByText("trump//");
+    expect(result[0].parentElement).toHaveClass("--active");
   });
 
   test("Displays 'No results found' when a result is not found", async () => {
@@ -75,4 +91,15 @@ describe("<App />", () => {
     expect(secondTestResult.length).toBeLessThan(5);
     expect(trumpResult.length).toBeGreaterThan(10);
   });
+});
+
+test("It generates an id in the url when shared", () => {
+  const { getByText, getByPlaceholderText } = render(<App />);
+  const input = getByPlaceholderText("input anagram");
+  //Search for trump
+  fireEvent.input(input, { target: { value: "trump" } });
+  fireEvent.keyDown(input, { key: "Enter", keyCode: 13 });
+
+  const shareButton = document.querySelector(".anticon-share-alt.share-icon");
+  fireEvent.click(shareButton, { button: 1 });
 });

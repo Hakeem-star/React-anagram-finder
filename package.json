@@ -12,7 +12,8 @@
     "gh-pages": "^2.2.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "^3.4.1"
+    "react-scripts": "^3.4.1",
+    "uuid": "^8.2.0"
   },
   "scripts": {
     "start": "craco start",
@@ -44,10 +45,5 @@
     "enzyme-adapter-react-16": "^1.15.2",
     "enzyme-to-json": "^3.5.0",
     "react-test-renderer": "^16.13.1"
-  },
-  "jest": {
-    "setupFilesAfterEnv": [
-      "<rootDir>src/setupTests.js"
-    ]
   }
 }

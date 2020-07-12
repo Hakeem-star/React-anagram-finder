@@ -2,7 +2,12 @@ import React, { useState, Fragment } from "react";
 import PreviousSearches from "./loading/PreviousSearches";
 import { Layout } from "antd";
 import "./StickySide.less";
-import { HistoryOutlined } from "@ant-design/icons";
+import {
+  ReloadOutlined,
+  DownloadOutlined,
+  ShareAltOutlined,
+} from "@ant-design/icons";
+import { addSharedSearchToFirestore } from "../firebase/firebase-setup";
 const { Sider } = Layout;
 
 export default function StickySide({
@@ -10,7 +15,6 @@ export default function StickySide({
   previousSearches,
   toggleCollapedSider,
   setToggleCollapedSider,
-
   updateTableData,
 }) {
   // useEffect(()=>{
@@ -34,15 +38,26 @@ export default function StickySide({
           updateTableData={updateTableData}
         ></PreviousSearches>
       </Sider>
-      <div className="sider-container__history-icon-container">
-        <HistoryOutlined
-          className="sider-container__history-icon-container__icon"
+      <div className="sider-container__icon-container">
+        <ReloadOutlined
+          className="sider-container__icon-container__icon history-icon"
           onClick={() => {
             setToggleCollapedSider((value) => {
               return value ? false : true;
             });
           }}
         />
+        <ShareAltOutlined
+          className="sider-container__icon-container__icon share-icon"
+          onClick={() => {
+            //generateUUID & send to firebase
+            addSharedSearchToFirestore(previousSearches);
+            //recieve confirmation that entry was added
+
+            //Display something showing the url as well as icon to copy
+          }}
+        />
+        <DownloadOutlined className="sider-container__icon-container__icon" />
       </div>
     </div>
   );

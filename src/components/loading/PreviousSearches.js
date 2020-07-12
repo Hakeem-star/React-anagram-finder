@@ -14,12 +14,18 @@ export default function PreviousSearches({
     <div className="previous-search">
       {previousSearches.map((result, index, original) => {
         let correctIndex = original.length - index - 1;
+        const trailingDots = result.value.length > 7 ? "..." : "";
+        const name = `${result.value.substr(0, 8)}${trailingDots}`;
+
         return (
           <Row key={`${result.title}${correctIndex}`}>
-            <Col span={12} push={6}>
+            <Col
+              span={12}
+              push={6}
+              className={`previous-search__item result-${correctIndex}`}
+            >
               <Popover
                 placement="right"
-                className={`previous-search__item result-${correctIndex}`}
                 content={result.value}
                 title={result.title}
               >
@@ -32,7 +38,7 @@ export default function PreviousSearches({
                   style={{ width: "100%" }}
                   type="primary"
                 >
-                  {result.name}
+                  {name}
                 </Button>
               </Popover>
             </Col>
