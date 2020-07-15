@@ -10,9 +10,7 @@ import ThresholdSlider from "./components/ThresholdSlider";
 import ResultsTable from "./components/ResultsTable";
 import { getSharedSearchToFirestore } from "./firebase/firebase-setup";
 
-
 export const AppContext = React.createContext();
-
 
 const { Content } = Layout;
 
@@ -71,7 +69,7 @@ export default function App() {
       };
     }
     const id = getParams(url).search;
-    // console.log(getParams(url));
+    console.log(getParams(url));
     //get the search term of the id from firebase
     // if (getParams.length > 0) {
     //   getSharedSearchToFirestore(id);
@@ -105,7 +103,21 @@ export default function App() {
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <AppContext.Provider value={{ inputvalueState, setInputvalueState, previousSearchHistory, toggleCollapedSider, updateActiveHistoryButtonStatus, previousSearchesData, setToggleCollapedSider, updateTableData, updateFetchingTableDataStatus, matchesPreviousSearch, updatePreviousSearchesStateData }}>
+      <AppContext.Provider
+        value={{
+          inputvalueState,
+          setInputvalueState,
+          previousSearchHistory,
+          toggleCollapedSider,
+          updateActiveHistoryButtonStatus,
+          previousSearchesData,
+          setToggleCollapedSider,
+          updateTableData,
+          updateFetchingTableDataStatus,
+          matchesPreviousSearch,
+          updatePreviousSearchesStateData,
+        }}
+      >
         <StickySide />
         <Row style={{ width: "100%" }}>
           <Col span={24}>
