@@ -1,18 +1,21 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Popover, Button, Row, Col } from "antd";
+import { AppContext } from "./../../App";
 
-export default function PreviousSearches({
-  previousSearches,
-  activateHistory,
+export default function PreviousSearches() {
+  const {
+    setInputvalueState,
+    updateActiveHistoryButtonStatus,
+    updateTableData,
+    previousSearchesData,
+  } = useContext(AppContext);
 
-  updateTableData,
-}) {
-  if (previousSearches.length < 1) {
+  if (previousSearchesData.length < 1) {
     return <div></div>;
   }
   return (
     <div className="previous-search">
-      {previousSearches.map((result, index, original) => {
+      {previousSearchesData.map((result, index, original) => {
         let correctIndex = original.length - index - 1;
         const trailingDots = result.value.length > 7 ? "..." : "";
         const name = `${result.value.substr(0, 8)}${trailingDots}`;
@@ -31,9 +34,9 @@ export default function PreviousSearches({
               >
                 <Button
                   onClick={() => {
-                    // console.log(correctIndex);
-                    activateHistory(correctIndex);
+                    updateActiveHistoryButtonStatus(correctIndex);
                     updateTableData(result.tableData);
+                    setInputvalueState(() => result.value);
                   }}
                   style={{ width: "100%" }}
                   type="primary"

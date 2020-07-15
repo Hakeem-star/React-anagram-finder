@@ -1,8 +1,9 @@
-import celebAPIResult_local from "../../celebAPIResult_local.json";
+import celebAPIResult_local from "../../CelebNames2.json";
+
 
 function mapLocalData(data) {
-  return data.CelebrityValues.map((celeb) => {
-    return celeb.name;
+  return data.map((celeb) => {
+    return celeb.value;
   });
 }
 

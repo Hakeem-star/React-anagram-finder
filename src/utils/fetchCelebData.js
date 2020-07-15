@@ -1,9 +1,9 @@
-import celebAPIResult_local from "../celebAPIResult_local.json";
+import celebAPIResult_local from "../CelebNames.json";
 import { fileURLs } from "./../firebase/firebase-setup";
 
 export function mapLocalData(data) {
-  return data.CelebrityValues.map((celeb) => {
-    return celeb.name;
+  return data.map((celeb) => {
+    return celeb.value;
   });
 }
 
@@ -29,6 +29,5 @@ export default async function fetchFromCelebApi() {
   // console.log(celebsFromApi);
 
   // return mapLocalData(celebsFromApi);
-
   return mapLocalData(celebAPIResult_local);
 }

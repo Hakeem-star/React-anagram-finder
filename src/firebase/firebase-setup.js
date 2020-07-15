@@ -4,8 +4,8 @@ import { firebaseConfig } from "./firebaseConfig";
 // Add the Firebase products that you want to use
 import "firebase/firestore";
 import "firebase/storage";
+import { uuidv5Maker } from './../utils/uuid-config';
 
-import { v5 as uuidv5 } from "uuid";
 
 firebase.initializeApp(firebaseConfig);
 
@@ -29,8 +29,7 @@ var db = firebase.firestore();
 export async function addSharedSearchToFirestore(searchValue) {
   //currently using the original search. Might be more efficient to use the cleaned search
   console.log(searchValue);
-  const MY_NAMESPACE = "1b671a64-40d5-491e-99b0-da01ff1f3341";
-  const id = uuidv5(searchValue[0].value, MY_NAMESPACE);
+  const id = uuidv5Maker(searchValue[0].value);
   const searchTerm = searchValue[0].value;
   console.log(id);
   const collection = db.collection("share").doc(id);

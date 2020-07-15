@@ -10,7 +10,7 @@ export function cleanInputValue(value) {
       .split(",")
       //Remove any non alphabet values
       .map((val, index, orig) => {
-        return [val.replace(/\W/g, "").toUpperCase(), orig[index]];
+        return [val.replace(/[^\p{L}\p{Nd}]/gu, "").toUpperCase(), orig[index]];
       })
       .filter((el) => el[0] !== "");
   } else {
@@ -18,56 +18,57 @@ export function cleanInputValue(value) {
     //Place Anagram into Array
     //Remove any non alphabet values
     // console.log(value);
-    cleanValue = [[value.replace(/\W/g, "").toUpperCase(), value]];
+    cleanValue = [[value.replace(/[^\p{L}\p{Nd}]/gu, "").toUpperCase(), value]];
   }
   return cleanValue;
 }
 
-// export function celebNameCleanup(value) {
-//   console.log(value);
-//   return [
-//     [
-//       value
-//         .toUpperCase()
-//         //remove spaces
-//         .replace(/\W/g, ""),
-//       value,
-//     ],
-//   ];
-// }
+export function cleanCelebInputValue(value) {
+  //write input value to anagram variable
+  //Check if there are multiple ANAGRAMS and split into array
+  let cleanValue = [];
+  //Clean value
+  //Place name into Array
+  //Remove any non alphabet values
+  const noBrackets = value.replace(/\(.*\)/u, "").trim();
+  const noUnderScore = value.replace(/_/g, " ").trim();
+  // const noBracketsNoUnderScore = noBrackets.replace(/_/g, " ");
+  const cleanUpper = noBrackets.replace(/[^\p{L}\p{Nd}]/gu, "").toUpperCase();
+  //["ROBERTFWAGNERJR","Robert F. Wagner Jr. (deputy mayor)","Robert_F._Wagner_Jr._(deputy_mayor)"]
+  cleanValue = [cleanUpper, noUnderScore, value];
+  return cleanValue;
+}
 
-export function occuranceCount(anagramToCount) {
+export function occuranceCount(arrayToCountContainer) {
   //Count the occurances of letters within the current anagram
-  let anagramLetterCount = {};
-  // debugger;
+  let letterCount = {};
   //Go through the anagram array
-  anagramToCount.forEach((anagramsArrayCounter) => {
+  //[["TRUMP","trump"]]
+  arrayToCountContainer.forEach((wordsArray, ind) => {
     //Split the anagram into an array of individual letters
     // console.log(anagramsArrayCounter);
-    let singleAnagramArray = anagramsArrayCounter[0].split("");
-    //console.log(splitAnagramToLetters)
+    const splitCleanUppercaseWord = wordsArray[0].toString().split("");
+    const orginalword = wordsArray[1];
     //[S,H,A,V,E,R,S,I,N]
 
-    //iterate through each letter
-    singleAnagramArray.forEach(function (anagramLetter, index, initialArray) {
-      if (anagramLetterCount[anagramsArrayCounter[1]] === undefined) {
-        anagramLetterCount[anagramsArrayCounter[1]] = {};
+    //Iterate through each letter
+    splitCleanUppercaseWord.forEach(function (letter, index) {
+      if (letterCount[orginalword] === undefined) {
+        letterCount[orginalword] = {};
       }
       //Create an object that uses the letter as a key
       //Then with a filter, it iterates through the array containing all the ANAGRAM letters to compare the key letter
       //Then uses the length of the filtered result as the amount of occurances
-      anagramLetterCount[anagramsArrayCounter[1]][
-        anagramLetter
-      ] = initialArray.filter(
+      letterCount[orginalword][letter] = splitCleanUppercaseWord.filter(
         (filteredSingleAnagramArray) =>
           //iterate through letters/Create an array of matching letters/get the length of that array to provide a count of the occurance of the letter in the array
-          filteredSingleAnagramArray === anagramLetter
+          filteredSingleAnagramArray === letter
       ).length;
     });
     //anagramLetterCount = {"TRUMCDONALD":{"t":1,"r":1}}
   });
 
-  return anagramLetterCount;
+  return letterCount;
 }
 
 export function matchMaker(userInputArray, celebArray) {
@@ -77,7 +78,6 @@ export function matchMaker(userInputArray, celebArray) {
   //clean - remove special characters
   const userInputAnagram = cleanInputValue(userInputArray);
   //[["TRUMP", "trump"]]
-
   //count
   const userInputAnagramOccuranceCount = occuranceCount(userInputAnagram);
   //{trump: {T: 1, R: 1, U: 1, M: 1, P: 1}}
@@ -90,9 +90,10 @@ export function matchMaker(userInputArray, celebArray) {
   //Celebs
   //clean - remove special characters
   const celebNames = celebArray.map(
-    (celebName) => cleanInputValue(celebName)[0]
+    (celebName) => cleanCelebInputValue(celebName)
   );
-  //[["DONALDTRUMP", "Donald Trump"]]
+  //[["ROBERTFWAGNERJR","Robert F. Wagner Jr. (deputy mayor)","Robert_F._Wagner_Jr._(deputy_mayor)"]]
+
 
   //count
   const countedCelebNames = occuranceCount(celebNames);
@@ -100,6 +101,7 @@ export function matchMaker(userInputArray, celebArray) {
   //Aaron Carter: {A: 3, R: 3, O: 1, N: 1, C: 1}}
 
   const countedCelebNamesKeys = Object.keys(countedCelebNames);
+  //  Object.keys(countedCelebNames);
   //["Donald Trump"]
 
   let recordKeeper = {};
@@ -144,18 +146,15 @@ export function matchMaker(userInputArray, celebArray) {
             userInputAnagramOccuranceCount[currentUserInputLetter];
           //countedUserInputAnagram[userAnagrams];
           //donaldtrumf
-          const userAnagrams = currentUserInputAnagramName;
 
           const celebName = countedCelebNamesKeys[celebNameIterator];
           const cleanCelebname = celebNames[celebNameIterator][0];
-          // debugger;
           //"Donald Trump"
 
           //DONALDTRUMP
           const celebArrayCurrentCelebOccurance = countedCelebNames[celebName];
 
           // countedCelebNames[celebName];
-
           //If the celebs anagram contains the letter from the user input
           if (celebArrayCurrentCelebOccurance.hasOwnProperty(userInputLetter)) {
             //If user input anagram letter count is smaller than the celeb anagram
@@ -166,23 +165,24 @@ export function matchMaker(userInputArray, celebArray) {
               //If there is no previous record of this anagram & celebName
               recordKeeper[cleanUserAnagrams][celebName] === undefined
                 ? (recordKeeper[cleanUserAnagrams][celebName] =
-                    userInputCurrentLetterOccurance[userInputLetter])
+                  userInputCurrentLetterOccurance[userInputLetter])
                 : (recordKeeper[cleanUserAnagrams][celebName] +=
-                    userInputCurrentLetterOccurance[userInputLetter]);
+                  userInputCurrentLetterOccurance[userInputLetter]);
             }
           }
-          // debugger;
-
           //if we are at the last one, I want to calculate the percentage
           if (
             index === orig.length - 1 &&
             recordKeeper[cleanUserAnagrams][celebName] !== undefined
           ) {
-            recordKeeper[cleanUserAnagrams][celebName] = (
-              (recordKeeper[cleanUserAnagrams][celebName] /
-                cleanCelebname.length) *
-              100
-            ).toFixed(0);
+            recordKeeper[cleanUserAnagrams][celebName] = [
+              (
+                (recordKeeper[cleanUserAnagrams][celebName] /
+                  cleanCelebname.length) *
+                100
+              ).toFixed(0),
+              celebNames[celebNameIterator][2]
+            ];
           }
         });
       }
@@ -208,7 +208,8 @@ function formatForTable(builtResult) {
         key: arr.length + 1,
         Anagram: key,
         Name: resultMatch,
-        "%": builtResult[key][resultMatch],
+        "%": builtResult[key][resultMatch][0],
+        url: builtResult[key][resultMatch][1],
       });
     }
   }
@@ -241,6 +242,7 @@ export default async function celebAnagramFinder(userInput, fetchFromCelebApi) {
   // );
   // console.log(formatForTable(matchMaker(userInput, celebNames)));
   const celebNames = await fetchFromCelebApi();
-
-  return formatForTable(matchMaker(userInput, celebNames));
+  //preferably the dataset would be de-duped, but just in case
+  const dedupedCelebNames = [...new Set(celebNames)];
+  return formatForTable(matchMaker(userInput, dedupedCelebNames));
 }

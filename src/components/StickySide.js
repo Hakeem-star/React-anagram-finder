@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from "react";
+import React, { useState, Fragment, useContext } from "react";
 import PreviousSearches from "./loading/PreviousSearches";
 import { Layout } from "antd";
 import "./StickySide.less";
@@ -8,18 +8,18 @@ import {
   ShareAltOutlined,
 } from "@ant-design/icons";
 import { addSharedSearchToFirestore } from "../firebase/firebase-setup";
+import { AppContext } from './../App';
+
 const { Sider } = Layout;
 
 export default function StickySide({
-  updateActiveHistoryButtonStatus,
-  previousSearches,
-  toggleCollapedSider,
-  setToggleCollapedSider,
-  updateTableData,
-}) {
-  // useEffect(()=>{
 
-  // },[])
+}) {
+
+  const {
+    toggleCollapedSider,
+    setToggleCollapedSider,
+    previousSearchesData } = useContext(AppContext);
 
   return (
     <div className="sider-container">
@@ -32,11 +32,7 @@ export default function StickySide({
         collapsed={toggleCollapedSider}
       >
         <div>History</div>
-        <PreviousSearches
-          activateHistory={updateActiveHistoryButtonStatus}
-          previousSearches={previousSearches}
-          updateTableData={updateTableData}
-        ></PreviousSearches>
+        <PreviousSearches />
       </Sider>
       <div className="sider-container__icon-container">
         <ReloadOutlined
@@ -51,7 +47,7 @@ export default function StickySide({
           className="sider-container__icon-container__icon share-icon"
           onClick={() => {
             //generateUUID & send to firebase
-            addSharedSearchToFirestore(previousSearches);
+            addSharedSearchToFirestore(previousSearchesData);
             //recieve confirmation that entry was added
 
             //Display something showing the url as well as icon to copy

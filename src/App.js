@@ -10,6 +10,10 @@ import ThresholdSlider from "./components/ThresholdSlider";
 import ResultsTable from "./components/ResultsTable";
 import { getSharedSearchToFirestore } from "./firebase/firebase-setup";
 
+
+export const AppContext = React.createContext();
+
+
 const { Content } = Layout;
 
 const matchesPreviousSearch = (previousSearchesState, newSearch) => {
@@ -27,7 +31,7 @@ const matchesPreviousSearch = (previousSearchesState, newSearch) => {
 const updateActiveHistoryButtonStatus = (matchesPreviousSearchResult) => {
   //get data from previous history
   //Remove class from other elements that already have the active class
-  Array.from(document.querySelectorAll(`.previous-search .ant-row`)).forEach(
+  Array.from(document.querySelectorAll(`.previous-search__item`)).forEach(
     (element) => {
       element.classList.remove("--active");
     }
@@ -46,7 +50,7 @@ export default function App() {
   const [anagramType, setAnagramType] = useState("celeb");
   const [tableData, updateTableData] = useState([]);
   const [filteredtableData, updateFilteredTableData] = useState([]);
-  const [previousSearches, updatePreviousSearchesState] = useState([]); //[{value:"test",tableData:[{}],title:Date.now()}]
+  const [previousSearchesData, updatePreviousSearchesStateData] = useState([]); //[{value:"test",tableData:[{}],title:Date.now()}]
   const [fetchingTableDataStatus, updateFetchingTableDataStatus] = useState(
     false
   );
@@ -54,6 +58,7 @@ export default function App() {
 
   const [toggleCollapedSider, setToggleCollapedSider] = useState(true);
   const previousSearchHistory = useRef([]);
+  const [inputvalueState, setInputvalueState] = useState("");
 
   useEffect(() => {
     //Grab url
@@ -66,11 +71,11 @@ export default function App() {
       };
     }
     const id = getParams(url).search;
-    console.log(getParams(url));
+    // console.log(getParams(url));
     //get the search term of the id from firebase
-    if (getParams.length > 0) {
-      getSharedSearchToFirestore(id);
-    }
+    // if (getParams.length > 0) {
+    //   getSharedSearchToFirestore(id);
+    // }
 
     //Update table as if a request was made
   }, []);
@@ -93,68 +98,51 @@ export default function App() {
 
   // useEffect(() => {
   //   //Highlight the most recent search button
-  //   if (previousSearches.length !== 0) {
+  //   if (previousSearchesData.length !== 0) {
   //     updateActiveHistoryButtonStatus(0);
   //   }
-  // }, [previousSearches]);
+  // }, [previousSearchesData]);
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <StickySide
-        toggleCollapedSider={toggleCollapedSider}
-        updateActiveHistoryButtonStatus={updateActiveHistoryButtonStatus}
-        previousSearches={previousSearches}
-        setToggleCollapedSider={setToggleCollapedSider}
-        updateTableData={updateTableData}
-      />
-      <Row style={{ width: "100%" }}>
-        <Col span={24}>
-          <PageHeader setAnagramType={setAnagramType} />
-          <SearchInput
-            updateFetchingTableDataStatus={updateFetchingTableDataStatus}
-            updateActiveHistoryButtonStatus={updateActiveHistoryButtonStatus}
-            matchesPreviousSearch={matchesPreviousSearch}
-            updateTableData={(value) => {
-              updateTableData(() => {
-                previousSearchHistory.current.unshift(value);
-                // console.log(previousSearchHistory.current);
-                return value;
-              });
-            }}
-            updatePreviousSearchesState={updatePreviousSearchesState}
-            previousSearches={previousSearches}
-          />
+      <AppContext.Provider value={{ inputvalueState, setInputvalueState, previousSearchHistory, toggleCollapedSider, updateActiveHistoryButtonStatus, previousSearchesData, setToggleCollapedSider, updateTableData, updateFetchingTableDataStatus, matchesPreviousSearch, updatePreviousSearchesStateData }}>
+        <StickySide />
+        <Row style={{ width: "100%" }}>
+          <Col span={24}>
+            <PageHeader setAnagramType={setAnagramType} />
+            <SearchInput />
 
-          <Content
-            className="main-content"
-            style={{ paddingTop: "60px", paddingBottom: "60px" }}
-          >
-            <Row justify="center">
-              <Col style={{ textAlign: "left" }} span={16}>
-                <p>Threshold</p>
-              </Col>
-            </Row>
-            <Row justify="center">
-              <Col span={16}>
-                <ThresholdSlider
-                  updateThresholdSliders={updateThresholdSliders}
-                  updateFilteredTableData={updateFilteredTableData}
-                  tableData={tableData}
-                  thresholdSliders={thresholdSliders}
-                />
-              </Col>
-            </Row>
-            <Row justify="center">
-              <Col span={20}>
-                <ResultsTable
-                  fetchingTableDataStatus={fetchingTableDataStatus}
-                  filteredtableData={filteredtableData}
-                />
-              </Col>
-            </Row>
-          </Content>
-        </Col>
-      </Row>
+            <Content
+              className="main-content"
+              style={{ paddingTop: "60px", paddingBottom: "60px" }}
+            >
+              <Row justify="center">
+                <Col style={{ textAlign: "left" }} span={16}>
+                  <p>Threshold</p>
+                </Col>
+              </Row>
+              <Row justify="center">
+                <Col span={16}>
+                  <ThresholdSlider
+                    updateThresholdSliders={updateThresholdSliders}
+                    updateFilteredTableData={updateFilteredTableData}
+                    tableData={tableData}
+                    thresholdSliders={thresholdSliders}
+                  />
+                </Col>
+              </Row>
+              <Row justify="center">
+                <Col span={20}>
+                  <ResultsTable
+                    fetchingTableDataStatus={fetchingTableDataStatus}
+                    filteredtableData={filteredtableData}
+                  />
+                </Col>
+              </Row>
+            </Content>
+          </Col>
+        </Row>
+      </AppContext.Provider>
     </Layout>
   );
 }
