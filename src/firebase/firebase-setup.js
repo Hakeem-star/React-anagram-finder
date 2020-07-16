@@ -4,8 +4,7 @@ import { firebaseConfig } from "./firebaseConfig";
 // Add the Firebase products that you want to use
 import "firebase/firestore";
 import "firebase/storage";
-import { uuidv5Maker } from './../utils/uuid-config';
-
+import { uuidv5Maker } from "./../utils/uuid-config";
 
 firebase.initializeApp(firebaseConfig);
 
@@ -28,10 +27,8 @@ var db = firebase.firestore();
 //Add shared id to firestore
 export async function addSharedSearchToFirestore(searchValue) {
   //currently using the original search. Might be more efficient to use the cleaned search
-  console.log(searchValue);
   const id = uuidv5Maker(searchValue[0].value);
   const searchTerm = searchValue[0].value;
-  console.log(id);
   const collection = db.collection("share").doc(id);
   await collection
     .set({
@@ -42,6 +39,7 @@ export async function addSharedSearchToFirestore(searchValue) {
     });
 
   console.log("Document written with ID: ", id);
+  return `www.celebAnagram.com/?share=${id}`;
 }
 
 //Get search string from database based on id
@@ -53,6 +51,8 @@ export async function getSharedSearchToFirestore(id) {
 
   if (document.exists) {
     console.log("Document data:", document.data());
+    const searchTermObject = await document.data();
+    return searchTermObject.searchTerm;
   } else {
     // doc.data() will be undefined in this case
     console.log("No such document!");

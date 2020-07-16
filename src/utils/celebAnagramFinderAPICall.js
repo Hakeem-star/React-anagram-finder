@@ -3,7 +3,6 @@ export function cleanInputValue(value) {
   //Check if there are multiple ANAGRAMS and split into array
   let cleanValue = [];
   //Clean value
-  // console.log(value);
   if (value.includes(",")) {
     //Create array from comma seperated anagram and remove spaces
     cleanValue = value
@@ -89,11 +88,10 @@ export function matchMaker(userInputArray, celebArray) {
 
   //Celebs
   //clean - remove special characters
-  const celebNames = celebArray.map(
-    (celebName) => cleanCelebInputValue(celebName)
+  const celebNames = celebArray.map((celebName) =>
+    cleanCelebInputValue(celebName)
   );
   //[["ROBERTFWAGNERJR","Robert F. Wagner Jr. (deputy mayor)","Robert_F._Wagner_Jr._(deputy_mayor)"]]
-
 
   //count
   const countedCelebNames = occuranceCount(celebNames);
@@ -165,9 +163,9 @@ export function matchMaker(userInputArray, celebArray) {
               //If there is no previous record of this anagram & celebName
               recordKeeper[cleanUserAnagrams][celebName] === undefined
                 ? (recordKeeper[cleanUserAnagrams][celebName] =
-                  userInputCurrentLetterOccurance[userInputLetter])
+                    userInputCurrentLetterOccurance[userInputLetter])
                 : (recordKeeper[cleanUserAnagrams][celebName] +=
-                  userInputCurrentLetterOccurance[userInputLetter]);
+                    userInputCurrentLetterOccurance[userInputLetter]);
             }
           }
           //if we are at the last one, I want to calculate the percentage
@@ -181,7 +179,7 @@ export function matchMaker(userInputArray, celebArray) {
                   cleanCelebname.length) *
                 100
               ).toFixed(0),
-              celebNames[celebNameIterator][2]
+              celebNames[celebNameIterator][2],
             ];
           }
         });

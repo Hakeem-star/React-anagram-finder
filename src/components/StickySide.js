@@ -1,6 +1,6 @@
 import React, { useState, Fragment, useContext } from "react";
 import PreviousSearches from "./loading/PreviousSearches";
-import { Layout } from "antd";
+import { Layout, Result, Button, message } from "antd";
 import "./StickySide.less";
 import {
   ReloadOutlined,
@@ -8,18 +8,17 @@ import {
   ShareAltOutlined,
 } from "@ant-design/icons";
 import { addSharedSearchToFirestore } from "../firebase/firebase-setup";
-import { AppContext } from './../App';
+import { AppContext } from "./../App";
+import { openNotification } from "./SharedResultDisplay";
 
 const { Sider } = Layout;
 
-export default function StickySide({
-
-}) {
-
+export default function StickySide() {
   const {
     toggleCollapedSider,
     setToggleCollapedSider,
-    previousSearchesData } = useContext(AppContext);
+    previousSearchesData,
+  } = useContext(AppContext);
 
   return (
     <div className="sider-container">
@@ -45,12 +44,19 @@ export default function StickySide({
         />
         <ShareAltOutlined
           className="sider-container__icon-container__icon share-icon"
-          onClick={() => {
+          onClick={async () => {
             //generateUUID & send to firebase
-            addSharedSearchToFirestore(previousSearchesData);
-            //recieve confirmation that entry was added
-
-            //Display something showing the url as well as icon to copy
+            if (previousSearchesData.length > 0) {
+              const shareURL = await addSharedSearchToFirestore(
+                previousSearchesData
+              );
+              console.log(shareURL);
+              //recieve confirmation that entry was added
+              openNotification(shareURL);
+              //Display something showing the url as well as icon to copy
+            } else {
+              message.error("Search for an anagram first");
+            }
           }}
         />
         <DownloadOutlined className="sider-container__icon-container__icon" />

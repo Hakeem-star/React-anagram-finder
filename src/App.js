@@ -9,34 +9,24 @@ import SearchInput from "./components/SearchInput";
 import ThresholdSlider from "./components/ThresholdSlider";
 import ResultsTable from "./components/ResultsTable";
 import { getSharedSearchToFirestore } from "./firebase/firebase-setup";
+import { getURLSharedId } from "./utils/getURLSharedId";
+import SharedResultDisplay from "./components/SharedResultDisplay";
 
 export const AppContext = React.createContext();
 
 const { Content } = Layout;
 
-const matchesPreviousSearch = (previousSearchesState, newSearch) => {
-  //go through the previous searches and compare it to the new search
-  for (let index = 0; index < previousSearchesState.length; index++) {
-    const correctIndex = previousSearchesState.length - index - 1;
-    if (previousSearchesState[index].value === newSearch) {
-      //If a match is found, return the match status as well as the index it was found
-      return { match: true, index: correctIndex };
-    }
-  }
-  return { match: false, index: null };
-};
-
 const updateActiveHistoryButtonStatus = (matchesPreviousSearchResult) => {
   //get data from previous history
   //Remove class from other elements that already have the active class
-  Array.from(document.querySelectorAll(`.previous-search__item`)).forEach(
+  Array.from(document.querySelectorAll(`.previous-searches__item`)).forEach(
     (element) => {
       element.classList.remove("--active");
     }
   );
 
   let element = document.querySelector(
-    `.previous-search__item.result-${matchesPreviousSearchResult}`
+    `.previous-searches__item.result-${matchesPreviousSearchResult}`
   );
 
   //highlight previous history selection
@@ -44,6 +34,7 @@ const updateActiveHistoryButtonStatus = (matchesPreviousSearchResult) => {
 
   //update history search
 };
+
 export default function App() {
   const [anagramType, setAnagramType] = useState("celeb");
   const [tableData, updateTableData] = useState([]);
@@ -55,31 +46,33 @@ export default function App() {
   const [thresholdSliders, updateThresholdSliders] = useState([1, 100]);
 
   const [toggleCollapedSider, setToggleCollapedSider] = useState(true);
-  const previousSearchHistory = useRef([]);
   const [inputvalueState, setInputvalueState] = useState("");
+  const [sharedSearchInput, setSharedSearchInput] = useState(null);
 
+  //On mount grab shared results from url uuid in search query
   useEffect(() => {
-    //Grab url
-    const url = window.location.search;
-    //Get query string
-    function getParams(url) {
-      const searchParams = new URLSearchParams(url);
-      return {
-        search: searchParams.get("search") || "",
-      };
-    }
-    const id = getParams(url).search;
-    console.log(getParams(url));
+    const id = getURLSharedId();
     //get the search term of the id from firebase
-    // if (getParams.length > 0) {
-    //   getSharedSearchToFirestore(id);
-    // }
+    if (id !== null) {
+      (async () => {
+        const searchTerm = await getSharedSearchToFirestore(id);
+        // console.log(id, searchTerm);
+        //Perform a search and update the input & history
+        setSharedSearchInput(searchTerm);
+      })();
+    }
 
     //Update table as if a request was made
   }, []);
 
   useEffect(() => {
+    //Confirm completed load after table is filtered
+    if (filteredtableData.length > 0) updateFetchingTableDataStatus(false);
+  }, [filteredtableData]);
+
+  useEffect(() => {
     //Filter table data using current threshold values
+
     updateFilteredTableData(() => {
       return tableData.filter(
         (data) =>
@@ -88,18 +81,27 @@ export default function App() {
     });
   }, [tableData, thresholdSliders]);
 
-  // useEffect(() => {
-  //   if (tableData.length > 0) {
-  //     previousSearchHistory.current.unshift(tableData);
-  //   }
-  // }, [tableData]);
+  useEffect(() => {
+    //Scroll to input on top
+    // pushToPrevSearchHistory(anagramResult);
+    const scrollOptions = {
+      behavior: "smooth",
+      block: "start",
+      inline: "nearest",
+    };
+    if (!fetchingTableDataStatus) {
+      document.querySelector(".search").scrollIntoView(scrollOptions);
+    }
+  }, [fetchingTableDataStatus]);
 
-  // useEffect(() => {
-  //   //Highlight the most recent search button
-  //   if (previousSearchesData.length !== 0) {
-  //     updateActiveHistoryButtonStatus(0);
-  //   }
-  // }, [previousSearchesData]);
+  useEffect(() => {
+    //When the previous state is updated by performing a new search, update the table data
+    //This provides a sensible way to update everything at once
+    //Highlight the most recent search button
+    if (previousSearchesData.length > 0) {
+      updateTableData(() => previousSearchesData[0].tableData);
+    }
+  }, [previousSearchesData]);
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
@@ -107,14 +109,13 @@ export default function App() {
         value={{
           inputvalueState,
           setInputvalueState,
-          previousSearchHistory,
+          sharedSearchInput,
           toggleCollapedSider,
           updateActiveHistoryButtonStatus,
           previousSearchesData,
           setToggleCollapedSider,
           updateTableData,
           updateFetchingTableDataStatus,
-          matchesPreviousSearch,
           updatePreviousSearchesStateData,
         }}
       >

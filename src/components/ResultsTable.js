@@ -47,7 +47,7 @@ export default function ResultsTable({
 }) {
   return (
     <Table
-      loading={fetchingTableDataStatus}
+      loading={{ spinning: fetchingTableDataStatus }}
       dataSource={filteredtableData}
       columns={columns}
     />

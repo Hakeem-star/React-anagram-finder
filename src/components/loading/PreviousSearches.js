@@ -14,7 +14,7 @@ export default function PreviousSearches() {
     return <div></div>;
   }
   return (
-    <div className="previous-search">
+    <div className="previous-searches">
       {previousSearchesData.map((result, index, original) => {
         let correctIndex = original.length - index - 1;
         const trailingDots = result.value.length > 7 ? "..." : "";
@@ -25,7 +25,7 @@ export default function PreviousSearches() {
             <Col
               span={12}
               push={6}
-              className={`previous-search__item result-${correctIndex}`}
+              className={`previous-searches__item result-${correctIndex}`}
             >
               <Popover
                 placement="right"

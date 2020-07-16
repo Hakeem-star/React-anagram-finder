@@ -7,3 +7,7 @@
 // export default function celebAnagramFinderAPICall(value) {
 //   // return original(value, celebAPIResult_local);
 // }
+
+export default function celebAnagramFinder() {
+  return [{ key: 1, Anagram: "TEST", Name: "test", "%": 100, url: "test" }];
+}
