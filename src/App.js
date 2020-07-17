@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Layout, Row, Col } from "antd";
 
 import "antd/dist/antd.less";
@@ -10,7 +10,6 @@ import ThresholdSlider from "./components/ThresholdSlider";
 import ResultsTable from "./components/ResultsTable";
 import { getSharedSearchToFirestore } from "./firebase/firebase-setup";
 import { getURLSharedId } from "./utils/getURLSharedId";
-import SharedResultDisplay from "./components/SharedResultDisplay";
 
 export const AppContext = React.createContext();
 

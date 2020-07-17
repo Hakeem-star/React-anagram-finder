@@ -1,6 +1,25 @@
 .shared-result-display {
+  @shared-result-display-width: 30.2vw;
+  @shared-result-display-height: 6vw;
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate3d(-50%, -50%, 0);
+  width: @shared-result-display-width;
+  height: @shared-result-display-height;
+  min-width: 580px;
+  min-height: 115px;
+  .ant-notification-notice-message {
+    width: 88%;
+    .ant-divider {
+      width: 100%;
+      margin: 0;
+    }
+  }
+}
+
+// ant-notification-notice shared-result-display ant-notification-notice-closable
+.ant-notification-notice-description {
+  font-size: 18px;
+  margin-top: 10px;
 }

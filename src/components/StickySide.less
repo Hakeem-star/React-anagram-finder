@@ -36,16 +36,19 @@
       padding-bottom: 37px;
       line-height: 30px;
     }
+
     & ~ .sider-container__icon-container .anticon-reload {
       svg {
-        transform: scaleX(-1) rotate(100deg);
+        transform: scaleX(-1) rotate(0deg);
+        transition: transform 0.5s;
       }
     }
+
     &.ant-layout-sider-collapsed
       ~ .sider-container__icon-container
       .anticon-reload {
       svg {
-        transform: scaleX(-1) rotate(0deg);
+        transform: scaleX(-1);
       }
     }
   }
@@ -73,21 +76,35 @@
       place-items: center;
       background-color: #001529;
 
+      @media only screen and (max-width: 991px) {
+        @sticky_side-icon-width: 40px;
+
+        width: @sticky_side-icon-width;
+        height: @sticky_side-icon-width;
+      }
+      //Hover animations
       &.anticon-reload {
+        &:hover {
+          svg {
+            transform: scaleX(-1.2) scaleY(1.2) rotate(30deg) !important;
+          }
+        }
+      }
+
+      &.share-icon {
         svg {
-          transform: scaleX(-1) rotate(-30deg);
           transition: transform 0.5s;
         }
         &:hover {
           svg {
-            transform: scaleX(-1) rotate(100deg) !important;
+            transform: scale(1.2) !important;
           }
         }
       }
     }
 
     @media only screen and (max-width: 991px) {
-      @sticky_side-icon-width: 50px;
+      @sticky_side-icon-width: 40px;
       width: @sticky_side-icon-width;
       height: @sticky_side-icon-width;
       position: relative;

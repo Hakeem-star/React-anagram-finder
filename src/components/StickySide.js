@@ -1,6 +1,6 @@
-import React, { useState, Fragment, useContext } from "react";
+import React, { useContext } from "react";
 import PreviousSearches from "./loading/PreviousSearches";
-import { Layout, Result, Button, message } from "antd";
+import { Layout, message } from "antd";
 import "./StickySide.less";
 import {
   ReloadOutlined,

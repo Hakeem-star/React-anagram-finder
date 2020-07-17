@@ -1,14 +1,22 @@
 import React from "react";
-import { notification, Button } from "antd";
-import { SmileOutlined } from "@ant-design/icons";
+import { notification, Button, Result, Typography, Divider } from "antd";
+import { ShareAltOutlined } from "@ant-design/icons";
+
 import "./SharedResultDisplay.less";
+const { Text } = Typography;
 
 export const openNotification = (url) => {
   notification.open({
-    message: "Notification Title",
-    description: url,
-    icon: <SmileOutlined style={{ color: "#108ee9" }} />,
+    message: <Divider>Shareable URL</Divider>,
+    description: (
+      <Text keyboard copyable>
+        {url}
+      </Text>
+    ),
+    icon: <ShareAltOutlined style={{ color: "#108ee9" }} />,
     className: "shared-result-display",
+    duration: 0,
+    placement: "bottomLeft",
   });
 };
 
