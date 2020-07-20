@@ -1,7 +1,6 @@
 import { useContext } from "react";
 import { AppContext } from "../App";
 import celebAnagramFinder from "./celebAnagramFinderAPICall";
-import fetchFromCelebApi from "./fetchCelebData";
 import { message } from "antd";
 
 message.config({
@@ -11,13 +10,20 @@ message.config({
   rtl: true,
 });
 
-const matchesPreviousSearch = (previousSearchesState, newSearch) => {
+const matchesPreviousSearch = (
+  previousSearchesState,
+  newSearch,
+  anagramType
+) => {
   //go through the previous searches and compare it to the new search
   for (let index = 0; index < previousSearchesState.length; index++) {
     const correctIndex = previousSearchesState.length - index - 1;
-    if (previousSearchesState[index].value === newSearch) {
-      //If a match is found, return the match status as well as the index it was found
-      return { match: true, index: correctIndex };
+    //Check which type of search it was
+    if (previousSearchesState[index].anagramType === anagramType) {
+      if (previousSearchesState[index].value === newSearch) {
+        //If a match is found, return the match status as well as the index it was found
+        return { match: true, index: correctIndex };
+      }
     }
   }
   return { match: false, index: null };
@@ -30,13 +36,24 @@ export default function useURLSharedSearch() {
     updatePreviousSearchesStateData,
     previousSearchesData,
     updateTableData,
+    anagramType,
   } = useContext(AppContext);
 
   return (e) => {
-    let searchValue = typeof e === "string" ? e : e.target.value;
+    let searchValue;
+    if (typeof e === "string") {
+      //If no value was entered
+      if (e.length < 1) {
+        message.error("Please type in an anagram");
+        return;
+      } else searchValue = e;
+    } else {
+      searchValue = e.target.value;
+    }
     let previousSearchMatch = matchesPreviousSearch(
       previousSearchesData,
-      searchValue
+      searchValue,
+      anagramType
     ); //{ match: false, index }
     //If the new user input is the same as a previous input
     previousSearchMatch.match
@@ -54,7 +71,7 @@ export default function useURLSharedSearch() {
           updateFetchingTableDataStatus(true);
           let anagramResult = await celebAnagramFinder(
             searchValue,
-            fetchFromCelebApi
+            anagramType
           );
 
           if (anagramResult.length === 0) {
@@ -70,6 +87,7 @@ export default function useURLSharedSearch() {
                 value: searchValue,
                 title: time.toGMTString(),
                 tableData: anagramResult,
+                anagramType,
               });
 
               return result;

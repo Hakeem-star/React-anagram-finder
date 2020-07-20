@@ -1,3 +1,5 @@
+import fetchFromApi from "./fetchCelebData";
+
 export function cleanInputValue(value) {
   //write input value to anagram variable
   //Check if there are multiple ANAGRAMS and split into array
@@ -55,6 +57,7 @@ export function occuranceCount(arrayToCountContainer) {
       if (letterCount[orginalword] === undefined) {
         letterCount[orginalword] = {};
       }
+
       //Create an object that uses the letter as a key
       //Then with a filter, it iterates through the array containing all the ANAGRAM letters to compare the key letter
       //Then uses the length of the filtered result as the amount of occurances
@@ -63,6 +66,9 @@ export function occuranceCount(arrayToCountContainer) {
           //iterate through letters/Create an array of matching letters/get the length of that array to provide a count of the occurance of the letter in the array
           filteredSingleAnagramArray === letter
       ).length;
+      if (letterCount[orginalword] === undefined) {
+        console.log(orginalword);
+      }
     });
     //anagramLetterCount = {"TRUMCDONALD":{"t":1,"r":1}}
   });
@@ -88,20 +94,31 @@ export function matchMaker(userInputArray, celebArray) {
 
   //Celebs
   //clean - remove special characters
-  const celebNames = celebArray.map((celebName) =>
-    cleanCelebInputValue(celebName)
-  );
+  let celebNames = [],
+    countedCelebNamesKeys = [];
+
+  celebArray.forEach((celebName) => {
+    let clean = cleanCelebInputValue(celebName);
+    celebNames.push(clean);
+    countedCelebNamesKeys.push(clean[1]);
+  });
+
   //[["ROBERTFWAGNERJR","Robert F. Wagner Jr. (deputy mayor)","Robert_F._Wagner_Jr._(deputy_mayor)"]]
 
   //count
   const countedCelebNames = occuranceCount(celebNames);
   //{50 Cent: {0: 1, 5: 1, C: 1, E: 1, N: 1, T: 1},
   //Aaron Carter: {A: 3, R: 3, O: 1, N: 1, C: 1}}
-
-  const countedCelebNamesKeys = Object.keys(countedCelebNames);
-  //  Object.keys(countedCelebNames);
-  //["Donald Trump"]
-
+  // countedCelebNamesKeys = Object.keys(countedCelebNames);
+  // //  Object.keys(countedCelebNames);
+  // //["Donald Trump"]
+  // celebNames.forEach((value) => {
+  //   let test = countedCelebNamesKeys.find((val) => val === value[1]);
+  //   if (test === undefined) {
+  //     console.log(value);
+  //   }
+  // });
+  // debugger;
   let recordKeeper = {};
   // {"TRUMCDONALD":{"t":1,"r":1}}
   //For all the anagrams the user entered
@@ -214,7 +231,7 @@ function formatForTable(builtResult) {
   return arr;
 }
 
-export default async function celebAnagramFinder(userInput, fetchFromCelebApi) {
+export default async function celebAnagramFinder(userInput, anagramType) {
   //local results to prevent too many API calls
   // let celebsFromApi = celebAPIResult_local;
 
@@ -239,8 +256,9 @@ export default async function celebAnagramFinder(userInput, fetchFromCelebApi) {
   //   formatForTable(matchMaker(countedUserInputAnagrams, countedCelebNames))
   // );
   // console.log(formatForTable(matchMaker(userInput, celebNames)));
-  const celebNames = await fetchFromCelebApi();
+  const apiData = await fetchFromApi(anagramType);
+
   //preferably the dataset would be de-duped, but just in case
-  const dedupedCelebNames = [...new Set(celebNames)];
+  const dedupedCelebNames = [...new Set(apiData)];
   return formatForTable(matchMaker(userInput, dedupedCelebNames));
 }

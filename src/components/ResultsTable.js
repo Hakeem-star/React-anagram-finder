@@ -71,7 +71,7 @@ export default function ResultsTable({
 
     const handleReset = (clearFilters) => {
       clearFilters();
-      updateSearchText({ searchText: "" });
+      updateSearchText("");
     };
     filterInputConfig.current = (dataIndex) => {
       return {
@@ -130,7 +130,6 @@ export default function ResultsTable({
           }
         },
         render: (text) => {
-          // console.log(text, searchedColumn, dataIndex);
           return searchedColumn === dataIndex ? (
             <Highlighter
               highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
@@ -144,6 +143,7 @@ export default function ResultsTable({
         },
       };
     };
+
     const anamgramArray = [];
 
     filteredtableData.forEach((value) => {

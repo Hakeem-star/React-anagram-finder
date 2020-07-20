@@ -67,6 +67,21 @@
     place-items: center;
     flex: none;
     z-index: 1;
+
+    @media only screen and (max-width: 991px) {
+      @sticky_side-icon-width: 40px;
+      width: @sticky_side-icon-width;
+      height: 200px;
+      position: relative;
+      top: 380px;
+      left: @sticky_side-icon-width;
+      margin-left: -@sticky_side-icon-width;
+
+      &__icon {
+        font-size: 1.5rem;
+      }
+    }
+
     &__icon {
       color: white;
       font-size: 2rem;
@@ -78,7 +93,7 @@
 
       @media only screen and (max-width: 991px) {
         @sticky_side-icon-width: 40px;
-
+        font-size: 1.5rem;
         width: @sticky_side-icon-width;
         height: @sticky_side-icon-width;
       }
@@ -100,20 +115,6 @@
             transform: scale(1.2) !important;
           }
         }
-      }
-    }
-
-    @media only screen and (max-width: 991px) {
-      @sticky_side-icon-width: 40px;
-      width: @sticky_side-icon-width;
-      height: @sticky_side-icon-width;
-      position: relative;
-      top: 380px;
-      left: @sticky_side-icon-width;
-      margin-left: -@sticky_side-icon-width;
-
-      &__icon {
-        font-size: 1.5rem;
       }
     }
   }

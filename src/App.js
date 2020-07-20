@@ -35,7 +35,7 @@ const updateActiveHistoryButtonStatus = (matchesPreviousSearchResult) => {
 };
 
 export default function App() {
-  const [anagramType, setAnagramType] = useState("celeb");
+  const [anagramType, setAnagramType] = useState("celebs");
   const [tableData, updateTableData] = useState([]);
   const [filteredtableData, updateFilteredTableData] = useState([]);
   const [previousSearchesData, updatePreviousSearchesStateData] = useState([]); //[{value:"test",tableData:[{}],title:Date.now()}]
@@ -78,7 +78,8 @@ export default function App() {
           data["%"] >= thresholdSliders[0] && data["%"] <= thresholdSliders[1]
       );
     });
-  }, [tableData, thresholdSliders]);
+    //thresholdSliders dependancy is excluded because this is already managed in its own state and another state that triggers this effect
+  }, [tableData]);
 
   useEffect(() => {
     //Scroll to input on top
@@ -106,12 +107,13 @@ export default function App() {
     <Layout style={{ minHeight: "100vh" }}>
       <AppContext.Provider
         value={{
+          anagramType,
           inputvalueState,
-          setInputvalueState,
           sharedSearchInput,
           toggleCollapedSider,
-          updateActiveHistoryButtonStatus,
           previousSearchesData,
+          setInputvalueState,
+          updateActiveHistoryButtonStatus,
           setToggleCollapedSider,
           updateTableData,
           updateFetchingTableDataStatus,
@@ -122,8 +124,9 @@ export default function App() {
         <Row style={{ width: "100%" }}>
           <Col span={24}>
             <PageHeader setAnagramType={setAnagramType} />
-            <SearchInput />
-
+            <Row justify="center">
+              <SearchInput />
+            </Row>
             <Content
               className="main-content"
               style={{ paddingTop: "60px", paddingBottom: "60px" }}

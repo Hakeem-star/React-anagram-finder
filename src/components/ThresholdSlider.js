@@ -44,6 +44,10 @@ export default function ThresholdSlider({
         value={thresholdSliders}
         onChange={(value) => {
           updateThresholdSliders(value);
+        }}
+        //Updating too often causes slowdown when there are lots of anagrams to look for
+        //So only change after we land on a value
+        onAfterChange={(value) => {
           updateFilteredTableData(() => {
             return tableData.filter(
               (data) => data["%"] >= value[0] && data["%"] <= value[1]

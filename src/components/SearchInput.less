@@ -2,9 +2,19 @@
   border-top: 0;
   width: 100%;
   height: 100px;
-  padding-left: 40px;
-  &__suffix {
-    font-size: 21px;
-    margin-right: 50px;
+  padding-left: 100px;
+  .ant-input-suffix {
+    flex-basis: 15%;
+    align-items: center;
+    @media only screen and (max-width: 991px) {
+      flex-basis: 33%;
+    }
+    .ant-input-search-icon {
+      width: 100%;
+      font-size: 28px;
+      height: 100%;
+      display: grid;
+      place-items: center;
+    }
   }
 }

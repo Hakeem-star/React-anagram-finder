@@ -4,6 +4,7 @@ import "./SearchInput.less";
 import { SearchOutlined } from "@ant-design/icons";
 import { AppContext } from "./../App";
 import useURLSharedSearch from "../utils/useURLSharedSearch";
+const { Search } = Input;
 
 export default function SearchInput() {
   const { inputvalueState, setInputvalueState, sharedSearchInput } = useContext(
@@ -18,7 +19,7 @@ export default function SearchInput() {
   }, [sharedSearchInput, search]);
 
   return (
-    <Input
+    <Search
       className="search"
       placeholder="input anagram"
       size="37px"
@@ -26,8 +27,17 @@ export default function SearchInput() {
       onChange={(e) => {
         return setInputvalueState(() => e.target.value);
       }}
-      onPressEnter={search}
-      suffix={<SearchOutlined className="search__suffix" />}
+      onSearch={
+        search
+
+        // if (anagramType === "celebs") {
+        // }
+        // if (anagramType === "general") {
+        //   search(e);
+        // }
+      }
+      // enterButton
+      // suffix={<SearchOutlined className="search__suffix" />}
     />
   );
 }

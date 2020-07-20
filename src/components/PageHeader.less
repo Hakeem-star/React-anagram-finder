@@ -14,11 +14,10 @@
     display: flex;
     align-items: center;
   }
-  &__history-icon {
-  }
+
   &__menu {
     &__menu-item {
-      width: 49.8%;
+      width: 50%;
       text-align: center;
       height: 100%;
       line-height: 100px;
@@ -28,6 +27,13 @@
         font-size: 30px;
       }
     }
+
+    > .ant-menu-item-active.page-header__menu__menu-item,
+    > .ant-menu-item-selected {
+      background-color: @primary-color;
+      color: white;
+    }
+
     &__custom-menu-divider {
       background-color: @primary-color;
       border-bottom: 2px solid @primary-color;
