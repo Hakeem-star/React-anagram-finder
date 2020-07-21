@@ -10,7 +10,11 @@ It will return a result if there is at least an 80% match.
 
 This celebrity anagram finder accepts single anagrams or a comma seperated list of anagrams. So you can input something like TRUMFDAONDL or Thanksmo,TRUMCDONALD,parsi/hl itno
 
+It also remembers your previous searches and allows you to go back to them with a single click.
+
 Special characters and spaces are also removed.
+
+![React Celebs Anagram Finder](https://i.imgur.com/ZrWFOKa.png)
 
 
 ## Issues
