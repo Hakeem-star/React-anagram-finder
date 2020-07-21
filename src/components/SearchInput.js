@@ -27,15 +27,7 @@ export default function SearchInput() {
       onChange={(e) => {
         return setInputvalueState(() => e.target.value);
       }}
-      onSearch={
-        search
-
-        // if (anagramType === "celebs") {
-        // }
-        // if (anagramType === "general") {
-        //   search(e);
-        // }
-      }
+      onSearch={search}
       // enterButton
       // suffix={<SearchOutlined className="search__suffix" />}
     />

@@ -25,7 +25,7 @@ export const fileURLs = {
 var db = firebase.firestore();
 
 //Add shared id to firestore
-export async function addSharedSearchToFirestore(searchValue) {
+export async function addSharedSearchToFirestore(searchValue, anagramType) {
   //currently using the original search. Might be more efficient to use the cleaned search
   const id = uuidv5Maker(searchValue[0].value);
   const searchTerm = searchValue[0].value;
@@ -33,13 +33,14 @@ export async function addSharedSearchToFirestore(searchValue) {
   await collection
     .set({
       searchTerm,
+      anagramType,
     })
     .catch(function (error) {
       console.error("Error adding document: ", error);
     });
-
-  console.log("Document written with ID: ", id);
-  return `www.celebAnagram.com/?share=${id}`;
+  const path = `${window.location.origin}${window.location.pathname}`;
+  // console.log(`${path}?share=${id}`);
+  return `${path}?share=${id}`;
 }
 
 //Get search string from database based on id
@@ -52,7 +53,7 @@ export async function getSharedSearchToFirestore(id) {
   if (document.exists) {
     console.log("Document data:", document.data());
     const searchTermObject = await document.data();
-    return searchTermObject.searchTerm;
+    return searchTermObject;
   } else {
     // doc.data() will be undefined in this case
     console.log("No such document!");

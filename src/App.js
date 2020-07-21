@@ -55,9 +55,11 @@ export default function App() {
     if (id !== null) {
       (async () => {
         const searchTerm = await getSharedSearchToFirestore(id);
-        // console.log(id, searchTerm);
+        //set the context for the search
+        setAnagramType(searchTerm.anagramType);
+
         //Perform a search and update the input & history
-        setSharedSearchInput(searchTerm);
+        setSharedSearchInput(searchTerm.searchTerm);
       })();
     }
 
@@ -123,7 +125,10 @@ export default function App() {
         <StickySide />
         <Row style={{ width: "100%" }}>
           <Col span={24}>
-            <PageHeader setAnagramType={setAnagramType} />
+            <PageHeader
+              anagramType={anagramType}
+              setAnagramType={setAnagramType}
+            />
             <Row justify="center">
               <SearchInput />
             </Row>
@@ -151,6 +156,7 @@ export default function App() {
                   <ResultsTable
                     fetchingTableDataStatus={fetchingTableDataStatus}
                     filteredtableData={filteredtableData}
+                    previousSearchesData={previousSearchesData}
                   />
                 </Col>
               </Row>

@@ -18,6 +18,7 @@ export default function StickySide() {
     toggleCollapedSider,
     setToggleCollapedSider,
     previousSearchesData,
+    anagramType,
   } = useContext(AppContext);
 
   return (
@@ -48,7 +49,8 @@ export default function StickySide() {
             //generateUUID & send to firebase
             if (previousSearchesData.length > 0) {
               const shareURL = await addSharedSearchToFirestore(
-                previousSearchesData
+                previousSearchesData,
+                anagramType
               );
               console.log(shareURL);
               //recieve confirmation that entry was added

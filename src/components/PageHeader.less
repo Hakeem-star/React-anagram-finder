@@ -1,18 +1,29 @@
 .page-header {
   padding: 0;
   height: auto;
-  h1 {
-    color: white;
-    font-size: 23px;
-    text-align: center;
-    padding-top: 37px;
-    padding-bottom: 37px;
-    line-height: 30px;
-    margin: 0 auto;
-  }
-  > div {
+
+  &__top {
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+    height: 90px;
+    h1 {
+      color: white;
+      font-size: 23px;
+      text-align: center;
+      width: 110px;
+      text-align: left;
+      line-height: 1.2;
+      margin: 0;
+    }
+    &__avatar {
+    }
+
+    &__navigation {
+      margin-left: auto;
+      margin-right: 30px;
+    }
   }
 
   &__menu {

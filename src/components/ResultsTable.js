@@ -52,6 +52,7 @@ const columns = [
 export default function ResultsTable({
   fetchingTableDataStatus,
   filteredtableData,
+  previousSearchesData,
 }) {
   const [columnsState, updateColumns] = useState(columns);
   const [searchedColumn, updateSearchedColumn] = useState("");
@@ -60,6 +61,10 @@ export default function ResultsTable({
   // const [filteredtableDataState, updatefilteredtableData] = useState(    filteredtableData  );
   const filterInput = useRef(null);
   const filterInputConfig = useRef(null);
+  useEffect(() => {
+    //Reset filters when a new search is made
+    updateSearchText("");
+  }, [previousSearchesData]);
 
   useEffect(() => {
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
