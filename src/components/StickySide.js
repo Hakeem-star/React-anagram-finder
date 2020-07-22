@@ -10,6 +10,7 @@ import {
 import { addSharedSearchToFirestore } from "../firebase/firebase-setup";
 import { AppContext } from "./../App";
 import { openNotification } from "./SharedResultDisplay";
+import { useShareSearch } from "../utils/useShareSearch";
 
 const { Sider } = Layout;
 
@@ -20,7 +21,7 @@ export default function StickySide() {
     previousSearchesData,
     anagramType,
   } = useContext(AppContext);
-
+  const shareSearch = useShareSearch();
   return (
     <div className="sider-container">
       <Sider
@@ -45,21 +46,7 @@ export default function StickySide() {
         />
         <ShareAltOutlined
           className="sider-container__icon-container__icon share-icon"
-          onClick={async () => {
-            //generateUUID & send to firebase
-            if (previousSearchesData.length > 0) {
-              const shareURL = await addSharedSearchToFirestore(
-                previousSearchesData,
-                anagramType
-              );
-              console.log(shareURL);
-              //recieve confirmation that entry was added
-              openNotification(shareURL);
-              //Display something showing the url as well as icon to copy
-            } else {
-              message.error("Search for an anagram first");
-            }
-          }}
+          onClick={shareSearch}
         />
         <DownloadOutlined className="sider-container__icon-container__icon" />
       </div>

@@ -5,8 +5,8 @@
   &__top {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 0 30px;
+    justify-content: left;
+    padding: 0 180px;
     height: 90px;
     h1 {
       color: white;
@@ -20,9 +20,20 @@
     &__avatar {
     }
 
-    &__navigation {
+    &__options {
       margin-left: auto;
-      margin-right: 30px;
+      margin-right: 40px;
+      color: white;
+      width: 122px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 16;
+      span {
+        cursor: pointer;
+        &:hover {
+          color: @primary-color;
+        }
+      }
     }
   }
 
@@ -55,5 +66,13 @@
       display: inline-block;
       top: 0;
     }
+  }
+}
+
+.page-header__top__avatar__popover {
+  padding-top: 0;
+
+  .ant-popover-arrow {
+    display: none;
   }
 }
