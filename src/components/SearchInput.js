@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { Input } from "antd";
 import "./SearchInput.less";
 import { SearchOutlined } from "@ant-design/icons";
@@ -7,16 +7,35 @@ import useURLSharedSearch from "../utils/useURLSharedSearch";
 const { Search } = Input;
 
 export default function SearchInput() {
-  const { inputvalueState, setInputvalueState, sharedSearchInput } = useContext(
-    AppContext
-  );
+  const {
+    inputvalueState,
+    setInputvalueState,
+    sharedSearchInput,
+    fetchingTableDataStatus,
+  } = useContext(AppContext);
   const search = useURLSharedSearch();
+  const preventInitialRun = useRef(false);
 
   useEffect(() => {
     if (sharedSearchInput !== null) {
       search(sharedSearchInput);
     }
   }, [sharedSearchInput, search]);
+
+  useEffect(() => {
+    //Scroll to input on top
+    // pushToPrevSearchHistory(anagramResult);
+    const scrollOptions = {
+      behavior: "smooth",
+      block: "start",
+      inline: "nearest",
+    };
+
+    if (!fetchingTableDataStatus && preventInitialRun.current) {
+      document.querySelector(".search").scrollIntoView(scrollOptions);
+    }
+  }, [fetchingTableDataStatus]);
+  preventInitialRun.current = true;
 
   return (
     <Search

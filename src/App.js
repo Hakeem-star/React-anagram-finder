@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment, useRef } from "react";
 import { Layout, Row, Col } from "antd";
 
 import "antd/dist/antd.less";
@@ -10,6 +10,12 @@ import ThresholdSlider from "./components/ThresholdSlider";
 import ResultsTable from "./components/ResultsTable";
 import { getSharedSearchToFirestore } from "./firebase/firebase-setup";
 import { getURLSharedId } from "./utils/getURLSharedId";
+import { createLocalData, getLocalData } from "./utils/indexDBManager";
+import fetchFromApi from "./utils/fetchCelebData";
+import LoginPage from "./LoginPage";
+
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import RegisterPage from "./RegisterPage";
 
 export const AppContext = React.createContext();
 
@@ -47,7 +53,7 @@ export default function App() {
   const [toggleCollapedSider, setToggleCollapedSider] = useState(true);
   const [inputvalueState, setInputvalueState] = useState("");
   const [sharedSearchInput, setSharedSearchInput] = useState(null);
-
+  const preventInitialRun = useRef(false);
   //On mount grab shared results from url uuid in search query
   useEffect(() => {
     const id = getURLSharedId();
@@ -63,7 +69,9 @@ export default function App() {
       })();
     }
 
-    //Update table as if a request was made
+    return function cleanup() {
+      preventInitialRun.current = false;
+    };
   }, []);
 
   useEffect(() => {
@@ -83,18 +91,20 @@ export default function App() {
     //thresholdSliders dependancy is excluded because this is already managed in its own state and another state that triggers this effect
   }, [tableData]);
 
-  useEffect(() => {
-    //Scroll to input on top
-    // pushToPrevSearchHistory(anagramResult);
-    const scrollOptions = {
-      behavior: "smooth",
-      block: "start",
-      inline: "nearest",
-    };
-    if (!fetchingTableDataStatus) {
-      document.querySelector(".search").scrollIntoView(scrollOptions);
-    }
-  }, [fetchingTableDataStatus]);
+  // useEffect(() => {
+  //   //Scroll to input on top
+  //   // pushToPrevSearchHistory(anagramResult);
+  //   const scrollOptions = {
+  //     behavior: "smooth",
+  //     block: "start",
+  //     inline: "nearest",
+  //   };
+  //   console.log(preventInitialRun.current);
+
+  //   if (!fetchingTableDataStatus && preventInitialRun.current) {
+  //     document.querySelector(".search").scrollIntoView(scrollOptions);
+  //   }
+  // }, [fetchingTableDataStatus]);
 
   useEffect(() => {
     //When the previous state is updated by performing a new search, update the table data
@@ -105,65 +115,83 @@ export default function App() {
     }
   }, [previousSearchesData]);
 
+  preventInitialRun.current = true;
   return (
-    <Layout style={{ minHeight: "100vh" }}>
-      <AppContext.Provider
-        value={{
-          anagramType,
-          inputvalueState,
-          sharedSearchInput,
-          toggleCollapedSider,
-          previousSearchesData,
-          setInputvalueState,
-          updateActiveHistoryButtonStatus,
-          setToggleCollapedSider,
-          updateTableData,
-          updateFetchingTableDataStatus,
-          updatePreviousSearchesStateData,
-        }}
-      >
-        <StickySide />
-        <Row style={{ width: "100%" }}>
-          <Col span={24}>
-            <PageHeader
-              anagramType={anagramType}
-              setAnagramType={setAnagramType}
-            />
-            <Row justify="center">
-              <SearchInput />
-            </Row>
-            <Content
-              className="main-content"
-              style={{ paddingTop: "60px", paddingBottom: "60px" }}
-            >
-              <Row justify="center">
-                <Col style={{ textAlign: "left" }} span={16}>
-                  <p>Threshold</p>
-                </Col>
-              </Row>
-              <Row justify="center">
-                <Col span={16}>
-                  <ThresholdSlider
-                    updateThresholdSliders={updateThresholdSliders}
-                    updateFilteredTableData={updateFilteredTableData}
-                    tableData={tableData}
-                    thresholdSliders={thresholdSliders}
-                  />
-                </Col>
-              </Row>
-              <Row justify="center">
-                <Col span={20}>
-                  <ResultsTable
-                    fetchingTableDataStatus={fetchingTableDataStatus}
-                    filteredtableData={filteredtableData}
-                    previousSearchesData={previousSearchesData}
-                  />
-                </Col>
-              </Row>
-            </Content>
-          </Col>
-        </Row>
-      </AppContext.Provider>
-    </Layout>
+    <Router>
+      <Layout style={{ minHeight: "100vh" }}>
+        <AppContext.Provider
+          value={{
+            anagramType,
+            inputvalueState,
+            sharedSearchInput,
+            toggleCollapedSider,
+            previousSearchesData,
+            fetchingTableDataStatus,
+            setAnagramType,
+            setInputvalueState,
+            updateActiveHistoryButtonStatus,
+            setToggleCollapedSider,
+            updateTableData,
+            updateFetchingTableDataStatus,
+            updatePreviousSearchesStateData,
+          }}
+        >
+          <Route exact path="/">
+            <StickySide />
+          </Route>
+          <Row style={{ width: "100%", height: "100vh" }}>
+            <Col span={24}>
+              <PageHeader
+                anagramType={anagramType}
+                setAnagramType={setAnagramType}
+              />
+              <Route exact path="/logIn">
+                <LoginPage />
+              </Route>
+              <Route exact path="/register">
+                <RegisterPage />
+              </Route>
+              {/*Main page*/}
+              <Route exact path="/">
+                <>
+                  <Row justify="center">
+                    <SearchInput />
+                  </Row>
+                  <Content
+                    className="main-content"
+                    style={{ paddingTop: "60px", paddingBottom: "60px" }}
+                  >
+                    <Row justify="center">
+                      <Col style={{ textAlign: "left" }} span={16}>
+                        <p>Threshold</p>
+                      </Col>
+                    </Row>
+                    <Row justify="center">
+                      <Col span={16}>
+                        <ThresholdSlider
+                          updateThresholdSliders={updateThresholdSliders}
+                          updateFilteredTableData={updateFilteredTableData}
+                          tableData={tableData}
+                          thresholdSliders={thresholdSliders}
+                        />
+                      </Col>
+                    </Row>
+                    <Row justify="center">
+                      <Col span={20}>
+                        <ResultsTable
+                          fetchingTableDataStatus={fetchingTableDataStatus}
+                          filteredtableData={filteredtableData}
+                          previousSearchesData={previousSearchesData}
+                        />
+                      </Col>
+                    </Row>
+                  </Content>
+                </>
+              </Route>
+            </Col>
+          </Row>
+        </AppContext.Provider>
+      </Layout>
+    </Router>
   );
 }

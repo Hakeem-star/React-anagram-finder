@@ -29,7 +29,12 @@ export default function PreviousSearches() {
             >
               <Popover
                 placement="right"
-                content={result.value}
+                content={
+                  <div>
+                    <div>{result.value}</div>
+                    <div>Share</div>
+                  </div>
+                }
                 title={result.title}
               >
                 <Button

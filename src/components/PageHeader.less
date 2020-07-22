@@ -5,23 +5,27 @@
   &__top {
     display: flex;
     align-items: center;
-    justify-content: left;
+    justify-content: flex-end;
     padding: 0 180px;
     height: 90px;
-    h1 {
-      color: white;
-      font-size: 23px;
-      text-align: center;
-      width: 110px;
-      text-align: left;
-      line-height: 1.2;
-      margin: 0;
+    .page-header__top__title {
+      margin-right: auto;
+      h1 {
+        color: white;
+        font-size: 23px;
+        text-align: center;
+        width: 110px;
+        text-align: left;
+        line-height: 1.2;
+        margin: 0;
+      }
     }
     &__avatar {
+      cursor: pointer;
     }
 
     &__options {
-      margin-left: auto;
+      // margin-left: auto;
       margin-right: 40px;
       color: white;
       width: 122px;
