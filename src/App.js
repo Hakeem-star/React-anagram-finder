@@ -8,11 +8,14 @@ import PageHeader from "./components/PageHeader";
 import SearchInput from "./components/SearchInput";
 import ThresholdSlider from "./components/ThresholdSlider";
 import ResultsTable from "./components/ResultsTable";
-import { getSharedSearchToFirestore } from "./firebase/firebase-setup";
+import {
+  getSharedSearchToFirestore,
+  authChange,
+  setPreviousDataToFirestore,
+} from "./firebase/firebase-setup";
 import { getURLSharedId } from "./utils/getURLSharedId";
 import { createLocalData, getLocalData } from "./utils/indexDBManager";
 import fetchFromApi from "./utils/fetchCelebData";
-import LoginPage from "./LoginPage";
 
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import RegisterPage from "./RegisterPage";
@@ -41,6 +44,8 @@ const updateActiveHistoryButtonStatus = (matchesPreviousSearchResult) => {
 };
 
 export default function App() {
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [user, setUser] = useState(false);
   const [anagramType, setAnagramType] = useState("celebs");
   const [tableData, updateTableData] = useState([]);
   const [filteredtableData, updateFilteredTableData] = useState([]);
@@ -75,6 +80,11 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    //signin Check
+    authChange(setLoggedIn, setUser, updatePreviousSearchesStateData);
+  }, []);
+
+  useEffect(() => {
     //Confirm completed load after table is filtered
     if (filteredtableData.length > 0) updateFetchingTableDataStatus(false);
   }, [filteredtableData]);
@@ -91,27 +101,27 @@ export default function App() {
     //thresholdSliders dependancy is excluded because this is already managed in its own state and another state that triggers this effect
   }, [tableData]);
 
-  // useEffect(() => {
-  //   //Scroll to input on top
-  //   // pushToPrevSearchHistory(anagramResult);
-  //   const scrollOptions = {
-  //     behavior: "smooth",
-  //     block: "start",
-  //     inline: "nearest",
-  //   };
-  //   console.log(preventInitialRun.current);
-
-  //   if (!fetchingTableDataStatus && preventInitialRun.current) {
-  //     document.querySelector(".search").scrollIntoView(scrollOptions);
-  //   }
-  // }, [fetchingTableDataStatus]);
-
   useEffect(() => {
     //When the previous state is updated by performing a new search, update the table data
     //This provides a sensible way to update everything at once
-    //Highlight the most recent search button
+    // TODO:Highlight the most recent search button
     if (previousSearchesData.length > 0) {
-      updateTableData(() => previousSearchesData[0].tableData);
+      //If the previous data does not include table data, don't do this
+      if (previousSearchesData[0].tableData !== undefined) {
+        updateTableData(() => previousSearchesData[0].tableData);
+        //Send updated previous data to firestore,but without tableData
+        if (loggedIn) {
+          const minimalPreviousData = previousSearchesData.map((data) => {
+            return {
+              value: data.value,
+              title: data.title,
+              anagramType: data.anagramType,
+            };
+          });
+          console.log(previousSearchesData);
+          setPreviousDataToFirestore(user.email, minimalPreviousData);
+        }
+      }
     }
   }, [previousSearchesData]);
 
@@ -127,6 +137,7 @@ export default function App() {
             toggleCollapedSider,
             previousSearchesData,
             fetchingTableDataStatus,
+            loggedIn,
             setAnagramType,
             setInputvalueState,
             updateActiveHistoryButtonStatus,
@@ -134,23 +145,29 @@ export default function App() {
             updateTableData,
             updateFetchingTableDataStatus,
             updatePreviousSearchesStateData,
+            setLoggedIn,
           }}
         >
           <Route exact path="/">
             <StickySide />
           </Route>
-          <Row style={{ width: "100%", height: "100vh" }}>
+          <Row style={{ width: "100%", height: "100%" }}>
             <Col span={24}>
               <PageHeader
                 anagramType={anagramType}
                 setAnagramType={setAnagramType}
+                user={user}
               />
-              <Route exact path="/logIn">
-                <LoginPage />
-              </Route>
-              <Route exact path="/register">
-                <RegisterPage />
-              </Route>
+              <Route
+                exact
+                path="/logIn"
+                render={(props) => <RegisterPage {...props} />}
+              ></Route>
+              <Route
+                exact
+                path="/register"
+                render={(props) => <RegisterPage {...props} />}
+              ></Route>
               {/*Main page*/}
               <Route exact path="/">
                 <>

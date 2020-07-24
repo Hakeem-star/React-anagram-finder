@@ -21,8 +21,12 @@ const matchesPreviousSearch = (
     //Check which type of search it was
     if (previousSearchesState[index].anagramType === anagramType) {
       if (previousSearchesState[index].value === newSearch) {
+        if (previousSearchesState[index].tableData === undefined) {
+          return { match: true, index: correctIndex, overwrite: true };
+        }
+
         //If a match is found, return the match status as well as the index it was found
-        return { match: true, index: correctIndex };
+        return { match: true, index: correctIndex, overwrite: false };
       }
     }
   }
@@ -56,7 +60,7 @@ export default function useURLSharedSearch() {
       anagramType
     ); //{ match: false, index }
     //If the new user input is the same as a previous input
-    previousSearchMatch.match
+    previousSearchMatch.match && !previousSearchMatch.overwrite
       ? //Update shown result to be previous value & highlight in history
         (() => {
           updateActiveHistoryButtonStatus(previousSearchMatch.index);
@@ -77,21 +81,30 @@ export default function useURLSharedSearch() {
           if (anagramResult.length === 0) {
             message.error("No results found");
           } else {
-            //Update previous searches object array with search, time & result
-            updatePreviousSearchesStateData((search) => {
-              //Make a copy and enforce a maximum of 10 previous searches
-              let result = search.slice(0, 9);
-              let time = new Date();
-
-              result.unshift({
-                value: searchValue,
-                title: time.toGMTString(),
-                tableData: anagramResult,
-                anagramType,
+            //If it needs to be overwritten, find the index and just give it table data
+            if (previousSearchMatch.overwrite) {
+              updatePreviousSearchesStateData((search) => {
+                let result = search.slice();
+                result[previousSearchMatch.index].tableData = anagramResult;
+                return result;
               });
+            } else {
+              //Update previous searches object array with search, time & result
+              updatePreviousSearchesStateData((search) => {
+                //Make a copy and enforce a maximum of 10 previous searches
+                let result = search.slice(0, 9);
+                let time = new Date();
 
-              return result;
-            });
+                result.unshift({
+                  value: searchValue,
+                  title: time.toGMTString(),
+                  tableData: anagramResult,
+                  anagramType,
+                });
+
+                return result;
+              });
+            }
           }
         })();
   };

@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { Popover, Button, Row, Col } from "antd";
 import { AppContext } from "./../../App";
+import useURLSharedSearch from "./../../utils/useURLSharedSearch";
 
 export default function PreviousSearches() {
   const {
@@ -9,7 +10,7 @@ export default function PreviousSearches() {
     updateTableData,
     previousSearchesData,
   } = useContext(AppContext);
-
+  const search = useURLSharedSearch();
   if (previousSearchesData.length < 1) {
     return <div></div>;
   }
@@ -40,7 +41,11 @@ export default function PreviousSearches() {
                 <Button
                   onClick={() => {
                     updateActiveHistoryButtonStatus(correctIndex);
-                    updateTableData(result.tableData);
+                    if (result.tableData !== undefined) {
+                      updateTableData(result.tableData);
+                    } else {
+                      search(result.value);
+                    }
                     setInputvalueState(() => result.value);
                   }}
                   style={{ width: "100%" }}

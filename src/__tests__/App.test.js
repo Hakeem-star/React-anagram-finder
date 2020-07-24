@@ -1,6 +1,6 @@
 import React from "react";
 import App from "../App";
-import { waitFor, render, fireEvent } from "@testing-library/react";
+import { waitFor, act, render, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
 
 jest.mock("../utils/fetchCelebData");
@@ -30,8 +30,10 @@ function searchAndEnter(input, searchterm) {
 // beforeEach()
 
 describe("<App />", () => {
-  test("renders without crashing", () => {
-    render(<App />);
+  test("renders without crashing", async () => {
+    await act(async () => {
+      render(<App />);
+    });
   });
 
   test("Displays a message when there's no input", async () => {

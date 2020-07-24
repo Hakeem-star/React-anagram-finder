@@ -2,6 +2,7 @@
 import * as firebase from "firebase/app";
 import { firebaseConfig } from "./firebaseConfig";
 // Add the Firebase products that you want to use
+import "firebase/auth";
 import "firebase/firestore";
 import "firebase/storage";
 import { uuidv5Maker } from "./../utils/uuid-config";
@@ -58,4 +59,94 @@ export async function getSharedSearchToFirestore(id) {
     // doc.data() will be undefined in this case
     console.log("No such document!");
   }
+}
+
+async function getPreviousDataFromFirestore(email) {
+  const docRef = db.collection("user").doc(email);
+  const document = await docRef.get().catch(function (error) {
+    console.log("Error getting document:", error);
+  });
+
+  if (document.exists) {
+    console.log("Document data:", document.data());
+    const previousDataObject = await document.data();
+    console.log(previousDataObject);
+    return previousDataObject;
+  } else {
+    // doc.data() will be undefined in this case
+    console.log("No such document!");
+  }
+}
+
+export async function setPreviousDataToFirestore(email, previousSearchesData) {
+  const collection = db.collection("user").doc(email);
+  const previousData = JSON.stringify(previousSearchesData);
+
+  await collection
+    .set({
+      previousSearchesData: previousData,
+    })
+    .catch(function (error) {
+      console.error("Error adding document: ", error);
+    });
+}
+///////////////////
+// Auth
+///////////////////
+const auth = firebase.auth();
+
+export function signInWithEmailPass({ email, password }) {
+  const request = auth.signInWithEmailAndPassword(email, password);
+  request.catch((e) => console.log(e.message));
+  return request;
+}
+
+export async function createUserWithEmailPass(
+  { email, password },
+  previousSearchesData
+) {
+  try {
+    await auth.createUserWithEmailAndPassword(email, password);
+
+    //once an account has been created, add a document in firestore
+    const collection = db.collection("user").doc(email);
+    const previousData = JSON.stringify(previousSearchesData);
+    await collection
+      .set({
+        previousSearchesData: previousData,
+      })
+      .catch(function (error) {
+        console.error("Error adding document: ", error);
+      });
+  } catch (e) {
+    console.log(e.message);
+  }
+}
+
+export function authChange(logInState, user, updatePreviousData) {
+  auth.onAuthStateChanged(async (firebaseUser) => {
+    if (firebaseUser) {
+      console.log(firebaseUser);
+      //Logged in
+      user(firebaseUser);
+      logInState(true);
+      //Get the users previous data from storage
+      const previousData = await getPreviousDataFromFirestore(
+        firebaseUser.email
+      );
+      //Use it to update state
+      if (previousData) {
+        updatePreviousData(JSON.parse(previousData.previousSearchesData));
+      }
+    } else {
+      // console.log("Not logged in");
+      logInState(false);
+      updatePreviousData([]);
+      //Logged out
+    }
+  }); //out = null
+}
+export function signOut() {
+  const request = firebase.auth().signOut();
+  return request;
 }

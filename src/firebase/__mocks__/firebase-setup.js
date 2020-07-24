@@ -5,5 +5,16 @@ export async function addSharedSearchToFirestore() {
 }
 
 export async function getSharedSearchToFirestore(id) {
-  return "test";
+  return Promise.resolve({ anagramType: "celebs", searchTerm: "test" });
+}
+
+const firebaseUser = null;
+export function authChange(logInState, user, updatePreviousData) {
+  if (firebaseUser) {
+    logInState(true);
+    user(user);
+    updatePreviousData();
+  } else {
+    logInState(false);
+  }
 }

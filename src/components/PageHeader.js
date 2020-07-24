@@ -1,17 +1,54 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import "./StickySide.less";
-import { Layout, Menu, Avatar, Popover, List, Row } from "antd";
+import { Layout, message, Avatar, Popover, List, Row } from "antd";
 import "./PageHeader.less";
 import { UserOutlined } from "@ant-design/icons";
 import { useShareSearch } from "../utils/useShareSearch";
 import PageHeaderCategories from "./PageHeaderCategories";
 import { Route, Link } from "react-router-dom";
+import { AppContext } from "./../App";
+import { signOut } from "./../firebase/firebase-setup";
 
 const { Header } = Layout;
 
-export default function PageHeader({ anagramType, setAnagramType }) {
+export default function PageHeader({ anagramType, setAnagramType, user }) {
   const shareSearch = useShareSearch();
   const [popoverState, setPopoverState] = useState(false);
+  const { loggedIn } = useContext(AppContext);
+
+  const data = loggedIn
+    ? [
+        [
+          <span key="username" className="username">
+            {user.email}
+          </span>,
+        ],
+        [
+          <span
+            key="log-out"
+            className="log-out"
+            onClick={() => {
+              signOut().then(() => {
+                message.error("Logged out!");
+              });
+            }}
+          >
+            Log Out
+          </span>,
+        ],
+      ]
+    : [
+        [
+          <Link key="logIn" to={`/logIn`}>
+            Log in
+          </Link>,
+        ],
+        [
+          <Link key="register" to={`/register`}>
+            Register
+          </Link>,
+        ],
+      ];
 
   return (
     <Header className="page-header">
@@ -30,13 +67,14 @@ export default function PageHeader({ anagramType, setAnagramType }) {
           content={
             <List
               size="small"
-              dataSource={[
-                ["Log in", "logIn"],
-                ["Register", "register"],
-              ]}
-              renderItem={(item) => (
-                <List.Item>
-                  <Link to={`/${item[1]}`}>{item[0]}</Link>
+              dataSource={data}
+              renderItem={(item, index) => (
+                <List.Item
+                  onClick={() => {
+                    setPopoverState((state) => (state ? false : true));
+                  }}
+                >
+                  {item}
                 </List.Item>
               )}
             />

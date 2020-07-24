@@ -1,0 +1,29 @@
+.login-form-container {
+  margin-top: 138px;
+  @media only screen and (max-width: 768px) {
+    margin-top: 28px;
+  }
+  h1 {
+    margin-bottom: 30px;
+  }
+  &__form {
+    .site-form-item-row.remember-forgot {
+      .ant-form-item-control-input-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
+
+    .site-form-item-row.login-register {
+      .ant-form-item-control-input-content {
+        > p {
+          display: inline;
+        }
+        > * {
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+}
