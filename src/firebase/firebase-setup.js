@@ -28,8 +28,8 @@ var db = firebase.firestore();
 //Add shared id to firestore
 export async function addSharedSearchToFirestore(searchValue, anagramType) {
   //currently using the original search. Might be more efficient to use the cleaned search
-  const id = uuidv5Maker(searchValue[0].value);
-  const searchTerm = searchValue[0].value;
+  const id = uuidv5Maker(searchValue.value);
+  const searchTerm = searchValue.value;
   const collection = db.collection("share").doc(id);
   await collection
     .set({

@@ -47,14 +47,12 @@ export default function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState(false);
   const [anagramType, setAnagramType] = useState("celebs");
-  const [tableData, updateTableData] = useState([]);
-  const [filteredtableData, updateFilteredTableData] = useState([]);
-  const [previousSearchesData, updatePreviousSearchesStateData] = useState([]); //[{value:"test",tableData:[{}],title:Date.now()}]
-  const [fetchingTableDataStatus, updateFetchingTableDataStatus] = useState(
-    false
-  );
-  const [thresholdSliders, updateThresholdSliders] = useState([1, 100]);
-
+  const [tableData, setTableData] = useState([]);
+  const [filteredtableData, setFilteredTableData] = useState([]);
+  const [previousSearchesData, setPreviousSearchesData] = useState([]); //[{value:"test",tableData:[{}],title:Date.now()}]
+  const [currentSearch, setCurrentSearch] = useState([]);
+  const [fetchingTableDataStatus, setFetchingTableDataStatus] = useState(false);
+  const [thresholdSliders, setThresholdSliders] = useState([1, 100]);
   const [toggleCollapedSider, setToggleCollapedSider] = useState(true);
   const [inputvalueState, setInputvalueState] = useState("");
   const [sharedSearchInput, setSharedSearchInput] = useState(null);
@@ -81,18 +79,17 @@ export default function App() {
 
   useEffect(() => {
     //signin Check
-    authChange(setLoggedIn, setUser, updatePreviousSearchesStateData);
+    authChange(setLoggedIn, setUser, setPreviousSearchesData);
   }, []);
 
   useEffect(() => {
     //Confirm completed load after table is filtered
-    if (filteredtableData.length > 0) updateFetchingTableDataStatus(false);
+    if (filteredtableData.length > 0) setFetchingTableDataStatus(false);
   }, [filteredtableData]);
 
   useEffect(() => {
     //Filter table data using current threshold values
-
-    updateFilteredTableData(() => {
+    setFilteredTableData(() => {
       return tableData.filter(
         (data) =>
           data["%"] >= thresholdSliders[0] && data["%"] <= thresholdSliders[1]
@@ -108,7 +105,7 @@ export default function App() {
     if (previousSearchesData.length > 0) {
       //If the previous data does not include table data, don't do this
       if (previousSearchesData[0].tableData !== undefined) {
-        updateTableData(() => previousSearchesData[0].tableData);
+        setTableData(() => previousSearchesData[0].tableData);
         //Send updated previous data to firestore,but without tableData
         if (loggedIn) {
           const minimalPreviousData = previousSearchesData.map((data) => {
@@ -118,7 +115,6 @@ export default function App() {
               anagramType: data.anagramType,
             };
           });
-          console.log(previousSearchesData);
           setPreviousDataToFirestore(user.email, minimalPreviousData);
         }
       }
@@ -138,13 +134,15 @@ export default function App() {
             previousSearchesData,
             fetchingTableDataStatus,
             loggedIn,
+            currentSearch,
+            setCurrentSearch,
             setAnagramType,
             setInputvalueState,
             updateActiveHistoryButtonStatus,
             setToggleCollapedSider,
-            updateTableData,
-            updateFetchingTableDataStatus,
-            updatePreviousSearchesStateData,
+            setTableData,
+            setFetchingTableDataStatus,
+            setPreviousSearchesData,
             setLoggedIn,
           }}
         >
@@ -186,8 +184,8 @@ export default function App() {
                     <Row justify="center">
                       <Col span={16}>
                         <ThresholdSlider
-                          updateThresholdSliders={updateThresholdSliders}
-                          updateFilteredTableData={updateFilteredTableData}
+                          setThresholdSliders={setThresholdSliders}
+                          setFilteredTableData={setFilteredTableData}
                           tableData={tableData}
                           thresholdSliders={thresholdSliders}
                         />

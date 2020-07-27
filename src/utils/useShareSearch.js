@@ -6,13 +6,14 @@ import { message } from "antd";
 import { openNotification } from "./../components/SharedResultDisplay";
 
 export function useShareSearch() {
-  const { previousSearchesData, anagramType } = useContext(AppContext);
+  const { currentSearch, anagramType } = useContext(AppContext);
 
   return async () => {
+    console.log(currentSearch);
     //generateUUID & send to firebase
-    if (previousSearchesData.length > 0) {
+    if (currentSearch.value !== undefined) {
       const shareURL = await addSharedSearchToFirestore(
-        previousSearchesData,
+        currentSearch,
         anagramType
       );
       //recieve confirmation that entry was added

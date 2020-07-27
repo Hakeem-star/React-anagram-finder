@@ -24,12 +24,12 @@ export default function PageHeaderCategories() {
         </Menu.Item>
         <Menu.Item
           onClick={() => {
-            setAnagramType("general");
+            setAnagramType("words");
           }}
-          className="page-header__menu__menu-item page-header__menu__menu-item-general"
-          key="general"
+          className="page-header__menu__menu-item page-header__menu__menu-item-words"
+          key="words"
         >
-          General
+          Words
         </Menu.Item>
       </Menu>
     </Row>
