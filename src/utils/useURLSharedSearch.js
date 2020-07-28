@@ -19,7 +19,7 @@ const matchesPreviousSearch = (
   for (let index = 0; index < previousSearchesState.length; index++) {
     const historyButtonsIndex = previousSearchesState.length - index - 1;
     //Check which type of search it was
-    console.log(previousSearchesState[index].anagramType, anagramType);
+    // console.log(previousSearchesState[index].anagramType, anagramType);
     if (previousSearchesState[index].anagramType === anagramType) {
       if (
         previousSearchesState[index].value.toLowerCase() ===
@@ -71,7 +71,7 @@ export default function useURLSharedSearch() {
     //Update the global scope and header categories
     setAnagramType(localAnagramType);
 
-    console.log(historyAnagramType, historyAnagramType || anagramType);
+    // console.log(historyAnagramType, historyAnagramType || anagramType);
     let previousSearchMatch = matchesPreviousSearch(
       previousSearchesData,
       searchValue,
@@ -90,7 +90,7 @@ export default function useURLSharedSearch() {
             return previousSearchesData[previousSearchMatch.index].tableData;
           });
 
-          setCurrentSearch(previousSearchesData[previousSearchMatch.index]);
+          setCurrentSearch(searchValue);
         })()
       : (async () => {
           //If it's a new search
@@ -104,7 +104,7 @@ export default function useURLSharedSearch() {
           if (anagramResult.length === 0) {
             message.error("No results found");
           } else {
-            setCurrentSearch(previousSearchesData[previousSearchMatch.index]);
+            setCurrentSearch(searchValue);
             //If it needs to be overwritten, find the index and just give it table data
             if (previousSearchMatch.overwrite) {
               setPreviousSearchesData((search) => {
@@ -113,8 +113,6 @@ export default function useURLSharedSearch() {
                 return result;
               });
               setTableData(() => {
-                // console.log(previousSearchesData, previousSearchMatch.index);
-
                 return previousSearchesData[previousSearchMatch.index]
                   .tableData;
               });

@@ -4,7 +4,7 @@ import { fileURLs } from "./../firebase/firebase-setup";
 import { set, get } from "idb-keyval";
 
 export default async function fetchFromApi(anagramType) {
-  console.log(typeof anagramType);
+  // console.log(typeof anagramType);
   let targetUrl;
   let JSONResponse;
   //Decide which anagram data to use

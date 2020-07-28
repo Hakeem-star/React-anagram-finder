@@ -8,13 +8,15 @@ import { openNotification } from "./../components/SharedResultDisplay";
 export function useShareSearch() {
   const { currentSearch, anagramType } = useContext(AppContext);
 
-  return async () => {
-    console.log(currentSearch);
+  return async (buttonSearch, ButtonAnagramType) => {
+    const valueToUse = buttonSearch || currentSearch;
+    const anagramTypeToUse = ButtonAnagramType || anagramType;
+    console.log(valueToUse, buttonSearch, currentSearch);
     //generateUUID & send to firebase
-    if (currentSearch.value !== undefined) {
+    if (currentSearch) {
       const shareURL = await addSharedSearchToFirestore(
-        currentSearch,
-        anagramType
+        valueToUse,
+        anagramTypeToUse
       );
       //recieve confirmation that entry was added
       openNotification(shareURL);

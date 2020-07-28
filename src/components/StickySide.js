@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
-import PreviousSearches from "./loading/PreviousSearches";
-import { Layout, message } from "antd";
+import PreviousSearches from "./PreviousSearches";
+import { Row, Layout, message, Button } from "antd";
 import "./StickySide.less";
 import {
   ReloadOutlined,
@@ -18,9 +18,15 @@ export default function StickySide() {
   const {
     toggleCollapedSider,
     setToggleCollapedSider,
+    setTableData,
     previousSearchesData,
+    setPreviousSearchesData,
     anagramType,
+    setCurrentSearch,
   } = useContext(AppContext);
+  const clearAllDisabledStatus = () => {
+    return previousSearchesData.length < 1;
+  };
   const shareSearch = useShareSearch();
   return (
     <div className="sider-container">
@@ -34,6 +40,19 @@ export default function StickySide() {
       >
         <div>History</div>
         <PreviousSearches />
+        <Button
+          danger
+          disabled={clearAllDisabledStatus()}
+          className="sider-container__clear-all-button"
+          onClick={() => {
+            //Clear previous searched
+            setPreviousSearchesData(() => {
+              return [];
+            });
+          }}
+        >
+          Clear All
+        </Button>
       </Sider>
       <div className="sider-container__icon-container">
         <ReloadOutlined
@@ -46,7 +65,7 @@ export default function StickySide() {
         />
         <ShareAltOutlined
           className="sider-container__icon-container__icon share-icon"
-          onClick={shareSearch}
+          onClick={() => shareSearch()}
         />
         <DownloadOutlined className="sider-container__icon-container__icon" />
       </div>

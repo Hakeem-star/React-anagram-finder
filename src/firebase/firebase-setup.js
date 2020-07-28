@@ -28,8 +28,8 @@ var db = firebase.firestore();
 //Add shared id to firestore
 export async function addSharedSearchToFirestore(searchValue, anagramType) {
   //currently using the original search. Might be more efficient to use the cleaned search
-  const id = uuidv5Maker(searchValue.value);
-  const searchTerm = searchValue.value;
+  const id = uuidv5Maker(searchValue);
+  const searchTerm = searchValue;
   const collection = db.collection("share").doc(id);
   await collection
     .set({
@@ -68,9 +68,9 @@ async function getPreviousDataFromFirestore(email) {
   });
 
   if (document.exists) {
-    console.log("Document data:", document.data());
+    // console.log("Document data:", document.data());
     const previousDataObject = await document.data();
-    console.log(previousDataObject);
+    // console.log(previousDataObject);
     return previousDataObject;
   } else {
     // doc.data() will be undefined in this case
@@ -126,7 +126,7 @@ export async function createUserWithEmailPass(
 export function authChange(logInState, user, updatePreviousData) {
   auth.onAuthStateChanged(async (firebaseUser) => {
     if (firebaseUser) {
-      console.log(firebaseUser);
+      // console.log(firebaseUser);
       //Logged in
       user(firebaseUser);
       logInState(true);

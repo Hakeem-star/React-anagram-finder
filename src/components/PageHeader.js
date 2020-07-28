@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import "./StickySide.less";
-import { Layout, message, Avatar, Popover, List, Row } from "antd";
+import { Layout, message, Avatar, Popover, List, Button } from "antd";
 import "./PageHeader.less";
 import { UserOutlined } from "@ant-design/icons";
 import { useShareSearch } from "../utils/useShareSearch";
@@ -14,7 +14,7 @@ const { Header } = Layout;
 export default function PageHeader({ anagramType, setAnagramType, user }) {
   const shareSearch = useShareSearch();
   const [popoverState, setPopoverState] = useState(false);
-  const { loggedIn } = useContext(AppContext);
+  const { loggedIn, setToggleCollapedSider } = useContext(AppContext);
 
   const data = loggedIn
     ? [
@@ -58,8 +58,19 @@ export default function PageHeader({ anagramType, setAnagramType, user }) {
         </Link>
         <Route exact path="/">
           <div className="page-header__top__options">
-            <span>History</span>
-            <span onClick={shareSearch}>Share</span>
+            <Button
+              type="text"
+              onClick={() => {
+                setToggleCollapedSider((value) => {
+                  return value ? false : true;
+                });
+              }}
+            >
+              History
+            </Button>
+            <Button type="text" onClick={() => shareSearch()}>
+              Share
+            </Button>
           </div>
         </Route>
         <Popover
@@ -69,12 +80,15 @@ export default function PageHeader({ anagramType, setAnagramType, user }) {
               size="small"
               dataSource={data}
               renderItem={(item, index) => (
-                <List.Item
-                  onClick={() => {
-                    setPopoverState((state) => (state ? false : true));
-                  }}
-                >
-                  {item}
+                <List.Item>
+                  <Button
+                    type="text"
+                    onClick={() => {
+                      setPopoverState((state) => (state ? false : true));
+                    }}
+                  >
+                    {item}
+                  </Button>
                 </List.Item>
               )}
             />

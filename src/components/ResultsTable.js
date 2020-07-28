@@ -15,6 +15,7 @@ export default function ResultsTable({
       title: "Anagram",
       dataIndex: "Anagram",
       key: "Anagram",
+
       // filters: [{ text: "", value: "" }],
       onFilter: (value, record) => {
         // console.log(value, record);
@@ -25,6 +26,7 @@ export default function ResultsTable({
       title: anagramType === "celebs" ? "Name" : "Word",
       dataIndex: anagramType === "celebs" ? "Name" : "Word",
       key: anagramType === "celebs" ? "Name" : "Word",
+      width: 900,
       // filters: [{ text: "", value: "" }],
       sorter: {
         compare: (a, b) => {
@@ -168,13 +170,11 @@ export default function ResultsTable({
       const temp = state.slice();
       temp[0].filters = anamgramArray;
       // console.log(temp[0].filters);
-      const celbeNames = filterInputConfig.current(
-        anagramType === "celebs" ? "Name" : "Word"
-      );
+      const celbeNames = filterInputConfig.current("Name");
       Object.assign(temp[1], celbeNames);
       return temp;
     });
-  }, [filteredtableData, searchedColumn, searchText, anagramType]);
+  }, [filteredtableData, searchedColumn, searchText]);
 
   return (
     <Table

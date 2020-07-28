@@ -50,7 +50,7 @@ export default function App() {
   const [tableData, setTableData] = useState([]);
   const [filteredtableData, setFilteredTableData] = useState([]);
   const [previousSearchesData, setPreviousSearchesData] = useState([]); //[{value:"test",tableData:[{}],title:Date.now()}]
-  const [currentSearch, setCurrentSearch] = useState([]);
+  const [currentSearch, setCurrentSearch] = useState(null);
   const [fetchingTableDataStatus, setFetchingTableDataStatus] = useState(false);
   const [thresholdSliders, setThresholdSliders] = useState([1, 100]);
   const [toggleCollapedSider, setToggleCollapedSider] = useState(true);
@@ -106,18 +106,22 @@ export default function App() {
       //If the previous data does not include table data, don't do this
       if (previousSearchesData[0].tableData !== undefined) {
         setTableData(() => previousSearchesData[0].tableData);
-        //Send updated previous data to firestore,but without tableData
-        if (loggedIn) {
-          const minimalPreviousData = previousSearchesData.map((data) => {
-            return {
-              value: data.value,
-              title: data.title,
-              anagramType: data.anagramType,
-            };
-          });
-          setPreviousDataToFirestore(user.email, minimalPreviousData);
-        }
       }
+    } else {
+      //If there are no previous searches, there is no current search
+      setCurrentSearch(null);
+      setTableData([]);
+    }
+    //Send updated previous data to firestore,but without tableData
+    if (loggedIn) {
+      const minimalPreviousData = previousSearchesData.map((data) => {
+        return {
+          value: data.value,
+          title: data.title,
+          anagramType: data.anagramType,
+        };
+      });
+      setPreviousDataToFirestore(user.email, minimalPreviousData);
     }
   }, [previousSearchesData]);
 
