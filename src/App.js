@@ -44,18 +44,35 @@ const updateActiveHistoryButtonStatus = (matchesPreviousSearchResult) => {
 };
 
 export default function App() {
+  //Logged in state
   const [loggedIn, setLoggedIn] = useState(false);
+  //User info
   const [user, setUser] = useState(false);
-  const [anagramType, setAnagramType] = useState("celebs");
+  const [anagramType, setAnagramType] = useState("celebs"); //celebs|words
+  //Raw data for the table
   const [tableData, setTableData] = useState([]);
+  //Control the previous searches so we get a result when we switch between anagram Types
+  const [previousTableData, setPreviousTableData] = useState({
+    celebs: [],
+    words: [],
+  });
+  //Filtered table data created by thresholds
   const [filteredtableData, setFilteredTableData] = useState([]);
+  //Holds the last search that was made
   const [previousSearchesData, setPreviousSearchesData] = useState([]); //[{value:"test",tableData:[{}],title:Date.now()}]
+  //Holds the current search value
   const [currentSearch, setCurrentSearch] = useState(null);
+  //Status of the results table populating
   const [fetchingTableDataStatus, setFetchingTableDataStatus] = useState(false);
+  //Values of the threshold sliders
   const [thresholdSliders, setThresholdSliders] = useState([1, 100]);
+  //State of the history side bar
   const [toggleCollapedSider, setToggleCollapedSider] = useState(true);
+  //Search Inputs value
   const [inputvalueState, setInputvalueState] = useState("");
+  //
   const [sharedSearchInput, setSharedSearchInput] = useState(null);
+  //Ref to prevent calculating values before first mount
   const preventInitialRun = useRef(false);
   //On mount grab shared results from url uuid in search query
   useEffect(() => {
@@ -83,11 +100,30 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    //Download data files
+    authChange(setLoggedIn, setUser, setPreviousSearchesData);
+  }, []);
+
+  useEffect(() => {
+    //If current search changes, clear previous data
+    setPreviousTableData({
+      celebs: [],
+      words: [],
+    });
+  }, [currentSearch]);
+
+  useEffect(() => {
     //Confirm completed load after table is filtered
     if (filteredtableData.length > 0) setFetchingTableDataStatus(false);
   }, [filteredtableData]);
 
   useEffect(() => {
+    setPreviousTableData((prev) => {
+      //Control the previous searches so we get a result when we switch between anagram Types
+      let celebs = anagramType === "celebs" ? tableData : prev.celebs;
+      let words = anagramType === "words" ? tableData : prev.words;
+      return { celebs, words };
+    });
     //Filter table data using current threshold values
     setFilteredTableData(() => {
       return tableData.filter(
@@ -139,6 +175,7 @@ export default function App() {
             fetchingTableDataStatus,
             loggedIn,
             currentSearch,
+            previousTableData,
             setCurrentSearch,
             setAnagramType,
             setInputvalueState,
@@ -153,7 +190,10 @@ export default function App() {
           <Route exact path="/">
             <StickySide />
           </Route>
-          <Row style={{ width: "100%", height: "100%" }}>
+          <Row
+            className="contentful-page"
+            style={{ width: "100%", height: "100%" }}
+          >
             <Col span={24}>
               <PageHeader
                 anagramType={anagramType}

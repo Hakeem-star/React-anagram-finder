@@ -4,6 +4,8 @@ import { fileURLs } from "./../firebase/firebase-setup";
 import { set, get } from "idb-keyval";
 
 export default async function fetchFromApi(anagramType) {
+  //Fetching data
+
   // console.log(typeof anagramType);
   let targetUrl;
   let JSONResponse;
@@ -26,6 +28,8 @@ export default async function fetchFromApi(anagramType) {
     JSONResponse = await resFetch.json();
     // If it fails, log message and quit
     if (resFetch.status !== 200) {
+      //Data stopped fetching
+
       console.log(
         "Looks like there was a problem. Status Code: " + resFetch.status
       );
@@ -35,6 +39,8 @@ export default async function fetchFromApi(anagramType) {
     //add to storage to save on calls
     set(anagramType, JSONResponse);
   }
+
+  //Data stopped fetching
 
   return JSONResponse.name;
 

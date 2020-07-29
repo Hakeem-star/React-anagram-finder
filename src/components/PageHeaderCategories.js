@@ -3,7 +3,12 @@ import { Menu, Row } from "antd";
 import { AppContext } from "./../App";
 
 export default function PageHeaderCategories() {
-  const { anagramType, setAnagramType } = useContext(AppContext);
+  const {
+    anagramType,
+    setAnagramType,
+    previousTableData,
+    setTableData,
+  } = useContext(AppContext);
   return (
     <Row>
       <Menu
@@ -16,6 +21,8 @@ export default function PageHeaderCategories() {
         <Menu.Item
           onClick={() => {
             setAnagramType("celebs");
+            //When the tab is changed, set the table data to the result that was previously recorded for the search
+            setTableData(previousTableData["celebs"]);
           }}
           className="page-header__menu__menu-item page-header__menu__menu-item-celebs"
           key="celebs"
@@ -25,6 +32,8 @@ export default function PageHeaderCategories() {
         <Menu.Item
           onClick={() => {
             setAnagramType("words");
+            //When the tab is changed, set the table data to the result that was previously recorded for the search
+            setTableData(previousTableData["words"]);
           }}
           className="page-header__menu__menu-item page-header__menu__menu-item-words"
           key="words"

@@ -4,61 +4,60 @@ import Highlighter from "react-highlight-words";
 import { SearchOutlined } from "@ant-design/icons";
 import { AppContext } from "./../App";
 
+const columns = (anagramType) => [
+  {
+    title: "Anagram",
+    dataIndex: "Anagram",
+    key: "Anagram",
+    // filters: [{ text: "", value: "" }],
+    onFilter: (value, record) => {
+      // console.log(value, record);
+      return record.Anagram.indexOf(value) === 0;
+    },
+  },
+  {
+    title: anagramType === "celebs" ? "Name" : "Word",
+    dataIndex: anagramType === "celebs" ? "Name" : "Word",
+    key: anagramType === "celebs" ? "Name" : "Word",
+    width: 900,
+    // filters: [{ text: "", value: "" }],
+    sorter: {
+      compare: (a, b) => {
+        const nameA = a.Name.toUpperCase(); // ignore upper and lowercase
+        const nameB = b.Name.toUpperCase(); // ignore upper and lowercase
+        if (nameA < nameB) {
+          return -1;
+        }
+        if (nameA > nameB) {
+          return 1;
+        }
+
+        // names must be equal
+        return 0;
+      },
+    },
+  },
+  {
+    title: "%",
+    dataIndex: "%",
+    key: "%",
+    width: 150,
+    defaultSortOrder: "descend",
+    sorter: {
+      compare: (a, b) => a["%"] - b["%"],
+    },
+    // onFilter: (value, record) => record.name.indexOf(value) === 0,
+    // filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => null,
+  },
+];
 export default function ResultsTable({
   fetchingTableDataStatus,
   filteredtableData,
   previousSearchesData,
 }) {
   const { anagramType } = useContext(AppContext);
-  const columns = [
-    {
-      title: "Anagram",
-      dataIndex: "Anagram",
-      key: "Anagram",
 
-      // filters: [{ text: "", value: "" }],
-      onFilter: (value, record) => {
-        // console.log(value, record);
-        return record.Anagram.indexOf(value) === 0;
-      },
-    },
-    {
-      title: anagramType === "celebs" ? "Name" : "Word",
-      dataIndex: anagramType === "celebs" ? "Name" : "Word",
-      key: anagramType === "celebs" ? "Name" : "Word",
-      width: 900,
-      // filters: [{ text: "", value: "" }],
-      sorter: {
-        compare: (a, b) => {
-          const nameA = a.Name.toUpperCase(); // ignore upper and lowercase
-          const nameB = b.Name.toUpperCase(); // ignore upper and lowercase
-          if (nameA < nameB) {
-            return -1;
-          }
-          if (nameA > nameB) {
-            return 1;
-          }
-
-          // names must be equal
-          return 0;
-        },
-      },
-    },
-    {
-      title: "%",
-      dataIndex: "%",
-      key: "%",
-      width: 150,
-      defaultSortOrder: "descend",
-      sorter: {
-        compare: (a, b) => a["%"] - b["%"],
-      },
-      // onFilter: (value, record) => record.name.indexOf(value) === 0,
-      // filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => null,
-    },
-  ];
-
-  const [columnsState, setColumns] = useState(columns);
+  const [columnsState, setColumns] = useState();
   const [searchedColumn, setSearchedColumn] = useState("");
   const [searchText, setSearchText] = useState("");
   const filterInput = useRef(null);
@@ -81,6 +80,7 @@ export default function ResultsTable({
       clearFilters();
       setSearchText("");
     };
+
     filterInputConfig.current = (dataIndex) => {
       return {
         filterDropdown: ({
@@ -166,15 +166,15 @@ export default function ResultsTable({
       }
     });
 
-    setColumns((state) => {
-      const temp = state.slice();
+    setColumns(() => {
+      const temp = columns(anagramType).slice();
       temp[0].filters = anamgramArray;
       // console.log(temp[0].filters);
       const celbeNames = filterInputConfig.current("Name");
       Object.assign(temp[1], celbeNames);
       return temp;
     });
-  }, [filteredtableData, searchedColumn, searchText]);
+  }, [filteredtableData, anagramType, searchedColumn, searchText]);
 
   return (
     <Table

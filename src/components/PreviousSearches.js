@@ -13,6 +13,7 @@ export default function PreviousSearches() {
     previousSearchesData,
     setPreviousSearchesData,
     setCurrentSearch,
+    setAnagramType,
   } = useContext(AppContext);
   const search = useURLSharedSearch();
   const shareSearch = useShareSearch();
@@ -85,9 +86,10 @@ export default function PreviousSearches() {
                     updateActiveHistoryButtonStatus(correctIndex);
                     // console.log(result);
                     if (result.tableData !== undefined) {
+                      setAnagramType(result.anagramType);
+                      setCurrentSearch(result.value);
                       setTableData(result.tableData);
                     } else {
-                      console.log("CLICK");
                       search(result.value, result.anagramType);
                     }
                     setInputvalueState(() => result.value);

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import PreviousSearches from "./PreviousSearches";
 import { Row, Layout, message, Button } from "antd";
 import "./StickySide.less";
@@ -18,25 +18,73 @@ export default function StickySide() {
   const {
     toggleCollapedSider,
     setToggleCollapedSider,
-    setTableData,
     previousSearchesData,
     setPreviousSearchesData,
-    anagramType,
-    setCurrentSearch,
   } = useContext(AppContext);
   const clearAllDisabledStatus = () => {
     return previousSearchesData.length < 1;
   };
+
+  const [siderWidth, setSiderWidth] = useState(300);
   const shareSearch = useShareSearch();
+  //Click function to close sider on click/press
+  const closeClick = useRef(() => {
+    setToggleCollapedSider(true);
+  });
+
+  useEffect(() => {
+    if (!toggleCollapedSider) {
+      const sider = document.querySelector(
+        ".sider-container__site-layout-background"
+      );
+      const closeSider = (down) => {
+        let startPosition = down.changedTouches[0].clientX;
+
+        sider.ontouchend = (up) => {
+          let endPosition = up.changedTouches[0].clientX;
+
+          if (startPosition - endPosition > 30) {
+            setToggleCollapedSider(true);
+          }
+        };
+      };
+      sider.addEventListener("touchstart", closeSider, { once: true });
+
+      return () => {
+        sider.removeEventListener("touchstart", closeSider);
+      };
+    }
+  }, [toggleCollapedSider]);
+
+  useEffect(() => {
+    const bg = document.querySelector(".contentful-page");
+    if (!toggleCollapedSider) {
+      bg.addEventListener("click", closeClick.current);
+      bg.addEventListener("touchend", closeClick.current);
+    } else {
+      bg.removeEventListener("click", closeClick.current);
+      bg.removeEventListener("touchend", closeClick.current);
+    }
+  }, [toggleCollapedSider]);
+
   return (
     <div className="sider-container">
       <Sider
+        breakpoint="xs"
         collapsible
         collapsedWidth={0}
-        width={300}
+        width={siderWidth}
         className="sider-container__site-layout-background"
         trigger={null}
         collapsed={toggleCollapedSider}
+        onBreakpoint={(broken) => {
+          //Adjust the width depending on the size of the screen
+          if (broken) {
+            setSiderWidth(150);
+          } else {
+            setSiderWidth(300);
+          }
+        }}
       >
         <div>History</div>
         <PreviousSearches />

@@ -213,7 +213,7 @@ export function matchMaker(userInputArray, celebArray) {
 //   AARONPAUL: "33"
 //   ADAMSANDLER: "18"
 
-function formatForTable(builtResult) {
+function formatForTable(builtResult, anagramType) {
   let arr = [];
   //Iterate through each anagram
   for (const key in builtResult) {
@@ -222,7 +222,9 @@ function formatForTable(builtResult) {
       arr.push({
         key: arr.length + 1,
         Anagram: key,
-        Name: resultMatch,
+        //Create a different key depending on the anagram type
+        //This affects the results shown on the table
+        [anagramType === "celebs" ? "Name" : "Word"]: resultMatch,
         "%": builtResult[key][resultMatch][0],
         url: builtResult[key][resultMatch][1],
       });
@@ -260,5 +262,5 @@ export default async function celebAnagramFinder(userInput, anagramType) {
 
   //preferably the dataset would be de-duped, but just in case
   const dedupedCelebNames = [...new Set(apiData)];
-  return formatForTable(matchMaker(userInput, dedupedCelebNames));
+  return formatForTable(matchMaker(userInput, dedupedCelebNames), anagramType);
 }
