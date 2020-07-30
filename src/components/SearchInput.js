@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useRef } from "react";
 import { Input } from "antd";
 import "./SearchInput.less";
-import { SearchOutlined } from "@ant-design/icons";
 import { AppContext } from "./../App";
 import useURLSharedSearch from "../utils/useURLSharedSearch";
 const { Search } = Input;
@@ -47,8 +46,6 @@ export default function SearchInput() {
         return setInputvalueState(() => e.target.value);
       }}
       onSearch={search}
-      // enterButton
-      // suffix={<SearchOutlined className="search__suffix" />}
     />
   );
 }

@@ -6,6 +6,8 @@ import "./SharedResultDisplay.less";
 const { Text } = Typography;
 
 export const openNotification = (url) => {
+  //Close other notifications first
+  notification.destroy();
   notification.open({
     message: <Divider>Shareable URL</Divider>,
     description: (

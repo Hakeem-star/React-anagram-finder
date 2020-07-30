@@ -28,11 +28,13 @@ export default function StickySide() {
   const [siderWidth, setSiderWidth] = useState(300);
   const shareSearch = useShareSearch();
   //Click function to close sider on click/press
-  const closeClick = useRef(() => {
-    setToggleCollapedSider(true);
+  const closeClick = useRef((e) => {
+    //Prevent clash with History button
+    if (e.target.innerText !== "History") setToggleCollapedSider(true);
   });
 
   useEffect(() => {
+    //If sider is open
     if (!toggleCollapedSider) {
       const sider = document.querySelector(
         ".sider-container__site-layout-background"
@@ -115,7 +117,7 @@ export default function StickySide() {
           className="sider-container__icon-container__icon share-icon"
           onClick={() => shareSearch()}
         />
-        <DownloadOutlined className="sider-container__icon-container__icon" />
+        {/* <DownloadOutlined className="sider-container__icon-container__icon" /> */}
       </div>
     </div>
   );

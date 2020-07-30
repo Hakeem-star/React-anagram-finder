@@ -9,5 +9,8 @@ export async function createLocalData(key, data) {
 }
 
 export function getLocalData(key) {
-  get(key).then((val) => console.log(val));
+  get(key).then((val) => {
+    //Check if the firebase version is newer
+    console.log(val);
+  });
 }

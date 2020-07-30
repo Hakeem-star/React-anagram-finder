@@ -60,7 +60,8 @@
 
   &__icon-container {
     // width: @sticky_side-icon-width;
-    height: 260px;
+    max-height: 260px;
+    height: 170px;
     position: sticky;
     top: 50vh;
     left: @sticky_side-icon-width;
@@ -74,7 +75,7 @@
     @media only screen and (max-width: 991px) {
       @sticky_side-icon-width: 40px;
       width: @sticky_side-icon-width;
-      height: 200px;
+      max-height: 100px;
       position: relative;
       top: 50vh;
       left: @sticky_side-icon-width;

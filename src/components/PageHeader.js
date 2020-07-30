@@ -60,7 +60,7 @@ export default function PageHeader({ anagramType, setAnagramType, user }) {
           <div className="page-header__top__options">
             <Button
               type="text"
-              onClick={() => {
+              onClick={(event) => {
                 setToggleCollapedSider((value) => {
                   return value ? false : true;
                 });

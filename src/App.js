@@ -15,7 +15,6 @@ import {
 } from "./firebase/firebase-setup";
 import { getURLSharedId } from "./utils/getURLSharedId";
 import { createLocalData, getLocalData } from "./utils/indexDBManager";
-import fetchFromApi from "./utils/fetchCelebData";
 
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import RegisterPage from "./RegisterPage";
@@ -96,11 +95,6 @@ export default function App() {
 
   useEffect(() => {
     //signin Check
-    authChange(setLoggedIn, setUser, setPreviousSearchesData);
-  }, []);
-
-  useEffect(() => {
-    //Download data files
     authChange(setLoggedIn, setUser, setPreviousSearchesData);
   }, []);
 

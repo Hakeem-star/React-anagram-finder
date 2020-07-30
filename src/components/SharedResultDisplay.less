@@ -1,5 +1,5 @@
 .shared-result-display {
-  @shared-result-display-width: 30.2vw;
+  @shared-result-display-width: 50vw;
   @shared-result-display-height: 6vw;
   position: fixed;
   top: 50%;
@@ -7,8 +7,12 @@
   transform: translate3d(-50%, -50%, 0);
   width: @shared-result-display-width;
   height: @shared-result-display-height;
-  min-width: 580px;
+  max-width: 600px;
   min-height: 115px;
+
+  @media only screen and (max-width: 768px) {
+    width: 400px;
+  }
   .ant-notification-notice-message {
     width: 88%;
     .ant-divider {

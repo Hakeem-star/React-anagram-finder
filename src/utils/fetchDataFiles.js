@@ -1,9 +1,9 @@
 import celebAPIResult_local from "../celebNames.json";
 import words_local from "../words2.json";
-import { fileURLs } from "./../firebase/firebase-setup";
+import { fileURLs } from "../firebase/firebase-setup";
 import { set, get } from "idb-keyval";
 
-export default async function fetchFromApi(anagramType) {
+export default async function fetchDataFiles(anagramType) {
   //Fetching data
 
   // console.log(typeof anagramType);
@@ -19,6 +19,7 @@ export default async function fetchFromApi(anagramType) {
   //Check if the data exists in indexdb to save another fetch
   const checkStorage = await get(anagramType);
   if (checkStorage !== undefined) {
+    console.log(checkStorage);
     JSONResponse = checkStorage;
   } else {
     // Fetch the json of celebs

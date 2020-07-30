@@ -1,4 +1,4 @@
-import fetchFromApi from "./fetchCelebData";
+import fetchDataFiles from "./fetchDataFiles";
 
 export function cleanInputValue(value) {
   //write input value to anagram variable
@@ -258,7 +258,7 @@ export default async function celebAnagramFinder(userInput, anagramType) {
   //   formatForTable(matchMaker(countedUserInputAnagrams, countedCelebNames))
   // );
   // console.log(formatForTable(matchMaker(userInput, celebNames)));
-  const apiData = await fetchFromApi(anagramType);
+  const apiData = await fetchDataFiles(anagramType);
 
   //preferably the dataset would be de-duped, but just in case
   const dedupedCelebNames = [...new Set(apiData)];
