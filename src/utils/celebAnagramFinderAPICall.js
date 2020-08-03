@@ -224,7 +224,7 @@ function formatForTable(builtResult, anagramType) {
         Anagram: key,
         //Create a different key depending on the anagram type
         //This affects the results shown on the table
-        [anagramType === "celebs" ? "Name" : "Word"]: resultMatch,
+        Name: resultMatch,
         "%": builtResult[key][resultMatch][0],
         url: builtResult[key][resultMatch][1],
       });

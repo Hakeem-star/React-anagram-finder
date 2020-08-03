@@ -17,8 +17,8 @@ const columns = (anagramType) => [
   },
   {
     title: anagramType === "celebs" ? "Name" : "Word",
-    dataIndex: anagramType === "celebs" ? "Name" : "Word",
-    key: anagramType === "celebs" ? "Name" : "Word",
+    dataIndex: "Name",
+    key: "Name",
     width: 900,
     // filters: [{ text: "", value: "" }],
     sorter: {
@@ -42,7 +42,7 @@ const columns = (anagramType) => [
     dataIndex: "%",
     key: "%",
     width: 150,
-    defaultSortOrder: "descend",
+    sortOrder: "descend",
     sorter: {
       compare: (a, b) => a["%"] - b["%"],
     },
