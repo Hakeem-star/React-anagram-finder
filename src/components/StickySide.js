@@ -50,10 +50,16 @@ export default function StickySide() {
           }
         };
       };
-      sider.addEventListener("touchstart", closeSider, { once: true });
+      sider.addEventListener("touchstart", closeSider, {
+        once: true,
+        passive: true,
+      });
 
       return () => {
-        sider.removeEventListener("touchstart", closeSider);
+        sider.removeEventListener("touchstart", closeSider, {
+          once: true,
+          passive: true,
+        });
       };
     }
   }, [toggleCollapedSider]);
@@ -62,10 +68,16 @@ export default function StickySide() {
     const bg = document.querySelector(".contentful-page");
     if (!toggleCollapedSider) {
       bg.addEventListener("click", closeClick.current);
-      bg.addEventListener("touchend", closeClick.current);
+      bg.addEventListener("touchend", closeClick.current, {
+        once: true,
+        passive: true,
+      });
     } else {
       bg.removeEventListener("click", closeClick.current);
-      bg.removeEventListener("touchend", closeClick.current);
+      bg.removeEventListener("touchend", closeClick.current, {
+        once: true,
+        passive: true,
+      });
     }
   }, [toggleCollapedSider]);
 

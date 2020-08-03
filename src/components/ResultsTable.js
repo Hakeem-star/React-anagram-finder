@@ -3,6 +3,8 @@ import { Table, Input, Button, Space } from "antd";
 import Highlighter from "react-highlight-words";
 import { SearchOutlined } from "@ant-design/icons";
 import { AppContext } from "./../App";
+import { authChange } from "./../firebase/__mocks__/firebase-setup";
+let i = 0;
 
 const columns = (anagramType, filteredInfo, sortedInfo) => [
   {
@@ -107,6 +109,11 @@ export default function ResultsTable({
     };
 
     filterInputConfig.current = (dataIndex) => {
+      const externalPageLink =
+        anagramType === "celebs"
+          ? "https://en.wikipedia.org/wiki/"
+          : "https://www.dictionary.com/browse/";
+
       return {
         filterDropdown: ({
           setSelectedKeys,
@@ -162,16 +169,32 @@ export default function ResultsTable({
             setTimeout(() => filterInput.current.select());
           }
         },
-        render: (text) => {
+        render: (text, record, index) => {
+          if (i === 0) {
+            console.log(text, record);
+          }
           return searchedColumn === dataIndex ? (
-            <Highlighter
-              highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
-              searchWords={[searchText]}
-              autoEscape
-              textToHighlight={text ? text.toString() : ""}
-            />
+            //wrap the name/word in a link
+            <a
+              href={`${externalPageLink}${record.url}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Highlighter
+                highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+                searchWords={[searchText]}
+                autoEscape
+                textToHighlight={text ? text.toString() : ""}
+              />
+            </a>
           ) : (
-            text
+            <a
+              href={`${externalPageLink}${record.url}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {text}
+            </a>
           );
         },
       };
@@ -199,6 +222,8 @@ export default function ResultsTable({
       Object.assign(temp[1], celbeNames);
       return temp;
     });
+
+    i = 0;
   }, [
     filteredtableData,
     filteredInfo,
@@ -213,7 +238,7 @@ export default function ResultsTable({
       dataSource={filteredtableData}
       columns={columnsState}
       onChange={(pagination, filters, sorter) => {
-        console.log(pagination, filters, sorter);
+        // console.log(pagination, filters, sorter);
         setFilteredInfo(filters);
         setSortedInfo(sorter);
       }}

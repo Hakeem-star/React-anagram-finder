@@ -11,7 +11,7 @@ export function useShareSearch() {
   return async (buttonSearch, ButtonAnagramType) => {
     const valueToUse = buttonSearch || currentSearch;
     const anagramTypeToUse = ButtonAnagramType || anagramType;
-    console.log(valueToUse, buttonSearch, currentSearch);
+    // console.log(valueToUse, buttonSearch, currentSearch);
     //generateUUID & send to firebase
     if (currentSearch) {
       const shareURL = await addSharedSearchToFirestore(

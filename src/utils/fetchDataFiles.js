@@ -19,7 +19,7 @@ export default async function fetchDataFiles(anagramType) {
   //Check if the data exists in indexdb to save another fetch
   const checkStorage = await get(anagramType);
   if (checkStorage !== undefined) {
-    console.log(checkStorage);
+    // console.log(checkStorage);
     JSONResponse = checkStorage;
   } else {
     // Fetch the json of celebs
