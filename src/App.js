@@ -242,7 +242,8 @@ export default function App() {
       </Layout>
       {/* <Footer className="footer">
         <Row justify="space-between">
-          <p>Submit missing Names/Words</p>
+          <p>Submit missing Names or Words</p>
+          <p>Report a problem</p>
           <p>Data courtesy of Wikipedia</p>
         </Row>
       </Footer> */}

@@ -1,4 +1,5 @@
 import fetchDataFiles from "./fetchDataFiles";
+import React from "react";
 
 export function cleanInputValue(value) {
   //write input value to anagram variable
@@ -215,6 +216,10 @@ export function matchMaker(userInputArray, celebArray) {
 
 function formatForTable(builtResult, anagramType) {
   let arr = [];
+  const externalPageLink =
+    anagramType === "celebs"
+      ? "https://en.wikipedia.org/wiki/"
+      : "https://www.dictionary.com/browse/";
   //Iterate through each anagram
   for (const key in builtResult) {
     //Iterate through the compared values for each
@@ -224,7 +229,15 @@ function formatForTable(builtResult, anagramType) {
         Anagram: key,
         //Create a different key depending on the anagram type
         //This affects the results shown on the table
-        Name: resultMatch,
+        Name: (
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href={`${externalPageLink}${builtResult[key][resultMatch][1]}`}
+          >
+            {resultMatch}
+          </a>
+        ),
         "%": builtResult[key][resultMatch][0],
         url: builtResult[key][resultMatch][1],
       });
