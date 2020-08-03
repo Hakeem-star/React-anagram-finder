@@ -4,12 +4,14 @@ import Highlighter from "react-highlight-words";
 import { SearchOutlined } from "@ant-design/icons";
 import { AppContext } from "./../App";
 
-const columns = (anagramType) => [
+const columns = (anagramType, filteredInfo, sortedInfo) => [
   {
     title: "Anagram",
     dataIndex: "Anagram",
     key: "Anagram",
     // filters: [{ text: "", value: "" }],
+    sortOrder: sortedInfo.columnKey === "Anagram" && sortedInfo.order,
+    filteredValue: filteredInfo.Anagram || null,
     onFilter: (value, record) => {
       // console.log(value, record);
       return record.Anagram.indexOf(value) === 0;
@@ -20,7 +22,10 @@ const columns = (anagramType) => [
     dataIndex: "Name",
     key: "Name",
     width: 900,
-    // filters: [{ text: "", value: "" }],
+    // defaultSortOrder: "descend",
+    filteredValue: filteredInfo.Name || null,
+    sortOrder: sortedInfo.columnKey === "Name" && sortedInfo.order,
+
     sorter: {
       compare: (a, b) => {
         const nameA = a.Name.toUpperCase(); // ignore upper and lowercase
@@ -42,10 +47,12 @@ const columns = (anagramType) => [
     dataIndex: "%",
     key: "%",
     width: 150,
-    sortOrder: "descend",
+    // sortOrder: "descend",
     sorter: {
       compare: (a, b) => a["%"] - b["%"],
     },
+    sortOrder: sortedInfo.columnKey === "%" && sortedInfo.order,
+
     // onFilter: (value, record) => record.name.indexOf(value) === 0,
     // filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => null,
   },
@@ -60,12 +67,30 @@ export default function ResultsTable({
   const [columnsState, setColumns] = useState();
   const [searchedColumn, setSearchedColumn] = useState("");
   const [searchText, setSearchText] = useState("");
+  const [filteredInfo, setFilteredInfo] = useState({
+    Anagram: null,
+    Name: null,
+  });
+  const [sortedInfo, setSortedInfo] = useState({
+    Anagram: null,
+    Name: null,
+  });
+
   const filterInput = useRef(null);
   const filterInputConfig = useRef(null);
 
   useEffect(() => {
     //Reset filters when a new search is made
     setSearchText("");
+    setFilteredInfo({
+      Anagram: null,
+      Name: null,
+    });
+    setSortedInfo({
+      order: "descend",
+      columnKey: "%",
+    });
+    // setSortedInfo()
   }, [previousSearchesData]);
 
   useEffect(() => {
@@ -167,20 +192,31 @@ export default function ResultsTable({
     });
 
     setColumns(() => {
-      const temp = columns(anagramType).slice();
+      const temp = columns(anagramType, filteredInfo, sortedInfo).slice();
       temp[0].filters = anamgramArray;
       // console.log(temp[0].filters);
       const celbeNames = filterInputConfig.current("Name");
       Object.assign(temp[1], celbeNames);
       return temp;
     });
-  }, [filteredtableData, anagramType, searchedColumn, searchText]);
+  }, [
+    filteredtableData,
+    filteredInfo,
+    anagramType,
+    searchedColumn,
+    searchText,
+  ]);
 
   return (
     <Table
       loading={{ spinning: fetchingTableDataStatus }}
       dataSource={filteredtableData}
       columns={columnsState}
+      onChange={(pagination, filters, sorter) => {
+        console.log(pagination, filters, sorter);
+        setFilteredInfo(filters);
+        setSortedInfo(sorter);
+      }}
     />
   );
 }

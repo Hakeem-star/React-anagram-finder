@@ -18,10 +18,11 @@ import { createLocalData, getLocalData } from "./utils/indexDBManager";
 
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import RegisterPage from "./RegisterPage";
+import Column from "antd/lib/table/Column";
 
 export const AppContext = React.createContext();
 
-const { Content } = Layout;
+const { Content, Footer } = Layout;
 
 const updateActiveHistoryButtonStatus = (matchesPreviousSearchResult) => {
   //get data from previous history
@@ -64,7 +65,8 @@ export default function App() {
   //Status of the results table populating
   const [fetchingTableDataStatus, setFetchingTableDataStatus] = useState(false);
   //Values of the threshold sliders
-  const [thresholdSliders, setThresholdSliders] = useState([1, 100]);
+  //Start at 50-100 to speed up table
+  const [thresholdSliders, setThresholdSliders] = useState([50, 100]);
   //State of the history side bar
   const [toggleCollapedSider, setToggleCollapedSider] = useState(true);
   //Search Inputs value
@@ -210,25 +212,18 @@ export default function App() {
                   <Row justify="center">
                     <SearchInput />
                   </Row>
-                  <Content
-                    className="main-content"
-                    style={{ paddingTop: "60px", paddingBottom: "60px" }}
-                  >
-                    <Row justify="center">
-                      <Col style={{ textAlign: "left" }} span={16}>
-                        <p>Threshold</p>
-                      </Col>
-                    </Row>
-                    <Row justify="center">
-                      <Col span={16}>
-                        <ThresholdSlider
-                          setThresholdSliders={setThresholdSliders}
-                          setFilteredTableData={setFilteredTableData}
-                          tableData={tableData}
-                          thresholdSliders={thresholdSliders}
-                        />
-                      </Col>
-                    </Row>
+                  <Content className="main-content">
+                    <Col
+                      justify="center"
+                      className="main-content__threshold-container threshold-container"
+                    >
+                      <ThresholdSlider
+                        setThresholdSliders={setThresholdSliders}
+                        setFilteredTableData={setFilteredTableData}
+                        tableData={tableData}
+                        thresholdSliders={thresholdSliders}
+                      />
+                    </Col>
                     <Row justify="center">
                       <Col span={20}>
                         <ResultsTable
@@ -245,6 +240,12 @@ export default function App() {
           </Row>
         </AppContext.Provider>
       </Layout>
+      {/* <Footer className="footer">
+        <Row justify="space-between">
+          <p>Submit missing Names/Words</p>
+          <p>Data courtesy of Wikipedia</p>
+        </Row>
+      </Footer> */}
     </Router>
   );
 }
