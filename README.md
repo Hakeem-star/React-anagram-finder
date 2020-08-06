@@ -1,7 +1,7 @@
 # React Anagram Finder
-An anagram finder, but this time built using React and with a few added features.
+An anagram finder with plenty of features built using React, Less, Ant Design & Firebase.
 
-Become a Countdown champion!
+Become a Countdown/Scrabble champion!
 
 Live at -
 https://anagram-finder-7228c.web.app/
