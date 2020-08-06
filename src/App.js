@@ -118,6 +118,10 @@ export default function App() {
       //If the previous data does not include table data, don't do this
       if (previousSearchesData[0].tableData !== undefined) {
         setTableData(() => previousSearchesData[0].tableData);
+        //select the correct category
+        setAnagramType(previousSearchesData[0].anagramType);
+        updateActiveHistoryButtonStatus(previousSearchesData.length - 1);
+        setInputvalueState(previousSearchesData[0].value);
       }
     } else {
       //If there are no previous searches, there is no current search

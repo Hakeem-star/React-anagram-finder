@@ -53,7 +53,6 @@ export default function PreviousSearches() {
                       <div className="ant-popover__space-container">
                         <Button
                           onClick={() => {
-                            console.log(result.value, result.anagramType);
                             shareSearch(result.value, result.anagramType);
                           }}
                           className="ant-popover__space-container__share"
@@ -65,11 +64,11 @@ export default function PreviousSearches() {
                           danger
                           onClick={() => {
                             setPreviousSearchesData((previousSearches) => {
-                              console.log(previousSearches, index);
                               const stateCopy = previousSearches.slice();
                               stateCopy.splice(index, 1);
                               return stateCopy;
                             });
+                            // setAnagramType()
                           }}
                           className="ant-popover__space-container__delete"
                         >
@@ -92,7 +91,7 @@ export default function PreviousSearches() {
                     } else {
                       search(result.value, result.anagramType);
                     }
-                    setInputvalueState(() => result.value);
+                    setInputvalueState(result.value);
                   }}
                   style={{ width: "100%" }}
                   type="primary"

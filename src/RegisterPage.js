@@ -47,7 +47,6 @@ export default function RegisterPage({ location, history }) {
               ? createUserWithEmailPass(values, previousSearchesData)
               : signInWithEmailPass(values)
                   .then(() => {
-                    console.log("YAAy");
                     message.success({
                       content: "Logged in!",
                       key: "updatable",
@@ -56,7 +55,6 @@ export default function RegisterPage({ location, history }) {
                   })
                   .catch((e) => {
                     setFormSubmission(false);
-                    console.log(e.message);
                     if (e.message.includes("no user record")) {
                       message.error("User does not exist");
                     } else if (e.message.includes("already in use")) {
@@ -66,9 +64,7 @@ export default function RegisterPage({ location, history }) {
                     }
                   });
           }}
-          onFinishFailed={() => {
-            console.log("BOO");
-          }}
+          onFinishFailed={() => {}}
           layout="vertical"
         >
           <Form.Item

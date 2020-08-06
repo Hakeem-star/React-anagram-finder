@@ -1,14 +1,24 @@
-// import celebAPIResult_local from "../celebNames.json";
-// import words_local from "../words2.json";
+import celebAPIResult_local from "../localData/celebs_06082020.json";
+import words_local from "../localData/words_06082020.json";
 import { listAllFromStorage, assignFileURLs } from "../firebase/firebase-setup";
 import { set, get, keys, del } from "idb-keyval";
+const localTestEnv = false;
 
 export default async function fetchDataFiles(anagramType) {
+  let JSONResponse;
   //Fetching data
 
+  if (localTestEnv) {
+    if (anagramType === "celebs") {
+      return celebAPIResult_local.name;
+    }
+    if (anagramType === "words") {
+      return words_local.name;
+    }
+  }
   // console.log(typeof anagramType);
   let targetUrl;
-  let JSONResponse;
+
   const fileURLs = await assignFileURLs();
   //Decide which anagram data to use
   if (anagramType === "celebs") {
@@ -26,13 +36,12 @@ export default async function fetchDataFiles(anagramType) {
   });
 
   if (firebaseFileNameRef === undefined) {
-    console.log("No relevent file found on server. Please contact admin");
+    console.error("No relevent file found on server. Please contact admin");
   }
   const firebaseFileName = firebaseFileNameRef.name;
 
   const arrayOfDBKeys = await keys();
   const hasMostRecentFile = arrayOfDBKeys.indexOf(firebaseFileName);
-  console.log(hasMostRecentFile);
   //if the file is in the local db
   if (hasMostRecentFile !== -1) {
     //Get the file from DB
@@ -58,18 +67,15 @@ export default async function fetchDataFiles(anagramType) {
     if (resFetch.status !== 200) {
       //Data stopped fetching
 
-      console.log(
+      console.error(
         "Looks like there was a problem. Status Code: " + resFetch.status
       );
       return;
     }
-    console.log(firebaseFileName);
     //add to storage to save on future calls
     set(firebaseFileName, JSONResponse);
   }
-
   //Data stopped fetching
-  console.log(JSONResponse);
   return JSONResponse.name;
 
   // return words_local;

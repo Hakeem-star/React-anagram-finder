@@ -24,8 +24,6 @@ export async function assignFileURLs() {
   const storage = await listAllFromStorage();
 
   storage.forEach((value) => {
-    console.log(value.name, value.name.includes("words"));
-
     if (value.name.includes("celebs")) {
       celebnames = storageRef.child(value.name);
     }
@@ -33,14 +31,13 @@ export async function assignFileURLs() {
       words = storageRef.child(value.name);
     }
   });
-  console.log(celebnames);
   try {
     return {
       celebNames: celebnames.getDownloadURL(),
       words: words.getDownloadURL(),
     };
   } catch (err) {
-    console.log(err, "Check file names on firebase");
+    console.error(err, "Check file names on firebase");
   }
 }
 
@@ -50,7 +47,6 @@ export async function listAllFromStorage() {
   let ret = await storageRef.listAll().catch(function (error) {
     console.error("Error adding document: ", error);
   });
-  console.log(ret.items);
   return ret.items;
 }
 ////////////
@@ -82,23 +78,22 @@ export async function addSharedSearchToFirestore(searchValue, anagramType) {
 export async function getSharedSearchToFirestore(id) {
   const docRef = db.collection("share").doc(id);
   const document = await docRef.get().catch(function (error) {
-    console.log("Error getting document:", error);
+    console.error("Error getting document:", error);
   });
 
   if (document.exists) {
-    console.log("Document data:", document.data());
     const searchTermObject = await document.data();
     return searchTermObject;
   } else {
     // doc.data() will be undefined in this case
-    console.log("No such document!");
+    console.error("No such document!");
   }
 }
 
 async function getPreviousDataFromFirestore(email) {
   const docRef = db.collection("user").doc(email);
   const document = await docRef.get().catch(function (error) {
-    console.log("Error getting document:", error);
+    console.error("Error getting document:", error);
   });
 
   if (document.exists) {
@@ -108,7 +103,7 @@ async function getPreviousDataFromFirestore(email) {
     return previousDataObject;
   } else {
     // doc.data() will be undefined in this case
-    console.log("No such document!");
+    console.error("No such document!");
   }
 }
 
@@ -131,7 +126,7 @@ const auth = firebase.auth();
 
 export function signInWithEmailPass({ email, password }) {
   const request = auth.signInWithEmailAndPassword(email, password);
-  request.catch((e) => console.log(e.message));
+  request.catch((e) => console.error(e.message));
   return request;
 }
 
@@ -153,7 +148,7 @@ export async function createUserWithEmailPass(
         console.error("Error adding document: ", error);
       });
   } catch (e) {
-    console.log(e.message);
+    console.error(e.message);
   }
 }
 

@@ -114,9 +114,10 @@ export default function useURLSharedSearch() {
               result[previousSearchMatch.index].tableData = anagramResult;
               return result;
             });
-            setTableData(() => {
-              return previousSearchesData[previousSearchMatch.index].tableData;
-            });
+            // setTableData(() => {
+            //   console.log(previousSearchMatch.index, previousSearchesData);
+            //   return previousSearchesData[previousSearchMatch.index].tableData;
+            // });
 
             updateActiveHistoryButtonStatus(
               previousSearchMatch.historyButtonsIndex

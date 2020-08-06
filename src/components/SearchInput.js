@@ -19,7 +19,7 @@ export default function SearchInput() {
     if (sharedSearchInput !== null) {
       search(sharedSearchInput);
     }
-  }, [sharedSearchInput, search]);
+  }, [sharedSearchInput]);
 
   useEffect(() => {
     //Scroll to input on top
