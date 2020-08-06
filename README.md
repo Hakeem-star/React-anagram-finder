@@ -19,7 +19,7 @@ You can also log in to keep your searches across devices.
 ## To run locally -
 1. npm install
 2. Move the files in the data folder to the src folder
-3. Remove comments for lines 1,2,11-18 in the fetchDataFiles.js document in the utils folder
+3. Change value of localTestEnv to **true** on line 5 in the fetchDataFiles.js document in the utils folder
 4. npm start
 5. Go to http://localhost:3000/
 
