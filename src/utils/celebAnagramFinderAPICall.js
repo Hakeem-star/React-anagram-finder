@@ -109,16 +109,7 @@ export function matchMaker(userInputArray, celebArray) {
   const countedCelebNames = occuranceCount(celebNames);
   //{50 Cent: {0: 1, 5: 1, C: 1, E: 1, N: 1, T: 1},
   //Aaron Carter: {A: 3, R: 3, O: 1, N: 1, C: 1}}
-  // countedCelebNamesKeys = Object.keys(countedCelebNames);
-  // //  Object.keys(countedCelebNames);
-  // //["Donald Trump"]
-  // celebNames.forEach((value) => {
-  //   let test = countedCelebNamesKeys.find((val) => val === value[1]);
-  //   if (test === undefined) {
-  //     console.log(value);
-  //   }
-  // });
-  // debugger;
+
   let recordKeeper = {};
   // {"TRUMCDONALD":{"t":1,"r":1}}
   //For all the anagrams the user entered
@@ -215,10 +206,7 @@ export function matchMaker(userInputArray, celebArray) {
 
 function formatForTable(builtResult, anagramType) {
   let arr = [];
-  const externalPage =
-    anagramType === "celebs"
-      ? "https://en.wikipedia.org/wiki/"
-      : "https://www.dictionary.com/browse/";
+
   //Iterate through each anagram
   for (const key in builtResult) {
     //Iterate through the compared values for each
@@ -242,20 +230,7 @@ export default async function celebAnagramFinder(userInput, anagramType) {
   // let celebsFromApi = celebAPIResult_local;
 
   // STRUCTURE---- celebsFromApi = {CelebrityValues: [{ name: "Serena Williams" },{ name: "Kacey Musgraves" }, { name: "Ivana Milicevic" } ] };
-  // console.log("Celebs from API", celebsFromApi.CelebrityValues)
 
-  //Example Anagrams to search for
-  /* var anagram = ["TRUMCDONALD", "SHAVERSINB", "SHAVERSINC", "SHAVERSINM", "SHAVERSINP", "HASTYMAREA", "HASTYMAREE", "HASTYMAREI",
-           "HASTYMAREL", "HASTYMAREN", "HASTYMAREO", "HASTYMARER", "HASTYMARES", "HASTYMARET", "HASTYMAREU", "SLIMSWINEAREAA",
-           "SLIMSWINEAREAE", "SLIMSWINEAREAI", "SLIMSWINEAREAL", "SLIMSWINEAREAN", "SLIMSWINEAREAO", "SLIMSWINEAREAR", "SLIMSWINEAREAS",
-           "SLIMSWINEAREAT", "SLIMSWINEAREAU", "ROTTENGROANA", "ROTTENGROANE", "ROTTENGROANI", "ROTTENGROANL", "ROTTENGROANN", "ROTTENGROANO",
-           "ROTTENGROANR", "ROTTENGROANS", "ROTTENGROANT", "ROTTENGROANU", "GRIMERTABOOB", "GRIMERTABOOC", "GRIMERTABOOM", "GRIMERTABOOP", "PUTINKARMAF",
-           "PUTINKARMAH", "PUTINKARMAV", "PUTINKARMAW", "PUTINKARMAY", "SLOTHMENWAILA", "SLOTHMENWAILE", "SLOTHMENWAILI", "SLOTHMENWAILL", "SLOTHMENWAILN",
-           "SLOTHMENWAILO", "SLOTHMENWAILR", "SLOTHMENWAILS", "SLOTHMENWAILT", "SLOTHMENWAILU", "BENLAIDLAWB", "BENLAIDLAWC", "BENLAIDLAWM", "BENLAIDLAWP",
-           "ONEMUTTISLANDA", "ONEMUTTISLANDE", "ONEMUTTISLANDI", "ONEMUTTISLANDL", "ONEMUTTISLANDN", "ONEMUTTISLANDO", "ONEMUTTISLANDR", "ONEMUTTISLANDS",
-           "ONEMUTTISLANDT", "ONEMUTTISLANDU", "JEDIMATHSA", "JEDIMATHSE", "JEDIMATHSI", "JEDIMATHSL", "JEDIMATHSN", "JEDIMATHSO", "JEDIMATHSR", "JEDIMATHSS",
-           "JEDIMATHST", "JEDIMATHSU"];
-  */
   //  const celebNames = await _fetchFromCelebApi();
 
   // console.log(

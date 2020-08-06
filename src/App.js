@@ -1,6 +1,5 @@
 import React, { useState, useEffect, Fragment, useRef } from "react";
 import { Layout, Row, Col } from "antd";
-
 import "antd/dist/antd.less";
 import "./App.less";
 import StickySide from "./components/StickySide";
@@ -12,6 +11,7 @@ import {
   getSharedSearchToFirestore,
   authChange,
   setPreviousDataToFirestore,
+  listAllFromStorage,
 } from "./firebase/firebase-setup";
 import { getURLSharedId } from "./utils/getURLSharedId";
 import { createLocalData, getLocalData } from "./utils/indexDBManager";
@@ -89,6 +89,7 @@ export default function App() {
         setSharedSearchInput(searchTerm.searchTerm);
       })();
     }
+    listAllFromStorage();
 
     return function cleanup() {
       preventInitialRun.current = false;

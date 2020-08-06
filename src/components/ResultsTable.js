@@ -112,7 +112,7 @@ export default function ResultsTable({
       const externalPageLink =
         anagramType === "celebs"
           ? "https://en.wikipedia.org/wiki/"
-          : "https://www.dictionary.com/browse/";
+          : "https://dictionary.babylon-software.com/";
 
       return {
         filterDropdown: ({
@@ -170,9 +170,9 @@ export default function ResultsTable({
           }
         },
         render: (text, record, index) => {
-          if (i === 0) {
-            console.log(text, record);
-          }
+          // if (i === 0) {
+          //   console.log(text, record);
+          // }
           return searchedColumn === dataIndex ? (
             //wrap the name/word in a link
             <a

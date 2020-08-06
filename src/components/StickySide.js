@@ -9,7 +9,6 @@ import {
 } from "@ant-design/icons";
 import { addSharedSearchToFirestore } from "../firebase/firebase-setup";
 import { AppContext } from "./../App";
-import { openNotification } from "./SharedResultDisplay";
 import { useShareSearch } from "../utils/useShareSearch";
 
 const { Sider } = Layout;
@@ -21,9 +20,6 @@ export default function StickySide() {
     previousSearchesData,
     setPreviousSearchesData,
   } = useContext(AppContext);
-  const clearAllDisabledStatus = () => {
-    return previousSearchesData.length < 1;
-  };
 
   const [siderWidth, setSiderWidth] = useState(300);
   const shareSearch = useShareSearch();
@@ -104,7 +100,7 @@ export default function StickySide() {
         <PreviousSearches />
         <Button
           danger
-          disabled={clearAllDisabledStatus()}
+          disabled={previousSearchesData.length < 1}
           className="sider-container__clear-all-button"
           onClick={() => {
             //Clear previous searched

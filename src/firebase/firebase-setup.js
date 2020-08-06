@@ -9,19 +9,53 @@ import { uuidv5Maker } from "./../utils/uuid-config";
 
 firebase.initializeApp(firebaseConfig);
 
+//////////
+//Storage
+/////////
+
 // Get a reference to the storage service, which is used to create references in your storage bucket
 const storage = firebase.storage();
 
 // Create a storage reference from our storage service
 const storageRef = storage.ref();
+let celebnames, words;
 
-const celebnames = storageRef.child("celebNames.json");
-const words = storageRef.child("words.json");
+export async function assignFileURLs() {
+  const storage = await listAllFromStorage();
 
-export const fileURLs = {
-  celebNames: celebnames.getDownloadURL(),
-  words: words.getDownloadURL(),
-};
+  storage.forEach((value) => {
+    console.log(value.name, value.name.includes("words"));
+
+    if (value.name.includes("celebs")) {
+      celebnames = storageRef.child(value.name);
+    }
+    if (value.name.includes("words")) {
+      words = storageRef.child(value.name);
+    }
+  });
+  console.log(celebnames);
+  try {
+    return {
+      celebNames: celebnames.getDownloadURL(),
+      words: words.getDownloadURL(),
+    };
+  } catch (err) {
+    console.log(err, "Check file names on firebase");
+  }
+}
+
+// export const fileURLs = assignFileURLs();
+
+export async function listAllFromStorage() {
+  let ret = await storageRef.listAll().catch(function (error) {
+    console.error("Error adding document: ", error);
+  });
+  console.log(ret.items);
+  return ret.items;
+}
+////////////
+///FireStore
+////////////
 
 var db = firebase.firestore();
 

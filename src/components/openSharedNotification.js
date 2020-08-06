@@ -2,10 +2,10 @@ import React from "react";
 import { notification, Button, Result, Typography, Divider } from "antd";
 import { ShareAltOutlined } from "@ant-design/icons";
 
-import "./SharedResultDisplay.less";
+import "./openSharedNotification.less";
 const { Text } = Typography;
 
-export const openNotification = (url) => {
+export const openSharedNotification = (url) => {
   //Close other notifications first
   notification.destroy();
   notification.open({
@@ -22,4 +22,4 @@ export const openNotification = (url) => {
   });
 };
 
-export default { openNotification };
+export default { openSharedNotification };
