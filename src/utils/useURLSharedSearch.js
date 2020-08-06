@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { AppContext } from "../App";
-import celebAnagramFinder from "./celebAnagramFinderAPICall";
+import createTableData from "./anagramMatchFunctions";
 import { message } from "antd";
 
 message.config({
@@ -50,6 +50,7 @@ export default function useURLSharedSearch() {
   } = useContext(AppContext);
 
   return (e, historyAnagramType) => {
+    // console.log(historyAnagramType, "HERE");
     let searchValue;
     //historyAnagramType might come in as an object if it's called from the searchInput
     typeof historyAnagramType === "object" && (historyAnagramType = undefined);
@@ -79,66 +80,66 @@ export default function useURLSharedSearch() {
     ); //{ match: true, historyButtonsIndex: 1, index: 0, overwrite: false }
 
     //If the new user input is the same as a previous input and it does not need to be overwritten
-    previousSearchMatch.match && !previousSearchMatch.overwrite
-      ? //Update shown result to be previous value & highlight in history
-        (() => {
-          updateActiveHistoryButtonStatus(
-            previousSearchMatch.historyButtonsIndex
-          );
-          //update current table results
-          setTableData(() => {
-            return previousSearchesData[previousSearchMatch.index].tableData;
-          });
+    if (previousSearchMatch.match && !previousSearchMatch.overwrite) {
+      //Update shown result to be previous value & highlight in history
+      (() => {
+        updateActiveHistoryButtonStatus(
+          previousSearchMatch.historyButtonsIndex
+        );
+        //update current table results
+        setTableData(() => {
+          return previousSearchesData[previousSearchMatch.index].tableData;
+        });
 
+        setCurrentSearch(searchValue);
+      })();
+    } else {
+      (async () => {
+        //If it's a new search
+        setFetchingTableDataStatus(true);
+        //createTableData
+        let anagramResult = await createTableData(
+          searchValue,
+          //If historyAnagramType has a value(a historical search was clicked), use that, else use the global anagramType value
+          localAnagramType
+        );
+        if (anagramResult.length === 0) {
+          message.error("No results found");
+        } else {
           setCurrentSearch(searchValue);
-        })()
-      : (async () => {
-          //If it's a new search
-          setFetchingTableDataStatus(true);
+          //If it needs to be overwritten, find the index and just give it table data
+          if (previousSearchMatch.overwrite) {
+            setPreviousSearchesData((search) => {
+              let result = search.slice();
+              result[previousSearchMatch.index].tableData = anagramResult;
+              return result;
+            });
+            setTableData(() => {
+              return previousSearchesData[previousSearchMatch.index].tableData;
+            });
 
-          let anagramResult = await celebAnagramFinder(
-            searchValue,
-            //If historyAnagramType has a value(a historical search was clicked), use that, else use the global anagramType value
-            localAnagramType
-          );
-          if (anagramResult.length === 0) {
-            message.error("No results found");
+            updateActiveHistoryButtonStatus(
+              previousSearchMatch.historyButtonsIndex
+            );
           } else {
-            setCurrentSearch(searchValue);
-            //If it needs to be overwritten, find the index and just give it table data
-            if (previousSearchMatch.overwrite) {
-              setPreviousSearchesData((search) => {
-                let result = search.slice();
-                result[previousSearchMatch.index].tableData = anagramResult;
-                return result;
+            //Update previous searches object array with search, time & result
+            setPreviousSearchesData((search) => {
+              //Make a copy and enforce a maximum of 10 previous searches
+              let result = search.slice(0, 9);
+              let time = new Date();
+              result.unshift({
+                value: searchValue,
+                title: time.toGMTString(),
+                tableData: anagramResult,
+                anagramType: localAnagramType,
               });
-              setTableData(() => {
-                return previousSearchesData[previousSearchMatch.index]
-                  .tableData;
-              });
+              return result;
+            });
 
-              updateActiveHistoryButtonStatus(
-                previousSearchMatch.historyButtonsIndex
-              );
-            } else {
-              //Update previous searches object array with search, time & result
-              setPreviousSearchesData((search) => {
-                //Make a copy and enforce a maximum of 10 previous searches
-                let result = search.slice(0, 9);
-                let time = new Date();
-                result.unshift({
-                  value: searchValue,
-                  title: time.toGMTString(),
-                  tableData: anagramResult,
-                  anagramType: localAnagramType,
-                });
-
-                return result;
-              });
-
-              updateActiveHistoryButtonStatus(previousSearchesData.length);
-            }
+            updateActiveHistoryButtonStatus(previousSearchesData.length);
           }
-        })();
+        }
+      })();
+    }
   };
 }

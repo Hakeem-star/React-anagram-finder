@@ -3,7 +3,7 @@ import App from "../App";
 import { waitFor, act, render, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
 
-jest.mock("../utils/fetchCelebData");
+jest.mock("../utils/fetchDataFiles");
 
 Object.defineProperty(window, "matchMedia", {
   writable: true,
@@ -47,29 +47,26 @@ describe("<App />", () => {
   test("Displays a results table when a result is found", async () => {
     const { findAllByText, getByPlaceholderText } = render(<App />);
     const input = getByPlaceholderText("input anagram");
-    fireEvent.input(input, { target: { value: "trump" } });
+    fireEvent.input(input, { target: { value: "trumpdonal" } });
     fireEvent.keyDown(input, { key: "Enter", keyCode: 13 });
-    expect(await findAllByText(/donald/i));
+    expect(await findAllByText(/Donald Trump/i));
   });
 
-  describe("Anagram Type toggle", () => {
-    test("It changes the anagrams function based on what you pick on the header", async () => {
-      const { getByText, findAllByText, getByPlaceholderText } = render(
-        <App />
-      );
-      const celebsTab = getByText("Celebs");
-      const generalsTab = getByText("General");
-      const input = getByPlaceholderText("input anagram");
-      searchAndEnter(input, "trump");
-      let findTrump = await findAllByText(/trump/i);
-      expect(findTrump.length).toBe(3);
-      fireEvent.click(generalsTab, { button: 1 });
-      searchAndEnter(input, "trumpet");
-      const findTrumpet = await findAllByText(/trumpet/i);
-      findTrump = await findAllByText("trump");
-      expect(findTrumpet.length).toBe(4);
-      expect(findTrump.length).toBe(1);
-    });
+  test("It changes the anagrams function based on what you pick on the header", async () => {
+    const { getByText, findAllByText, getByPlaceholderText } = render(<App />);
+    const wordsTab = getByText("Words");
+    const input = getByPlaceholderText("input anagram");
+    searchAndEnter(input, "trumpdonal");
+    //Words need to be shortened because history tab only counts 7 characters
+    let findTrump = await findAllByText(/trumpdon/i);
+    expect(findTrump.length).toBe(2);
+    fireEvent.click(wordsTab, { button: 1 });
+    searchAndEnter(input, "trumpet");
+    const findTrumpet = await findAllByText(/trumpet/i);
+    findTrump = await findAllByText(/trumpdon/i);
+    //Search input uses shadowdom, so it's not found/counted
+    expect(findTrumpet.length).toBe(3);
+    expect(findTrump.length).toBe(1);
   });
 
   test("It highlights a historical search item when a previous search is repeated ", async () => {
@@ -103,7 +100,7 @@ describe("<App />", () => {
     //Input element is not included in findby results, so visible counts will be 1 less
 
     //Search for trump
-    searchAndEnter(input, "trump");
+    searchAndEnter(input, "trumpdonal");
     //wait for result
     let findDonald = await findAllByText(/trump/i);
     expect(findDonald.length).toBe(3);
@@ -130,7 +127,7 @@ describe("<App />", () => {
     const secondTestResult = await findAllByText("test");
     findDonald = await findAllByText(/trump/i);
     //wait for result
-    // expect(secondTestResult.length).toBe(1);
+    expect(secondTestResult.length).toBe(1);
     expect(findDonald.length).toBe(3);
   });
 });

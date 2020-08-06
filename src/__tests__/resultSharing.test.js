@@ -6,10 +6,10 @@ import "@testing-library/jest-dom";
 import { uuidv5Maker } from "./../utils/uuid-config";
 import { getURLSharedId } from "./../utils/getURLSharedId";
 
-jest.mock("../utils/fetchCelebData");
+jest.mock("../utils/fetchDataFiles");
 jest.mock("../firebase/firebase-setup");
 jest.mock("./../utils/getURLSharedId");
-jest.mock("../utils/celebAnagramFinderAPICall");
+
 getURLSharedId.mockImplementation(() => "f81789d2-8ecc-5d84-b2e8-986e69b7f5d4");
 
 function searchAndEnter(input, searchterm) {

@@ -59,6 +59,12 @@ const columns = (anagramType, filteredInfo, sortedInfo) => [
     // filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => null,
   },
 ];
+
+const footerStyle = {
+  color: "#b3b3b3",
+  marginBottom: 0,
+};
+
 export default function ResultsTable({
   fetchingTableDataStatus,
   filteredtableData,
@@ -112,7 +118,7 @@ export default function ResultsTable({
       const externalPageLink =
         anagramType === "celebs"
           ? "https://en.wikipedia.org/wiki/"
-          : "https://dictionary.babylon-software.com/";
+          : "https://en.wiktionary.org/wiki/";
 
       return {
         filterDropdown: ({
@@ -172,11 +178,13 @@ export default function ResultsTable({
         render: (text, record, index) => {
           // if (i === 0) {
           //   console.log(text, record);
+          //   console.log(record.url.toLowerCase());
           // }
+          const lowerCaseURL = record.url.toLowerCase();
           return searchedColumn === dataIndex ? (
             //wrap the name/word in a link
             <a
-              href={`${externalPageLink}${record.url}`}
+              href={`${externalPageLink}${lowerCaseURL}`}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -189,7 +197,7 @@ export default function ResultsTable({
             </a>
           ) : (
             <a
-              href={`${externalPageLink}${record.url}`}
+              href={`${externalPageLink}${lowerCaseURL}`}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -242,6 +250,33 @@ export default function ResultsTable({
         setFilteredInfo(filters);
         setSortedInfo(sorter);
       }}
+      footer={() =>
+        anagramType === "celebs" ? (
+          <p style={footerStyle} className="table-footer-reference">
+            Data courtesy of{" "}
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: "#b3b3b3" }}
+              href="https://www.wikipedia.org/"
+            >
+              Wikipedia
+            </a>
+          </p>
+        ) : (
+          <p style={footerStyle} className="table-footer-reference">
+            Data courtesy of{" "}
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: "#b3b3b3" }}
+              href="http://www.gwicks.net"
+            >
+              gwicks
+            </a>
+          </p>
+        )
+      }
     />
   );
 }

@@ -11,14 +11,11 @@ import {
   getSharedSearchToFirestore,
   authChange,
   setPreviousDataToFirestore,
-  listAllFromStorage,
 } from "./firebase/firebase-setup";
 import { getURLSharedId } from "./utils/getURLSharedId";
-import { createLocalData, getLocalData } from "./utils/indexDBManager";
 
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 import RegisterPage from "./RegisterPage";
-import Column from "antd/lib/table/Column";
 
 export const AppContext = React.createContext();
 
@@ -89,7 +86,6 @@ export default function App() {
         setSharedSearchInput(searchTerm.searchTerm);
       })();
     }
-    listAllFromStorage();
 
     return function cleanup() {
       preventInitialRun.current = false;
@@ -113,23 +109,6 @@ export default function App() {
     //Confirm completed load after table is filtered
     if (filteredtableData.length > 0) setFetchingTableDataStatus(false);
   }, [filteredtableData]);
-
-  useEffect(() => {
-    setPreviousTableData((prev) => {
-      //Control the previous searches so we get a result when we switch between anagram Types
-      let celebs = anagramType === "celebs" ? tableData : prev.celebs;
-      let words = anagramType === "words" ? tableData : prev.words;
-      return { celebs, words };
-    });
-    //Filter table data using current threshold values
-    setFilteredTableData(() => {
-      return tableData.filter(
-        (data) =>
-          data["%"] >= thresholdSliders[0] && data["%"] <= thresholdSliders[1]
-      );
-    });
-    //thresholdSliders dependancy is excluded because this is already managed in its own state and another state that triggers this effect
-  }, [tableData]);
 
   useEffect(() => {
     //When the previous state is updated by performing a new search, update the table data
@@ -157,6 +136,24 @@ export default function App() {
       setPreviousDataToFirestore(user.email, minimalPreviousData);
     }
   }, [previousSearchesData]);
+
+  useEffect(() => {
+    setPreviousTableData((prev) => {
+      //Control the previous searches so we get a result when we switch between anagram Types
+      let celebs = anagramType === "celebs" ? tableData : prev.celebs;
+      let words = anagramType === "words" ? tableData : prev.words;
+      return { celebs, words };
+    });
+
+    //Filter table data using current threshold values
+    setFilteredTableData(() => {
+      return tableData.filter(
+        (data) =>
+          data["%"] >= thresholdSliders[0] && data["%"] <= thresholdSliders[1]
+      );
+    });
+    //thresholdSliders dependancy is excluded because this is already managed in its own state and another state that triggers this effect
+  }, [tableData]);
 
   preventInitialRun.current = true;
   return (

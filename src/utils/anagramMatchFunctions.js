@@ -225,7 +225,7 @@ function formatForTable(builtResult, anagramType) {
   return arr;
 }
 
-export default async function celebAnagramFinder(userInput, anagramType) {
+export default async function createTableData(userInput, anagramType) {
   //local results to prevent too many API calls
   // let celebsFromApi = celebAPIResult_local;
 
@@ -238,7 +238,6 @@ export default async function celebAnagramFinder(userInput, anagramType) {
   // );
   // console.log(formatForTable(matchMaker(userInput, celebNames)));
   const apiData = await fetchDataFiles(anagramType);
-
   //preferably the dataset would be de-duped, but just in case
   const dedupedCelebNames = [...new Set(apiData)];
   return formatForTable(matchMaker(userInput, dedupedCelebNames), anagramType);
