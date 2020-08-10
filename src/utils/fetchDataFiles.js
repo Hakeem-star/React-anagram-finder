@@ -1,21 +1,23 @@
-import celebAPIResult_local from "../localData/celebs_06082020.json";
-import words_local from "../localData/words_06082020.json";
+//uncomment for local testing
+// import celebAPIResult_local from "../localData/celebs_06082020.json";
+// import words_local from "../localData/words_06082020.json";
 import { listAllFromStorage, assignFileURLs } from "../firebase/firebase-setup";
 import { set, get, keys, del } from "idb-keyval";
-const localTestEnv = false;
+// const localTestEnv = false;
 
 export default async function fetchDataFiles(anagramType) {
   let JSONResponse;
   //Fetching data
 
-  if (localTestEnv) {
-    if (anagramType === "celebs") {
-      return celebAPIResult_local.name;
-    }
-    if (anagramType === "words") {
-      return words_local.name;
-    }
-  }
+  //uncomment for local testing
+  // if (localTestEnv) {
+  //   if (anagramType === "celebs") {
+  //     return celebAPIResult_local.name;
+  //   }
+  //   if (anagramType === "words") {
+  //     return words_local.name;
+  //   }
+  // }
   // console.log(typeof anagramType);
   let targetUrl;
 

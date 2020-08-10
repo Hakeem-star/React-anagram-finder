@@ -37,7 +37,7 @@ Object.defineProperty(window.HTMLElement.prototype, "scrollIntoView", {
 
 test("It grabs the uuid from the url and uses it to perform a search", async () => {
   const { findAllByText } = render(<App />);
-  const testsFound = await findAllByText(/test/g);
+  const testsFound = await findAllByText(/test/i);
   expect(testsFound.length).toBe(3);
 });
 
